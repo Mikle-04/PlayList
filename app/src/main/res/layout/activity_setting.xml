@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginStart="@dimen/size_4dp"
+        android:layout_marginTop="@dimen/size_4dp"
+        android:layout_marginBottom="@dimen/size_4dp"
+        android:layout_marginEnd="52dp"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:paddingHorizontal="@dimen/size_12dp"
+            android:src="@drawable/ic_back_24"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/txt_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/size_12dp"
+            android:text="@string/setting"
+            android:textColor="@color/fiol"
+            android:textSize="@dimen/size_text_main"
+            android:textStyle="bold"
+            tools:ignore="RtlSymmetry" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txt_setting_night"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/size_16dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/txt_night_theme"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_16sp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_theme"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:paddingStart="9dp"
+            android:paddingEnd="@dimen/size_12dp"
+            android:paddingVertical="11dp"
+            android:backgroundTint="@color/gray"
+            android:alpha="0.3"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <TextView
+            android:id="@+id/txt_share"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/size_16dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/txt_share_app"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_16sp" />
+
+        <ImageView
+            android:id="@+id/img_share"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/size_12dp"
+            android:src="@drawable/ic_share_24"
+            tools:ignore="ContentDescription" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <TextView
+            android:id="@+id/txt_mode"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/size_16dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/txt_mode"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_16sp" />
+
+        <ImageView
+            android:id="@+id/img_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/size_12dp"
+            android:src="@drawable/ic_support_24"
+            tools:ignore="ContentDescription" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <TextView
+            android:id="@+id/txt_agreement"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/size_16dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/txt_user_agreement"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_16sp" />
+
+        <ImageView
+            android:id="@+id/img_agreement_next"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/size_12dp"
+            android:src="@drawable/ic_next_24"
+            tools:ignore="ContentDescription" />
+
+
+    </LinearLayout>
+</LinearLayout>
