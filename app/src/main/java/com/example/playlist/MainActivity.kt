@@ -1,5 +1,6 @@
 package com.example.playlist
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -25,11 +26,8 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this@MainActivity, "Media", Toast.LENGTH_SHORT).show()
         }
         btnSettings.setOnClickListener {
-            Toast.makeText(
-                this@MainActivity,
-                "Setting",
-                Toast.LENGTH_SHORT
-            ).show()
+            val intent = Intent(this, SettingActivity::class.java)
+            startActivity(intent)
         }
 
     }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue"
+    android:background="?attr/colorOnBackground"
     android:orientation="vertical">
 
     <FrameLayout
@@ -27,64 +27,33 @@
             android:text="@string/playlist_maker"
             android:textColor="@color/white"
             android:textSize="@dimen/size_text_main"
-            tools:ignore="RtlSymmetry" />
+            tools:ignore="RtlSymmetry"
+            android:fontFamily="@font/ys_display_medium"
+            android:textFontWeight="500"/>
 
     </FrameLayout>
 
 
     <Button
         android:id="@+id/btn_search"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="@dimen/size_16dp"
         android:layout_marginTop="24dp"
-        android:layout_weight="1"
-        android:backgroundTint="@color/white"
-        android:gravity="center"
         android:text="@string/search"
-        android:textColor="@color/fiol"
-        android:textSize="@dimen/size_text_main"
-        app:cornerRadius="@dimen/size_16dp"
         app:icon="@drawable/ic_search_24"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp"
-        app:iconTint="@color/fiol" />
+        style="@style/ButtonMainMenu" />
 
     <Button
         android:id="@+id/btn_media"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="@dimen/size_16dp"
         android:layout_marginTop="@dimen/size_16dp"
-        android:layout_weight="1"
-        android:backgroundTint="@color/white"
-        android:gravity="center"
         android:text="@string/mediateka"
-        android:textColor="@color/fiol"
-        android:textSize="@dimen/size_text_main"
-        app:cornerRadius="@dimen/size_16dp"
         app:icon="@drawable/ic_media_24"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp"
-        app:iconTint="@color/fiol" />
+        style="@style/ButtonMainMenu" />
 
     <Button
         android:id="@+id/btn_setting"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="@dimen/size_16dp"
         android:layout_marginTop="@dimen/size_16dp"
         android:layout_marginBottom="28dp"
-        android:layout_weight="1"
-        android:backgroundTint="@color/white"
-        android:gravity="center"
         android:text="@string/setting"
-        android:textColor="@color/fiol"
-        android:textSize="@dimen/size_text_main"
-        app:cornerRadius="@dimen/size_16dp"
         app:icon="@drawable/ic_settings_24"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp"
-        app:iconTint="@color/fiol" />
+        style="@style/ButtonMainMenu" />
 
 </LinearLayout>

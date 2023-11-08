@@ -1,9 +1,20 @@
+
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.PlayList" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+    <style name="Base.Theme.PlayList" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorSecondary">@color/black</item>
+        <item name="colorOnPrimary">@color/gray</item>
+        <item name="colorOnSecondary">@color/fiol</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnBackground">@color/blue</item>
     </style>
 
     <style name="Theme.PlayList" parent="Base.Theme.PlayList" />
+
+    <style name="MySwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/blue_switch</item>
+        <item name="colorSwitchThumbNormal">@color/gray</item>
+        <item name="trackTint">@color/green_switch_light</item>
+    </style>
 </resources>
