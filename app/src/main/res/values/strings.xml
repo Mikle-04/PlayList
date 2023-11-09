@@ -8,4 +8,6 @@
     <string name="txt_share_app">Поделиться приложением</string>
     <string name="txt_mode">Написать в поддержку</string>
     <string name="txt_user_agreement">Пользовательское соглашение</string>
+    <string name="serch_activity">Поиск</string>
+    <string name="hint_search">Поиск</string>
 </resources>

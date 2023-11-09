@@ -7,6 +7,7 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorPrimaryVariant">@color/fiol</item>
         <item name="colorOnBackground">@color/fiol</item>
+        <item name="colorButtonNormal">@color/fiol</item>
     </style>
 
     <style name="MySwitch" parent="Theme.AppCompat.Light">

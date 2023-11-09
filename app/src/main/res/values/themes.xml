@@ -8,6 +8,7 @@
         <item name="colorOnSecondary">@color/fiol</item>
         <item name="colorPrimaryVariant">@color/white</item>
         <item name="colorOnBackground">@color/blue</item>
+        <item name="colorButtonNormal">@color/gray</item>
     </style>
 
     <style name="Theme.PlayList" parent="Base.Theme.PlayList" />
