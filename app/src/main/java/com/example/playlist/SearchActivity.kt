@@ -41,6 +41,18 @@ class SearchActivity : AppCompatActivity() {
         }
         editTextSearch.addTextChangedListener(editTextForWatcher)
 
+        fun onSaveInstanceState(outState: Bundle) {
+            super.onSaveInstanceState(outState)
+            val textSearch = editTextForWatcher.toString()
+            outState.putString("TEXT_SEARCH", textSearch)
+        }
+
+        fun onRestoreInstanceState(savedInstanceState: Bundle) {
+            super.onRestoreInstanceState(savedInstanceState)
+            val textSave = savedInstanceState.getString("TEXT_SEARCH")
+            editTextSearch.setText(textSave)
+        }
+
         imgClearSearch.setOnClickListener {
             editTextSearch.setText("")
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
