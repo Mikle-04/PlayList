@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:theme="@style/Base.Theme.PlayList"
     tools:context=".SearchActivity">
 
     <LinearLayout
@@ -65,7 +66,8 @@
                 android:paddingStart="14dp"
                 android:paddingEnd="40dp"
                 android:textColor="@color/black"
-                android:textColorHint="?attr/colorButtonNormal" />
+                android:textColorHint="?attr/colorButtonNormal"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <ImageView
                 android:id="@+id/img_clear_search"

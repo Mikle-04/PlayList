@@ -12,6 +12,10 @@ import android.widget.EditText
 import android.widget.ImageView
 
 class SearchActivity : AppCompatActivity() {
+    private lateinit var saveText: String
+    companion object{
+        private const val keySearch = "TEXT_SEARCH"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -19,9 +23,10 @@ class SearchActivity : AppCompatActivity() {
         val imgBack = findViewById<ImageView>(R.id.img_back_search)
         val imgClearSearch = findViewById<ImageView>(R.id.img_clear_search)
 
+        if (savedInstanceState != null) editTextSearch.setText(savedInstanceState.getString(keySearch, ""))
+
         imgBack.setOnClickListener {
-            val intentMenu = Intent(this, MainActivity::class.java)
-            startActivity(intentMenu)
+            onBackPressed()
         }
         val editTextForWatcher = object : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -36,22 +41,13 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
+                saveText = p0.toString()
+
             }
 
         }
         editTextSearch.addTextChangedListener(editTextForWatcher)
 
-        fun onSaveInstanceState(outState: Bundle) {
-            super.onSaveInstanceState(outState)
-            val textSearch = editTextForWatcher.toString()
-            outState.putString("TEXT_SEARCH", textSearch)
-        }
-
-        fun onRestoreInstanceState(savedInstanceState: Bundle) {
-            super.onRestoreInstanceState(savedInstanceState)
-            val textSave = savedInstanceState.getString("TEXT_SEARCH")
-            editTextSearch.setText(textSave)
-        }
 
         imgClearSearch.setOnClickListener {
             editTextSearch.setText("")
@@ -59,6 +55,10 @@ class SearchActivity : AppCompatActivity() {
             inputMethodManager?.hideSoftInputFromWindow(editTextSearch.windowToken, 0)
         }
 
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(keySearch, saveText)
     }
 
     private fun showClearIcon(s: CharSequence?): Int {

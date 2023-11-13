@@ -10,4 +10,9 @@
     <string name="txt_user_agreement">Пользовательское соглашение</string>
     <string name="serch_activity">Поиск</string>
     <string name="hint_search">Поиск</string>
+    <string name="subject_message">"Сообщение разработчикам и разработчицам приложения Playlist Maker"</string>
+    <string name="link_message">"https://practicum.yandex.ru/android-developer/"</string>
+    <string name="email_message">"Godmordor@gmail.com"</string>
+    <string name="dev_message">"Спасибо разработчикам и разработчицам за крутое приложение"</string>
+    <string name="uri_message">"https://yandex.ru/legal/practicum_offer/"</string>
 </resources>

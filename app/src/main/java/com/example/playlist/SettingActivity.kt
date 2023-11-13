@@ -4,7 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.CompoundButton
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
 
 class SettingActivity : AppCompatActivity() {
@@ -18,13 +20,19 @@ class SettingActivity : AppCompatActivity() {
         val switchCompat = findViewById<SwitchCompat>(R.id.switch_theme)
 
         imgBack.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            onBackPressed()
+        }
+
+        switchCompat.setOnCheckedChangeListener{_, checkedId ->
+            when(checkedId){
+                true -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                false -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
         }
 
 
         imgShare.setOnClickListener {
-            val message = "https://practicum.yandex.ru/android-developer/"
+            val message = getString(R.string.link_message)
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
                 putExtra(Intent.EXTRA_TEXT, message)
@@ -33,9 +41,9 @@ class SettingActivity : AppCompatActivity() {
         }
 
         imgMode.setOnClickListener {
-            val email = arrayOf("Godmordor@gmail.com")
-            val subject = "Сообщение разработчикам и разработчицам приложения Playlist Maker"
-            val message = "Спасибо разработчикам и разработчицам за крутое приложение"
+            val email = arrayOf(getString(R.string.email_message))
+            val subject = getString(R.string.subject_message)
+            val message = getString(R.string.dev_message)
             val modeIntent = Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse("mailto:")
                 putExtra(Intent.EXTRA_EMAIL, email)
@@ -47,7 +55,7 @@ class SettingActivity : AppCompatActivity() {
         }
 
         imgAgreementNext.setOnClickListener {
-            val uri = Uri.parse("https://yandex.ru/legal/practicum_offer/")
+            val uri = Uri.parse(getString(R.string.uri_message))
             val agreementIntent = Intent(Intent.ACTION_VIEW, uri)
             startActivity(agreementIntent)
         }

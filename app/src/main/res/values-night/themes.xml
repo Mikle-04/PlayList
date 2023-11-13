@@ -12,7 +12,7 @@
 
     <style name="MySwitch" parent="Theme.AppCompat.Light">
         <item name="colorControlActivated">@color/blue_switch</item>
-        <item name="colorSwitchThumbNormal">@color/gray</item>
+        <item name="colorSwitchThumbNormal">@color/blue_switch</item>
         <item name="trackTint">@color/blue_switch_light</item>
     </style>
 </resources>
