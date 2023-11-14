@@ -5,4 +5,7 @@
     <color name="blue">#3772E7</color>
     <color name="fiol">#1A1B22</color>
     <color name="gray">#AEAFB4</color>
+    <color name="blue_switch">#3772E7</color>
+    <color name="blue_switch_light">#9FBBF3</color>
+    <color name="green_switch_light">#E6E8EB</color>
 </resources>

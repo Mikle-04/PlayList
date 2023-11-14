@@ -1,5 +1,6 @@
 package com.example.playlist
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -14,22 +15,17 @@ class MainActivity : AppCompatActivity() {
         val btnMedia = findViewById<Button>(R.id.btn_media)
         val btnSettings = findViewById<Button>(R.id.btn_setting)
 
-        val clickSearch: View.OnClickListener = object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                Toast.makeText(this@MainActivity, "Search", Toast.LENGTH_SHORT).show()
-            }
-        }
 
-        btnSearch.setOnClickListener(clickSearch)
+        btnSearch.setOnClickListener{
+            val intentSearch = Intent(this, SearchActivity::class.java)
+            startActivity(intentSearch)
+        }
         btnMedia.setOnClickListener {
-            Toast.makeText(this@MainActivity, "Media", Toast.LENGTH_SHORT).show()
+
         }
         btnSettings.setOnClickListener {
-            Toast.makeText(
-                this@MainActivity,
-                "Setting",
-                Toast.LENGTH_SHORT
-            ).show()
+            val intentSetting = Intent(this, SettingActivity::class.java)
+            startActivity(intentSetting)
         }
 
     }
