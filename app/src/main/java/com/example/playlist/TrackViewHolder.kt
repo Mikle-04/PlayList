@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 
 class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -22,8 +23,7 @@ class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         trackTime.text = model.trackTime
         Glide.with(itemView)
             .load(model.artworkUrl100)
-            .centerCrop()
-            .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.size_2dp)))
+            .transform(CenterCrop(), RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.size_2dp)))
             .placeholder(R.drawable.img_track_default)
             .into(artworkImg)
     }

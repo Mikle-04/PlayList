@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import java.util.ArrayList
 
 class SearchActivity : AppCompatActivity() {
-    private lateinit var saveText: String
+    private var saveText: String = ""
 
     companion object {
         private const val keySearch = "TEXT_SEARCH"

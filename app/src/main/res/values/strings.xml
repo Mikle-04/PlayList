@@ -15,7 +15,4 @@
     <string name="email_message">"Godmordor@gmail.com"</string>
     <string name="dev_message">"Спасибо разработчикам и разработчицам за крутое приложение"</string>
     <string name="uri_message">"https://yandex.ru/legal/practicum_offer/"</string>
-    <string name="song_name">Yesterday (Remastered 2009)</string>
-    <string name="author_song_name">The Beatles</string>
-    <string name="song_time">2:55</string>
 </resources>
