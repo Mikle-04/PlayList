@@ -198,8 +198,6 @@ class SearchActivity : AppCompatActivity() {
         txtEmpty.visibility = View.GONE
     }
 
-
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(keySearch, saveText)
