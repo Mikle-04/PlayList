@@ -37,4 +37,44 @@
         <item name="android:textColor">@color/gray</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
+    <style name="imgEmpty">
+        <item name="android:layout_marginTop">102dp</item>
+        <item name="android:layout_marginHorizontal">120dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="srcCompat">@drawable/not_result_track</item>
+    </style>
+    <style name="imgError">
+        <item name="android:layout_marginTop">102dp</item>
+        <item name="android:layout_marginHorizontal">120dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="srcCompat">@drawable/no_inthernet</item>
+    </style>
+    <style name="txtError">
+        <item name="android:visibility">gone</item>
+        <item name="android:layout_marginTop">@dimen/size_16dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:textColor">?attr/colorSecondaryVariant</item>
+        <item name="android:layout_marginHorizontal">24dp</item>
+
+    </style>
+    <style name="btvUpdate" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:backgroundTint">?attr/colorSecondaryVariant</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:paddingHorizontal">@dimen/size_8dp</item>
+        <item name="android:paddingVertical">6dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:visibility">gone</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="cornerRadius">54dp</item>
+    </style>
 </resources>

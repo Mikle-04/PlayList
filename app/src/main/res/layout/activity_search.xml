@@ -56,6 +56,8 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
                 android:background="@drawable/shape_search"
                 android:drawableStart="@drawable/ic_search_activity_16"
                 android:drawablePadding="@dimen/size_4dp"
@@ -84,12 +86,56 @@
 
 
     </LinearLayout>
+    <ImageView
+        android:id="@+id/imageViewEmpty"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:visibility="gone"
+        style="@style/imgEmpty" />
+    <TextView
+        android:id="@+id/txtEmpty"
+        android:layout_width="312dp"
+        android:layout_height="20dp"
+        android:text ="@string/search_empty"
+        style="@style/txtError"/>
+
+
+    <ImageView
+        android:id="@+id/imageViewError"
+        style="@style/imgError"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/txtError"
+        android:layout_width="312dp"
+        android:layout_height="20dp"
+        style="@style/txtError"
+        android:text="@string/error_ithernet"
+         />
+
+    <TextView
+        android:id="@+id/txtErrorIthernet"
+        android:layout_width="312dp"
+        android:layout_height="66dp"
+        android:text = "@string/ithernet_no_download"
+        style="@style/txtError"/>
+
+    <Button
+        android:id="@+id/btn_update"
+        android:layout_width="91dp"
+        android:layout_height="36dp"
+        style="@style/btvUpdate"
+        android:text="@string/update"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewTrack"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/size_16dp"/>
+
+
 
 
 </LinearLayout>
