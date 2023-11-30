@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:theme="@style/Base.Theme.PlayList"
+    android:background="?attr/colorPrimaryVariant"
     tools:context=".SearchActivity">
 
     <LinearLayout
@@ -95,7 +96,7 @@
     <TextView
         android:id="@+id/txtEmpty"
         android:layout_width="312dp"
-        android:layout_height="20dp"
+        android:layout_height="wrap_content"
         android:text ="@string/search_empty"
         style="@style/txtError"/>
 
@@ -110,7 +111,7 @@
     <TextView
         android:id="@+id/txtError"
         android:layout_width="312dp"
-        android:layout_height="20dp"
+        android:layout_height="wrap_content"
         style="@style/txtError"
         android:text="@string/error_ithernet"
          />
@@ -118,13 +119,13 @@
     <TextView
         android:id="@+id/txtErrorIthernet"
         android:layout_width="312dp"
-        android:layout_height="66dp"
+        android:layout_height="wrap_content"
         android:text = "@string/ithernet_no_download"
         style="@style/txtError"/>
 
     <Button
         android:id="@+id/btn_update"
-        android:layout_width="91dp"
+        android:layout_width="wrap_content"
         android:layout_height="36dp"
         style="@style/btvUpdate"
         android:text="@string/update"/>

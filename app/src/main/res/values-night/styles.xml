@@ -37,11 +37,6 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
-    <style name="imgEmpty">
-        <item name="android:layout_marginTop">102dp</item>
-        <item name="android:layout_marginHorizontal">120dp</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-        <item name="srcCompat">@drawable/not_result_track_nigth</item>
-    </style>
+
 
 </resources>

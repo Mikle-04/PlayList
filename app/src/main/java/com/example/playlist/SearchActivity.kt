@@ -40,10 +40,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var txtErrorIthernet: TextView
     private lateinit var btnUpdate: Button
 
-    companion object {
-        private const val keySearch = "TEXT_SEARCH"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -209,5 +205,8 @@ class SearchActivity : AppCompatActivity() {
         } else {
             View.VISIBLE
         }
+    }
+    companion object {
+        private const val keySearch = "TEXT_SEARCH"
     }
 }
