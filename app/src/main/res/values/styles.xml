@@ -47,7 +47,7 @@
         <item name="android:layout_marginTop">102dp</item>
         <item name="android:layout_marginHorizontal">120dp</item>
         <item name="android:layout_gravity">center_horizontal</item>
-        <item name="srcCompat">@drawable/no_inthernet</item>
+        <item name="srcCompat">@drawable/no_ithernet</item>
     </style>
     <style name="txtError">
         <item name="android:visibility">gone</item>
