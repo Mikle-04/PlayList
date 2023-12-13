@@ -19,4 +19,6 @@
     <string name="error_ithernet">Проблемы со связью</string>
     <string name="ithernet_no_download">Загрузка не удалась. Проверьте подключение к интернету</string>
     <string name="update">Обновить</string>
+    <string name="searchHistory">Вы искали</string>
+    <string name="clearHistory">Очистить историю</string>
 </resources>

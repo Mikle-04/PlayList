@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,13 +33,17 @@ class SearchActivity : AppCompatActivity() {
 
     private val trackApiService = retrofit.create(TrackApi::class.java)
     private val tracks = ArrayList<Track>()
+    private val tracksHistory = ArrayList<Track>()
     private val adapter = AdapterTrack()
+    private val adapterHistory = AdapterTrack()
     private lateinit var imgEmpty: ImageView
     private lateinit var txtEmpty: TextView
     private lateinit var imgError: ImageView
     private lateinit var txtError: TextView
     private lateinit var txtErrorIthernet: TextView
     private lateinit var btnUpdate: Button
+    private lateinit var historyGroup : LinearLayout
+    private lateinit var recyclerViewHistory: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,12 +58,15 @@ class SearchActivity : AppCompatActivity() {
         imgError = findViewById(R.id.imageViewError)
         txtErrorIthernet = findViewById(R.id.txtErrorIthernet)
         btnUpdate = findViewById(R.id.btn_update)
+        historyGroup = findViewById(R.id.layoutHistory)
+        recyclerViewHistory = findViewById(R.id.recyclerViewHistory)
         if (savedInstanceState != null) editTextSearch.setText(
             savedInstanceState.getString(
                 keySearch,
                 ""
             )
         )
+
 
         imgBack.setOnClickListener {
             onBackPressed()
@@ -70,8 +78,13 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (!p0.isNullOrEmpty()) {
                     imgClearSearch.visibility = showClearIcon(p0)
+                    historyGroup.visibility = View.GONE
+                    recyclerTrack.visibility = View.VISIBLE
+
                 } else {
                     imgClearSearch.visibility = showClearIcon(p0)
+                    historyGroup.visibility = View.VISIBLE
+                    recyclerTrack.visibility = View.GONE
                 }
             }
 
@@ -95,6 +108,11 @@ class SearchActivity : AppCompatActivity() {
         adapter.trackList = tracks
         recyclerTrack.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerTrack.adapter = adapter
+
+        adapterHistory.trackListHistory = tracksHistory
+        recyclerViewHistory.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recyclerViewHistory.adapter = adapterHistory
+
         btnUpdate.setOnClickListener {
             if (editTextSearch.text.isNotEmpty()){
                 trackApiService.search(editTextSearch.text.toString())
