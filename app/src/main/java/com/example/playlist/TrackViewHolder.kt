@@ -2,6 +2,7 @@ package com.example.playlist
 
 
 import android.view.View
+import android.widget.AdapterView.OnItemClickListener
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +29,7 @@ class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             .transform(CenterCrop(), RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.size_2dp)))
             .placeholder(R.drawable.img_track_default)
             .into(artworkImg)
+
     }
 
 }

@@ -87,6 +87,7 @@
 
 
     </LinearLayout>
+
     <ImageView
         android:id="@+id/imageViewEmpty"
         android:layout_width="120dp"
@@ -141,7 +142,6 @@
         android:id="@+id/layoutHistory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:visibility="gone"
         android:orientation="vertical">
         <TextView
@@ -158,35 +158,33 @@
             android:gravity="center"
             android:textColor="?attr/colorOnSecondary"
             android:text="@string/searchHistory"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewHistory"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/btnHistory"
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
+            android:layout_height="38dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="24dp"
             android:layout_marginHorizontal="106dp"
+            android:layout_marginVertical="24dp"
             android:backgroundTint="?attr/colorOnSecondary"
             android:fontFamily="@font/ys_display_medium"
-            android:textSize="14sp"
-            android:textFontWeight="500"
+            android:gravity="center"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            tools:cornerRadius = "54dp"
-            android:textColor="?attr/colorPrimaryVariant"
-            android:text="@string/clearHistory"
-            android:gravity="center"
             android:paddingHorizontal="@dimen/size_14dp"
             android:paddingVertical="10dp"
-            android:textAllCaps="false" />
+            android:text="@string/clearHistory"
+            android:textAllCaps="false"
+            android:textColor="?attr/colorPrimaryVariant"
+            android:textFontWeight="500"
+            android:textSize="14sp"
+            app:cornerRadius="54dp" />
+
     </LinearLayout>
-
-
-
-
-
 </LinearLayout>
