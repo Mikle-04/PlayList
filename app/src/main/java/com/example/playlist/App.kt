@@ -10,7 +10,7 @@ const val KEY_SWITCH = "Switch_Boolean"
 
 class App : Application() {
     var darkTheme = false
-    lateinit var sharedPref: SharedPreferences
+    var sharedPref: SharedPreferences? = null
     override fun onCreate() {
         super.onCreate()
         sharedPref = getSharedPreferences(KEY_SP, MODE_PRIVATE)
@@ -19,7 +19,7 @@ class App : Application() {
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
-        sharedPref.edit().putBoolean(KEY_SWITCH, darkThemeEnabled).apply()
+        sharedPref?.edit()?.putBoolean(KEY_SWITCH, darkThemeEnabled)?.apply()
         AppCompatDelegate.setDefaultNightMode(
             if (darkThemeEnabled) {
                 AppCompatDelegate.MODE_NIGHT_YES
@@ -32,6 +32,6 @@ class App : Application() {
     fun checkTheme() {
         val themeNigthDefault =
             resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-        darkTheme = sharedPref.getBoolean(KEY_SWITCH, themeNigthDefault)
+        darkTheme = sharedPref?.getBoolean(KEY_SWITCH, themeNigthDefault) ?: false
     }
 }
