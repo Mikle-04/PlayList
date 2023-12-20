@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:theme="@style/Base.Theme.PlayList"
+    android:background="?attr/colorPrimaryVariant"
     tools:context=".SearchActivity">
 
     <LinearLayout
@@ -56,6 +57,8 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
                 android:background="@drawable/shape_search"
                 android:drawableStart="@drawable/ic_search_activity_16"
                 android:drawablePadding="@dimen/size_4dp"
@@ -85,11 +88,103 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/imageViewEmpty"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:visibility="gone"
+        style="@style/imgEmpty" />
+    <TextView
+        android:id="@+id/txtEmpty"
+        android:layout_width="312dp"
+        android:layout_height="wrap_content"
+        android:text ="@string/search_empty"
+        style="@style/txtError"/>
+
+
+    <ImageView
+        android:id="@+id/imageViewError"
+        style="@style/imgError"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/txtError"
+        android:layout_width="312dp"
+        android:layout_height="wrap_content"
+        style="@style/txtError"
+        android:text="@string/error_ithernet"
+         />
+
+    <TextView
+        android:id="@+id/txtErrorIthernet"
+        android:layout_width="312dp"
+        android:layout_height="wrap_content"
+        android:text = "@string/ithernet_no_download"
+        style="@style/txtError"/>
+
+    <Button
+        android:id="@+id/btn_update"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        style="@style/btvUpdate"
+        android:text="@string/update"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewTrack"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:layout_marginTop="@dimen/size_16dp"/>
 
+    <LinearLayout
+        android:id="@+id/layoutHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/txtHistorySearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingHorizontal="@dimen/size_16dp"
+            android:paddingTop="@dimen/size_18dp"
+            android:paddingBottom="@dimen/size_12dp"
+            android:fontFamily="@font/ys_text_medium"
+            android:textFontWeight="500"
+            android:textSize="19sp"
+            android:gravity="center"
+            android:textColor="?attr/colorOnSecondary"
+            android:text="@string/searchHistory"/>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewHistory"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/btnHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="106dp"
+            android:layout_marginVertical="24dp"
+            android:backgroundTint="?attr/colorOnSecondary"
+            android:fontFamily="@font/ys_display_medium"
+            android:gravity="center"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingHorizontal="@dimen/size_14dp"
+            android:paddingVertical="10dp"
+            android:text="@string/clearHistory"
+            android:textAllCaps="false"
+            android:textColor="?attr/colorPrimaryVariant"
+            android:textFontWeight="500"
+            android:textSize="14sp"
+            app:cornerRadius="54dp" />
+
+    </LinearLayout>
 </LinearLayout>

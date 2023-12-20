@@ -1,6 +1,8 @@
 package com.example.playlist
 
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,7 +10,9 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
 
+
 class SettingActivity : AppCompatActivity() {
+    lateinit var switchCompat: SwitchCompat
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
@@ -16,17 +20,19 @@ class SettingActivity : AppCompatActivity() {
         val imgMode = findViewById<ImageView>(R.id.img_mode)
         val imgAgreementNext = findViewById<ImageView>(R.id.img_agreement_next)
         val imgBack = findViewById<ImageView>(R.id.img_back)
-        val switchCompat = findViewById<SwitchCompat>(R.id.switch_theme)
+        switchCompat = findViewById<SwitchCompat>(R.id.switch_theme)
+
 
         imgBack.setOnClickListener {
             onBackPressed()
         }
 
-        switchCompat.setOnCheckedChangeListener{_, checkedId ->
-            when(checkedId){
-                true -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                false -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
+        checkSwitch()
+
+        // switchCompat.isChecked = sharedPreferences.getBoolean(KEY_SWITCH, false)
+        switchCompat.setOnCheckedChangeListener { switcher, checkedId ->
+            (applicationContext as App).switchTheme(checkedId)
+
         }
 
 
@@ -60,5 +66,10 @@ class SettingActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    fun checkSwitch() {
+        switchCompat.isChecked =
+            resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
     }
 }

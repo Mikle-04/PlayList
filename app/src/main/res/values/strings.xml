@@ -15,4 +15,10 @@
     <string name="email_message">"Godmordor@gmail.com"</string>
     <string name="dev_message">"Спасибо разработчикам и разработчицам за крутое приложение"</string>
     <string name="uri_message">"https://yandex.ru/legal/practicum_offer/"</string>
+    <string name="search_empty">Ничего не нашлось</string>
+    <string name="error_ithernet">Проблемы со связью</string>
+    <string name="ithernet_no_download">Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="update">Обновить</string>
+    <string name="searchHistory">Вы искали</string>
+    <string name="clearHistory">Очистить историю</string>
 </resources>
