@@ -60,7 +60,7 @@ class PlayActivity : AppCompatActivity() {
         intent.getStringExtra("EXTRA_DURATION")
         album_name.text = intent.getStringExtra("EXTRA_COLLECTION").toString()
         album_name.isSelected = true
-        year_track.text = intent.getStringExtra("EXTRA_DATE").toString()
+        year_track.text = intent.getStringExtra("EXTRA_DATE").toString().take(4)
         genre_track.text = intent.getStringExtra("EXTRA_GENRE").toString()
         country_track.text = intent.getStringExtra("EXTRA_COUNTRY").toString()
     }
