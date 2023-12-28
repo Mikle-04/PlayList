@@ -1,6 +1,7 @@
 package com.example.playlist
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -140,6 +141,10 @@ class SearchActivity : AppCompatActivity() {
         recyclerViewHistory.adapter = adapterHistory
         adapter.onItemClick = {track ->
             searchHistory.addTrack(adapterHistory, track)
+            callPlayActivity(track)
+        }
+        adapterHistory.onItemClick = {track ->
+            callPlayActivity(track)
         }
 
 
@@ -220,11 +225,6 @@ class SearchActivity : AppCompatActivity() {
         super.onStop()
         searchHistory.saveHistory(tracksHistory)
     }
-    fun layoutVisibility(){
-        if(tracksHistory.isNotEmpty()){
-
-        }
-    }
 
     private fun showMessage() {
         imgEmpty.visibility = View.VISIBLE
@@ -272,6 +272,23 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         private const val keySearch = "TEXT_SEARCH"
+    }
+
+    fun callPlayActivity(track: Track){
+        val intent = Intent(this, PlayActivity::class.java).also {
+            it.putExtra("EXTRA_NAME", track.trackName)
+            it.putExtra("EXTRA_AUTHOR", track.artistName)
+            it.putExtra("EXTRA_IMAGE", track.artworkUrl100)
+            it.putExtra("EXTRA_DURATION", track.trackTime)
+            if (track.collectionName.isNotEmpty()){
+                it.putExtra("EXTRA_COLLECTION", track.collectionName)
+            }
+            it.putExtra("EXTRA_DATE", track.releaseDate)
+            it.putExtra("EXTRA_GENRE", track.primaryGenreName)
+            it.putExtra("EXTRA_COUNTRY", track.country)
+            startActivity(it)
+
+        }
     }
 
 

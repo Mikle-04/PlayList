@@ -77,4 +77,22 @@
         <item name="android:textColor">?attr/colorPrimary</item>
         <item name="cornerRadius">54dp</item>
     </style>
+    <style name="textPlay">
+        <item name="android:layout_marginStart">@dimen/size_16dp</item>
+        <item name="android:paddingTop">9dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+    <style name="changeTextPlay">
+        <item name="android:layout_marginEnd">@dimen/size_16dp</item>
+        <item name="android:paddingTop">9dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textColor">@color/fiol</item>
+    </style>
 </resources>
