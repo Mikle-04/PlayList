@@ -25,16 +25,16 @@ class PlayActivity : AppCompatActivity() {
     }
 
     private var playerState = STATE_DEFAULT
-    lateinit var cover_artwork:ImageView
-    lateinit var uri_img:String
-    lateinit var track_name:TextView
-    lateinit var author_track:TextView
-    lateinit var time_play:TextView
-    lateinit var time_track:TextView
-    lateinit var album_name:TextView
-    lateinit var year_track:TextView
-    lateinit var genre_track:TextView
-    lateinit var country_track:TextView
+    lateinit var cover_artwork: ImageView
+    lateinit var uri_img: String
+    lateinit var track_name: TextView
+    lateinit var author_track: TextView
+    lateinit var time_play: TextView
+    lateinit var time_track: TextView
+    lateinit var album_name: TextView
+    lateinit var year_track: TextView
+    lateinit var genre_track: TextView
+    lateinit var country_track: TextView
     lateinit var url: String
     lateinit var play: ImageView
     private val handlerPlay = Handler(Looper.getMainLooper())
@@ -55,7 +55,7 @@ class PlayActivity : AppCompatActivity() {
         country_track = findViewById(R.id.country_txt)
         play = findViewById(R.id.play_img)
 
-        back.setOnClickListener{
+        back.setOnClickListener {
             finish()
         }
 
@@ -65,21 +65,27 @@ class PlayActivity : AppCompatActivity() {
         uri_img = intent.getStringExtra("EXTRA_IMAGE").toString()
         Glide.with(this)
             .load(getCoverArtwork())
-            .transform(CenterCrop(), RoundedCorners(applicationContext.resources.getDimensionPixelSize(R.dimen.size_8dp)))
+            .transform(
+                CenterCrop(),
+                RoundedCorners(applicationContext.resources.getDimensionPixelSize(R.dimen.size_8dp))
+            )
             .placeholder(R.drawable.img_track_default)
             .into(cover_artwork)
 
         preparePlayer()
-        play.setOnClickListener{
+        play.setOnClickListener {
             playbackControl()
         }
         time_play.text = "00:00"
     }
 
-    fun getIntentSearchActivity(){
+    fun getIntentSearchActivity() {
         track_name.text = intent.getStringExtra("EXTRA_NAME").toString()
         author_track.text = intent.getStringExtra("EXTRA_AUTHOR").toString()
-        time_track.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(intent.getLongExtra("EXTRA_DURATION", 0))
+        time_track.text = SimpleDateFormat(
+            "mm:ss",
+            Locale.getDefault()
+        ).format(intent.getLongExtra("EXTRA_DURATION", 0))
         intent.getStringExtra("EXTRA_DURATION")
         album_name.text = intent.getStringExtra("EXTRA_COLLECTION").toString()
         album_name.isSelected = true
@@ -88,7 +94,8 @@ class PlayActivity : AppCompatActivity() {
         country_track.text = intent.getStringExtra("EXTRA_COUNTRY").toString()
         url = intent.getStringExtra("EXTRA_PLAY").toString()
     }
-    fun getCoverArtwork(): String = uri_img.replaceAfterLast('/',"512x512bb.jpg")
+
+    fun getCoverArtwork(): String = uri_img.replaceAfterLast('/', "512x512bb.jpg")
     private fun preparePlayer() {
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
@@ -103,18 +110,21 @@ class PlayActivity : AppCompatActivity() {
             time_play.text = "00:00"
         }
     }
+
     private fun playbackControl() {
-        when(playerState) {
+        when (playerState) {
             STATE_PLAYING -> {
                 pausePlayer()
                 handlerPlay.removeCallbacks(timeSoundRunnable)
             }
+
             STATE_PREPARED, STATE_PAUSED -> {
                 startPlayer()
                 handlerPlay.post(timeSoundRunnable)
             }
         }
     }
+
     private fun startPlayer() {
         mediaPlayer.start()
         play.setImageResource(R.drawable.stop_button)
@@ -128,8 +138,11 @@ class PlayActivity : AppCompatActivity() {
         handlerPlay.removeCallbacks(timeSoundRunnable)
     }
 
-    private fun handlerTimePlay(){
-        time_play.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition + TIMER_PLAY)
+    private fun handlerTimePlay() {
+        time_play.text = SimpleDateFormat(
+            "mm:ss",
+            Locale.getDefault()
+        ).format(mediaPlayer.currentPosition + TIMER_PLAY)
         handlerPlay.postDelayed(timeSoundRunnable, TIMER_PLAY)
 
     }
