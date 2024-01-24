@@ -14,6 +14,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+
 class PlayActivity : AppCompatActivity() {
     companion object {
         private const val STATE_DEFAULT = 0
