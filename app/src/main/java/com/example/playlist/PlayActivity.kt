@@ -21,12 +21,11 @@ class PlayActivity : AppCompatActivity() {
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
-        private const val TIMER_PLAY = 300L
+        private const val TIMER_PLAY = 500L
     }
 
     private var playerState = STATE_DEFAULT
     lateinit var cover_artwork: ImageView
-    lateinit var uri_img: String
     lateinit var track_name: TextView
     lateinit var author_track: TextView
     lateinit var time_play: TextView
@@ -35,11 +34,13 @@ class PlayActivity : AppCompatActivity() {
     lateinit var year_track: TextView
     lateinit var genre_track: TextView
     lateinit var country_track: TextView
-    lateinit var url: String
+    private var url: String? = null
+    private var uri_img: String? = null
     lateinit var play: ImageView
     private val handlerPlay = Handler(Looper.getMainLooper())
     private var timeSoundRunnable = Runnable { handlerTimePlay() }
     private var mediaPlayer = MediaPlayer()
+    private val timeFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
@@ -54,29 +55,17 @@ class PlayActivity : AppCompatActivity() {
         genre_track = findViewById(R.id.genre_txt)
         country_track = findViewById(R.id.country_txt)
         play = findViewById(R.id.play_img)
+        time_play.text = timeFormat.format(0)
 
         back.setOnClickListener {
             finish()
         }
-
-
         getIntentSearchActivity()
-
-        uri_img = intent.getStringExtra("EXTRA_IMAGE").toString()
-        Glide.with(this)
-            .load(getCoverArtwork())
-            .transform(
-                CenterCrop(),
-                RoundedCorners(applicationContext.resources.getDimensionPixelSize(R.dimen.size_8dp))
-            )
-            .placeholder(R.drawable.img_track_default)
-            .into(cover_artwork)
-
+        getCoverArtwork()
         preparePlayer()
         play.setOnClickListener {
             playbackControl()
         }
-        time_play.text = "00:00"
     }
 
     fun getIntentSearchActivity() {
@@ -93,9 +82,19 @@ class PlayActivity : AppCompatActivity() {
         genre_track.text = intent.getStringExtra("EXTRA_GENRE").toString()
         country_track.text = intent.getStringExtra("EXTRA_COUNTRY").toString()
         url = intent.getStringExtra("EXTRA_PLAY").toString()
+        uri_img = intent.getStringExtra("EXTRA_IMAGE").toString()
     }
 
-    fun getCoverArtwork(): String = uri_img.replaceAfterLast('/', "512x512bb.jpg")
+    fun getCoverArtwork(){
+        Glide.with(this)
+            .load(uri_img?.replaceAfterLast('/', "512x512bb.jpg"))
+            .transform(
+                CenterCrop(),
+                RoundedCorners(applicationContext.resources.getDimensionPixelSize(R.dimen.size_8dp))
+            )
+            .placeholder(R.drawable.img_track_default)
+            .into(cover_artwork)
+    }
     private fun preparePlayer() {
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
@@ -107,7 +106,9 @@ class PlayActivity : AppCompatActivity() {
             play.setImageResource(R.drawable.play_button)
             playerState = STATE_PREPARED
             handlerPlay.removeCallbacks(timeSoundRunnable)
-            time_play.text = "00:00"
+            time_play.text = timeFormat.format(0)
+
+
         }
     }
 
@@ -135,17 +136,14 @@ class PlayActivity : AppCompatActivity() {
         mediaPlayer.pause()
         play.setImageResource(R.drawable.play_button)
         playerState = STATE_PAUSED
-        handlerPlay.removeCallbacks(timeSoundRunnable)
     }
 
     private fun handlerTimePlay() {
-        time_play.text = SimpleDateFormat(
-            "mm:ss",
-            Locale.getDefault()
-        ).format(mediaPlayer.currentPosition + TIMER_PLAY)
+        time_play.text = timeFormat.format(mediaPlayer.currentPosition + TIMER_PLAY)
         handlerPlay.postDelayed(timeSoundRunnable, TIMER_PLAY)
 
     }
+
 
     override fun onPause() {
         super.onPause()

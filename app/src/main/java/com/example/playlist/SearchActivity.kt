@@ -51,7 +51,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var txtError: TextView
     private lateinit var txtErrorIthernet: TextView
     private lateinit var btnUpdate: Button
-    private lateinit var historyGroup: LinearLayout
     private lateinit var recyclerViewHistory: RecyclerView
     private lateinit var searchHistory: SearchHistory
     private lateinit var txtHistory: TextView
@@ -178,8 +177,6 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
-
-        onStop()
 
     }
     fun searchRequest(){
