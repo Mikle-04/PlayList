@@ -1,6 +1,5 @@
-package com.example.playlist
+package com.example.playlist.ui
 
-import android.media.Image
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +10,7 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlist.R
 import java.text.SimpleDateFormat
 import java.util.Locale
 

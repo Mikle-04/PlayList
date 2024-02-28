@@ -1,9 +1,11 @@
-package com.example.playlist
+package com.example.playlist.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.example.playlist.R
+import com.example.playlist.ui.searchActivity.SearchActivity
 
 
 class MainActivity : AppCompatActivity() {

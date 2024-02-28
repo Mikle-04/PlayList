@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:theme="@style/Base.Theme.PlayList"
     android:background="?attr/colorPrimaryVariant"
-    tools:context=".SearchActivity">
+    tools:context=".ui.searchActivity.SearchActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

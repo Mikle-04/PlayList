@@ -1,29 +1,30 @@
-package com.example.playlist
+package com.example.playlist.ui.searchActivity
 
 import android.content.Context
 import android.content.Intent
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlist.Creator
+import com.example.playlist.R
+import com.example.playlist.domain.models.Track
+import com.example.playlist.data.network.TrackApi
+import com.example.playlist.data.dto.TrackResponse
+import com.example.playlist.ui.PlayActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -52,7 +53,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var txtErrorIthernet: TextView
     private lateinit var btnUpdate: Button
     private lateinit var recyclerViewHistory: RecyclerView
-    private lateinit var searchHistory: SearchHistory
     private lateinit var txtHistory: TextView
     private lateinit var btnHistory: Button
     private lateinit var layoutHistory: LinearLayout
@@ -62,6 +62,7 @@ class SearchActivity : AppCompatActivity() {
     lateinit var editTextSearch: EditText
     private var isClickAllowed = true
     lateinit var handler: Handler
+    private val max = 10
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +72,6 @@ class SearchActivity : AppCompatActivity() {
         val imgBack = findViewById<ImageView>(R.id.img_back_search)
         val imgClearSearch = findViewById<ImageView>(R.id.img_clear_search)
         recyclerTrack = findViewById<RecyclerView>(R.id.recyclerViewTrack)
-        searchHistory = SearchHistory(this)
         imgEmpty = findViewById<ImageView>(R.id.imageViewEmpty)
         txtEmpty = findViewById<TextView>(R.id.txtEmpty)
         txtError = findViewById(R.id.txtError)
@@ -84,8 +84,9 @@ class SearchActivity : AppCompatActivity() {
         layoutHistory = findViewById(R.id.layoutHistory)
         layoutProgressBar = findViewById(R.id.progressBarSearch)
         handler = Handler(Looper.getMainLooper())
+        Creator.setContext(this)
 
-        tracksHistory = searchHistory.getSearchHistory().toMutableList()
+        tracksHistory = Creator.provideSearchHistoryRepository().getSearchHistory().toMutableList()
 
         if (savedInstanceState != null) editTextSearch.setText(
             savedInstanceState.getString(
@@ -97,7 +98,7 @@ class SearchActivity : AppCompatActivity() {
             onBackPressed()
         }
         btnHistory.setOnClickListener {
-            searchHistory.clearHistory(tracksHistory)
+            Creator.provideSearchHistoryRepository().clearHistory(tracksHistory)
             adapterHistory.notifyDataSetChanged()
             layoutHistory.visibility = View.GONE
         }
@@ -151,7 +152,7 @@ class SearchActivity : AppCompatActivity() {
 
         adapter.onItemClick = {track ->
             if (clickDebounce()){
-                searchHistory.addTrack(adapterHistory, track)
+                addTrack(adapterHistory, track)
 
                 callPlayActivity(track)
             }
@@ -183,6 +184,7 @@ class SearchActivity : AppCompatActivity() {
         if (editTextSearch.text.isNotEmpty()) {
             layoutProgressBar.visibility = View.VISIBLE
             recyclerTrack.visibility = View.GONE
+
             trackApiService.search(editTextSearch.text.toString())
                 .enqueue(object : Callback<TrackResponse> {
                     override fun onResponse(
@@ -195,7 +197,7 @@ class SearchActivity : AppCompatActivity() {
                             tracks.clear()
                             if (response.body()?.results?.isNotEmpty() == true) {
                                 hideError()
-                                tracks.addAll(response.body()?.results!!)
+                               tracks.addAll(response.body()?.results!!)
                                 adapter.notifyDataSetChanged()
                             }
                             if (response.body()?.results?.isNotEmpty() == false) {
@@ -218,7 +220,7 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        searchHistory.saveHistory(tracksHistory)
+        Creator.provideSearchHistoryRepository().saveHistory(tracksHistory)
         handler.removeCallbacks(searchRunable)
     }
 
@@ -294,6 +296,19 @@ class SearchActivity : AppCompatActivity() {
     private fun searchDebounce(){
         handler.removeCallbacks(searchRunable)
         handler.postDelayed(searchRunable, SEARCH_DEBOUNCE_DELAY)
+    }
+    fun addTrack(adapter: AdapterTrack, track: Track){
+        if (adapter.trackList.contains(track)){
+            adapter.trackList.removeAt(adapter.trackList.indexOf(track))
+            adapter.notifyItemRemoved(adapter.trackList.indexOf(track))
+            adapter.notifyItemRangeChanged(adapter.trackList.indexOf(track), adapter.trackList.size - 1)
+        }
+        adapter.trackList.add(0, track)
+        adapter.notifyItemInserted(0)
+        if(adapter.trackList.size == max + 1){
+            adapter.trackList.remove(adapter.trackList[max])
+            adapter.notifyItemRemoved(10)
+        }
     }
 
     companion object {

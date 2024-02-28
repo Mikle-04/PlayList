@@ -1,14 +1,15 @@
-package com.example.playlist
+package com.example.playlist.ui.searchActivity
 
 
 import android.view.View
-import android.widget.AdapterView.OnItemClickListener
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlist.R
+import com.example.playlist.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 

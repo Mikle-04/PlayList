@@ -5,21 +5,18 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
 
-const val KEY_SP = "Shared_Preferences_Key"
-const val KEY_SWITCH = "Switch_Boolean"
-
 class App : Application() {
     var darkTheme = false
-    var sharedPref: SharedPreferences? = null
+
     override fun onCreate() {
         super.onCreate()
-        sharedPref = getSharedPreferences(KEY_SP, MODE_PRIVATE)
+        Creator.setContext(this)
         checkTheme()
         switchTheme(darkTheme)
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
-        sharedPref?.edit()?.putBoolean(KEY_SWITCH, darkThemeEnabled)?.apply()
+        Creator.provideThemeRepository().saveTheme(darkThemeEnabled)
         AppCompatDelegate.setDefaultNightMode(
             if (darkThemeEnabled) {
                 AppCompatDelegate.MODE_NIGHT_YES
@@ -30,8 +27,9 @@ class App : Application() {
     }
 
     fun checkTheme() {
+
         val themeNigthDefault =
             resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-        darkTheme = sharedPref?.getBoolean(KEY_SWITCH, themeNigthDefault) ?: false
+        darkTheme = Creator.provideThemeRepository().checkTheme(themeNigthDefault)
     }
 }
