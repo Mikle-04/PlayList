@@ -1,12 +1,11 @@
 package com.example.playlist.data.impl
 
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import com.example.playlist.domain.api.SearchHistoryRepository
 import com.example.playlist.domain.models.Track
 import com.google.gson.Gson
 
-class SearchHistoryImpl(private val sharedPreferences: SharedPreferences):SearchHistoryRepository {
+class SearchHistoryImpl(private val sharedPreferences: SharedPreferences): SearchHistoryRepository {
     private val SEARCH_HISTORY_TRACK = "SearchHistoryTrack"
 
     override fun saveHistory(tracks: List<Track>){

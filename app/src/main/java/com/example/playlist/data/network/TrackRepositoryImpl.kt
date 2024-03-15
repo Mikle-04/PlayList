@@ -7,9 +7,11 @@ import com.example.playlist.domain.api.TrackRepository
 import com.example.playlist.domain.models.Track
 
 class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepository {
-    override fun searchTrack(expression: String): List<Track> {
+    override fun searchTrack(expression: String): List<Track>? {
         val response = networkClient.doRequest(TrackRequest(expression))
-        if (response.resultCode == 200) {
+        if (response.resultCode != 200){
+            return null
+        }else if (response.resultCode == 200) {
             return (response as TrackResponse).results.map {
                 Track(
                     it.trackId,
@@ -25,7 +27,7 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
                 )
             }
         }else{
-          return emptyList()
+            return emptyList()
         }
     }
 }

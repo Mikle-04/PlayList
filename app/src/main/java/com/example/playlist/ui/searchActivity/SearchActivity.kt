@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -23,29 +24,18 @@ import com.example.playlist.Creator
 import com.example.playlist.R
 import com.example.playlist.domain.models.Track
 import com.example.playlist.data.network.TrackApi
-import com.example.playlist.data.dto.TrackResponse
+import com.example.playlist.domain.api.TrackInteractor
 import com.example.playlist.ui.PlayActivity
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
 class SearchActivity : AppCompatActivity() {
-    private var saveText: String = ""
-    private val baseUrls = "https://itunes.apple.com"
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(baseUrls)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val trackApiService = retrofit.create(TrackApi::class.java)
     private val tracks = mutableListOf<Track>()
     private var tracksHistory = mutableListOf<Track>()
-    private lateinit var adapter: AdapterTrack
-    private lateinit var adapterHistory: AdapterTrack
+    private val adapter = AdapterTrack(tracks)
+    private val adapterHistory = AdapterTrack(tracksHistory)
     private lateinit var imgEmpty: ImageView
     private lateinit var txtEmpty: TextView
     private lateinit var imgError: ImageView
@@ -57,7 +47,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var btnHistory: Button
     private lateinit var layoutHistory: LinearLayout
     private lateinit var layoutProgressBar: ProgressBar
-    private lateinit var recyclerTrack:RecyclerView
+    private lateinit var recyclerTrack: RecyclerView
     private val searchRunable = Runnable { searchRequest() }
     lateinit var editTextSearch: EditText
     private var isClickAllowed = true
@@ -88,15 +78,13 @@ class SearchActivity : AppCompatActivity() {
 
         tracksHistory = Creator.provideSearchHistoryRepository().getSearchHistory().toMutableList()
 
-        if (savedInstanceState != null) editTextSearch.setText(
-            savedInstanceState.getString(
-                keySearch,
-                ""
-            )
-        )
+
+
         imgBack.setOnClickListener {
             onBackPressed()
         }
+
+
         btnHistory.setOnClickListener {
             Creator.provideSearchHistoryRepository().clearHistory(tracksHistory)
             adapterHistory.notifyDataSetChanged()
@@ -115,11 +103,8 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (!p0.isNullOrEmpty()) {
                     imgClearSearch.visibility = showClearIcon(p0)
-                    layoutHistory.visibility =
-                        if (editTextSearch.hasFocus() && p0?.isEmpty() == true && tracksHistory.isNotEmpty()) View.VISIBLE else View.GONE
                     searchDebounce()
-                }
-                else {
+                } else {
                     imgClearSearch.visibility = showClearIcon(p0)
                     layoutHistory.visibility =
                         if (editTextSearch.hasFocus() && p0?.isEmpty() == true && tracksHistory.isNotEmpty()) View.VISIBLE else View.GONE
@@ -127,7 +112,6 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                saveText = p0.toString()
             }
 
         }
@@ -143,23 +127,22 @@ class SearchActivity : AppCompatActivity() {
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(editTextSearch.windowToken, 0)
         }
-        adapter = AdapterTrack(tracks)
         recyclerTrack.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerTrack.adapter = adapter
-        recyclerViewHistory.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        adapterHistory = AdapterTrack(tracksHistory)
-        recyclerViewHistory.adapter = adapterHistory
+        recyclerTrack.adapter = AdapterTrack(tracks)
+        recyclerViewHistory.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recyclerViewHistory.adapter = AdapterTrack(tracksHistory)
 
-        adapter.onItemClick = {track ->
-            if (clickDebounce()){
+        adapter.onItemClick = { track ->
+            if (clickDebounce()) {
                 addTrack(adapterHistory, track)
 
                 callPlayActivity(track)
             }
 
         }
-        adapterHistory.onItemClick = {track ->
-            if (clickDebounce()){
+        adapterHistory.onItemClick = { track ->
+            if (clickDebounce()) {
                 callPlayActivity(track)
             }
 
@@ -180,43 +163,39 @@ class SearchActivity : AppCompatActivity() {
         }
 
     }
-    fun searchRequest(){
+
+    fun searchRequest() {
         if (editTextSearch.text.isNotEmpty()) {
+            handler.removeCallbacksAndMessages(RunnableTag)
+            hideError()
             layoutProgressBar.visibility = View.VISIBLE
-            recyclerTrack.visibility = View.GONE
-
-            trackApiService.search(editTextSearch.text.toString())
-                .enqueue(object : Callback<TrackResponse> {
-                    override fun onResponse(
-                        call: Call<TrackResponse>,
-                        response: Response<TrackResponse>
-                    ) {
-                        layoutProgressBar.visibility = View.GONE
-                        recyclerTrack.visibility = View.VISIBLE
-                        if (response.code() == 200) {
-                            tracks.clear()
-                            if (response.body()?.results?.isNotEmpty() == true) {
-                                hideError()
-                               tracks.addAll(response.body()?.results!!)
-                                adapter.notifyDataSetChanged()
+            Creator.provideTrackInteractor().searchTrack(
+                editTextSearch.text.toString(),
+                object : TrackInteractor.TrackConsumer {
+                    override fun consume(foundMovies: List<Track>?) {
+                        if (foundMovies == null) {
+                            handler.post { showError() }
+                        } else {
+                            if (foundMovies.isEmpty()) {
+                                handler.post { showMessage() }
+                            } else {
+                                handler.post { render(foundMovies) }
                             }
-                            if (response.body()?.results?.isNotEmpty() == false) {
-                                showMessage()
-                            }
-                        } else if (response.code() != 200) {
-                            showError()
                         }
-
-                    }
-
-                    override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                        layoutProgressBar.visibility = View.GONE
-                        showError()
                     }
 
                 })
         }
     }
+
+    private fun render(foundMovies: List<Track>) {
+        tracks.clear()
+        tracks.addAll(foundMovies)
+        adapter.notifyDataSetChanged()
+        layoutProgressBar.visibility = View.GONE
+        recyclerTrack.visibility = View.VISIBLE
+    }
+
 
     override fun onStop() {
         super.onStop()
@@ -225,25 +204,25 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showMessage() {
+        layoutProgressBar.visibility = View.GONE
         imgEmpty.visibility = View.VISIBLE
         txtEmpty.visibility = View.VISIBLE
         txtError.visibility = View.GONE
         txtErrorIthernet.visibility = View.GONE
         imgError.visibility = View.GONE
         btnUpdate.visibility = View.GONE
-        tracks.clear()
-        adapter.notifyDataSetChanged()
+        recyclerTrack.visibility = View.GONE
     }
 
     private fun showError() {
+        layoutProgressBar.visibility = View.GONE
+        recyclerTrack.visibility = View.GONE
         imgEmpty.visibility = View.GONE
         txtEmpty.visibility = View.GONE
         txtError.visibility = View.VISIBLE
         txtErrorIthernet.visibility = View.VISIBLE
         imgError.visibility = View.VISIBLE
         btnUpdate.visibility = View.VISIBLE
-        tracks.clear()
-        adapter.notifyDataSetChanged()
     }
 
     private fun hideError() {
@@ -253,11 +232,6 @@ class SearchActivity : AppCompatActivity() {
         btnUpdate.visibility = View.GONE
         imgEmpty.visibility = View.GONE
         txtEmpty.visibility = View.GONE
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(keySearch, saveText)
     }
 
     private fun showClearIcon(s: CharSequence?): Int {
@@ -285,36 +259,41 @@ class SearchActivity : AppCompatActivity() {
 
         }
     }
-    private fun clickDebounce():Boolean{
+
+    private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({isClickAllowed = true}, CLICK_DEBOUNCE_DELAY)
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
         return current
     }
-    private fun searchDebounce(){
-        handler.removeCallbacks(searchRunable)
-        handler.postDelayed(searchRunable, SEARCH_DEBOUNCE_DELAY)
+
+    private fun searchDebounce() {
+        handler.removeCallbacksAndMessages(RunnableTag)
+        handler.postDelayed(searchRunable, RunnableTag, SEARCH_DEBOUNCE_DELAY)
     }
-    fun addTrack(adapter: AdapterTrack, track: Track){
-        if (adapter.trackList.contains(track)){
+
+    fun addTrack(adapter: AdapterTrack, track: Track) {
+        if (adapter.trackList.contains(track)) {
             adapter.trackList.removeAt(adapter.trackList.indexOf(track))
             adapter.notifyItemRemoved(adapter.trackList.indexOf(track))
-            adapter.notifyItemRangeChanged(adapter.trackList.indexOf(track), adapter.trackList.size - 1)
+            adapter.notifyItemRangeChanged(
+                adapter.trackList.indexOf(track),
+                adapter.trackList.size - 1
+            )
         }
         adapter.trackList.add(0, track)
         adapter.notifyItemInserted(0)
-        if(adapter.trackList.size == max + 1){
+        if (adapter.trackList.size == max + 1) {
             adapter.trackList.remove(adapter.trackList[max])
             adapter.notifyItemRemoved(10)
         }
     }
 
     companion object {
-        private const val keySearch = "TEXT_SEARCH"
+        private const val RunnableTag = "SEARCH"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
-
 }

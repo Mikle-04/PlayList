@@ -1,5 +1,6 @@
 package com.example.playlist.data.network
 
+import android.util.Log
 import com.example.playlist.data.NetworkClient
 import com.example.playlist.data.dto.Response
 import com.example.playlist.data.dto.TrackRequest
@@ -15,13 +16,16 @@ class RetrofitNetworkClient: NetworkClient {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val trackService = retrofit.create(TrackApi::class.java)
-    override fun doRequest(dto: Any): Response {
-        if (dto is TrackRequest){
-            val resp = trackService.search(dto.expression).execute()
+    override fun doRequest(request: TrackRequest): Response {
+        return try {
+            val resp = trackService.search(request.expression).execute()
             val body = resp.body() ?: Response()
-            return body.apply { resultCode = resp.code() }
-        }else{
-            return  Response().apply { resultCode = 400 }
+            body.apply { resultCode = resp.code() }
+        }catch (e:Exception){
+            Response().apply { resultCode = 400 }
         }
+
+
+
     }
 }

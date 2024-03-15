@@ -1,6 +1,7 @@
 package com.example.playlist
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.playlist.data.impl.SearchHistoryImpl
@@ -12,11 +13,17 @@ import com.example.playlist.domain.api.ThemeRepository
 import com.example.playlist.domain.api.TrackInteractor
 import com.example.playlist.domain.api.TrackRepository
 import com.example.playlist.domain.impl.TrackInteractorImpl
+import com.example.playlist.presentation.TrackSearchController
+import com.example.playlist.ui.searchActivity.AdapterTrack
 
 @SuppressLint("StaticFieldLeak")
 object Creator {
     const val KEY_SP = "Shared_Preferences_Key"
     private lateinit var contextApp : Context
+
+    fun provideTrackSearchController(activity: Activity, adapterTrack: AdapterTrack):TrackSearchController{
+        return TrackSearchController(activity, adapterTrack)
+    }
     fun provideSearchHistoryRepository():SearchHistoryRepository{
         return SearchHistoryImpl(getSharedPref())
     }
@@ -35,7 +42,7 @@ object Creator {
         return TrackRepositoryImpl(RetrofitNetworkClient())
     }
 
-    fun provideMoviesInteractor(): TrackInteractor {
+    fun provideTrackInteractor(): TrackInteractor {
         return TrackInteractorImpl(getTrackRepository())
     }
 
