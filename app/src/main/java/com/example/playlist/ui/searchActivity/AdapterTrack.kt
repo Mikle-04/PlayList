@@ -1,13 +1,10 @@
-package com.example.playlist
+package com.example.playlist.ui.searchActivity
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
+import com.example.playlist.R
+import com.example.playlist.domain.models.Track
 
 class AdapterTrack(var trackList: MutableList<Track>) : RecyclerView.Adapter<TrackViewHolder>() {
     var onItemClick : ((Track) -> Unit)? = null
