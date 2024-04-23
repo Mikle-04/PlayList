@@ -1,4 +1,4 @@
-package com.example.playlist
+package com.example.playlist.util
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -13,16 +13,21 @@ import com.example.playlist.domain.api.ThemeRepository
 import com.example.playlist.domain.api.TrackInteractor
 import com.example.playlist.domain.api.TrackRepository
 import com.example.playlist.domain.impl.TrackInteractorImpl
-import com.example.playlist.presentation.TrackSearchController
-import com.example.playlist.ui.searchActivity.AdapterTrack
+import com.example.playlist.presentation.play.PlayTrackPresenter
+import com.example.playlist.presentation.tracks.TrackSearchPresenter
+import com.example.playlist.presentation.tracks.TrackView
 
 @SuppressLint("StaticFieldLeak")
 object Creator {
     const val KEY_SP = "Shared_Preferences_Key"
     private lateinit var contextApp : Context
 
-    fun provideTrackSearchController(activity: Activity, adapterTrack: AdapterTrack):TrackSearchController{
-        return TrackSearchController(activity, adapterTrack)
+    fun providePlayController(activity: Activity): PlayTrackPresenter {
+        return PlayTrackPresenter(activity)
+    }
+
+    fun provideTrackSearchPresenter(context: Context): TrackSearchPresenter {
+        return TrackSearchPresenter(context)
     }
     fun provideSearchHistoryRepository():SearchHistoryRepository{
         return SearchHistoryImpl(getSharedPref())
@@ -33,17 +38,17 @@ object Creator {
     }
 
     fun setContext(context: Context)      {
-        this.contextApp = context
+        contextApp = context
     }
     private fun getSharedPref(): SharedPreferences{
       return contextApp.getSharedPreferences(KEY_SP, Context.MODE_PRIVATE)
     }
-    private fun getTrackRepository(): TrackRepository {
-        return TrackRepositoryImpl(RetrofitNetworkClient())
+    private fun getTrackRepository(context: Context): TrackRepository {
+        return TrackRepositoryImpl(RetrofitNetworkClient(context))
     }
 
-    fun provideTrackInteractor(): TrackInteractor {
-        return TrackInteractorImpl(getTrackRepository())
+    fun provideTrackInteractor(context: Context): TrackInteractor {
+        return TrackInteractorImpl(getTrackRepository(context))
     }
 
 }

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.playlist">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -17,10 +18,11 @@
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
         tools:targetApi="31">
         <activity
-            android:name=".ui.PlayActivity"
+            android:name=".ui.playActivity.PlayActivity"
             android:exported="false" />
         <activity
             android:name=".ui.searchActivity.SearchActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/Base.Theme.PlayList" />
         <activity
@@ -33,7 +35,6 @@
             android:theme="@style/Base.Theme.PlayList">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -1,11 +1,13 @@
 package com.example.playlist
 
 import android.app.Application
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlist.presentation.tracks.TrackSearchPresenter
+import com.example.playlist.util.Creator
 
 class App : Application() {
+    var trackSearchPresenter: TrackSearchPresenter? = null
     var darkTheme = false
 
     override fun onCreate() {
@@ -27,7 +29,6 @@ class App : Application() {
     }
 
     fun checkTheme() {
-
         val themeNigthDefault =
             resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
         darkTheme = Creator.provideThemeRepository().checkTheme(themeNigthDefault)
