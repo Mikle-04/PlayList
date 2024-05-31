@@ -1,6 +1,6 @@
 package com.example.playlist.ui.searchActivity.models
 
-import com.example.playlist.domain.models.Track
+import com.example.playlist.domain.search.models.Track
 
 sealed interface TrackState{
 

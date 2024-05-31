@@ -1,7 +1,6 @@
 package com.example.playlist.ui.searchActivity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,20 +15,19 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.ComponentActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlist.util.Creator
+import com.example.playlist.creator.Creator
 import com.example.playlist.R
-import com.example.playlist.domain.models.Track
-import com.example.playlist.presentation.tracks.TrackSearchPresenter
-import com.example.playlist.presentation.tracks.TrackView
+import com.example.playlist.domain.search.models.Track
+import com.example.playlist.ui.searchActivity.viewModel.TrackSearchViewModel
 import com.example.playlist.ui.playActivity.PlayActivity
 import com.example.playlist.ui.searchActivity.models.TrackState
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
 
 
-class SearchActivity : AppCompatActivity(), TrackView {
+class SearchActivity : ComponentActivity() {
     private var tracksHistory = mutableListOf<Track>()
     private var tracks = mutableListOf<Track>()
     private val adapter = AdapterTrack(tracks)
@@ -53,19 +51,17 @@ class SearchActivity : AppCompatActivity(), TrackView {
     private val max = 10
     private var textWatcher: TextWatcher? = null
 
-    //create presenter MVP
-    @InjectPresenter
-    lateinit var trackSearchPresenter: TrackSearchPresenter
 
-    @ProvidePresenter
-    fun providePresenter(): TrackSearchPresenter{
-        return Creator.provideTrackSearchPresenter(context = this.applicationContext)
-    }
+    private lateinit var viewModel: TrackSearchViewModel
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
+        viewModel = ViewModelProvider(this, TrackSearchViewModel.getModelFactory())[TrackSearchViewModel::class.java]
+
         editTextSearch = findViewById(R.id.edit_text_search)
         imgClearSearch = findViewById(R.id.img_clear_search)
         recyclerTrack = findViewById(R.id.recyclerViewTrack)
@@ -109,7 +105,7 @@ class SearchActivity : AppCompatActivity(), TrackView {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!s.isNullOrEmpty()) {
                     imgClearSearch.visibility = showClearIcon(s)
-                    trackSearchPresenter.searchDebounce(
+                    viewModel.searchDebounce(
                         changedText = s.toString()
                     )
                 } else {
@@ -124,11 +120,15 @@ class SearchActivity : AppCompatActivity(), TrackView {
         }
         textWatcher?.let { editTextSearch.addTextChangedListener(it) }
 
+        viewModel.observeState().observe(this){
+            render(it)
+        }
+
 
         // start search click keypad "enter"
         editTextSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                trackSearchPresenter.searchRequest(editTextSearch.text.toString())
+                viewModel.searchRequest(editTextSearch.text.toString())
                 true
             }
             false
@@ -151,7 +151,7 @@ class SearchActivity : AppCompatActivity(), TrackView {
         }
         //update search
         btnUpdate.setOnClickListener {
-            trackSearchPresenter.searchRequest(editTextSearch.text.toString())
+            viewModel.searchRequest(editTextSearch.text.toString())
         }
 
 
@@ -159,13 +159,13 @@ class SearchActivity : AppCompatActivity(), TrackView {
             if (clickDebounce()) {
                 addTrack(adapterHistory, track)
 
-                callPlayActivity(track)
+                putPlayActivity(track)
             }
 
         }
         adapterHistory.onItemClick = { track ->
             if (clickDebounce()) {
-                callPlayActivity(track)
+                putPlayActivity(track)
             }
 
         }
@@ -205,7 +205,6 @@ class SearchActivity : AppCompatActivity(), TrackView {
     override fun onStop() {
         super.onStop()
         Creator.provideSearchHistoryRepository().saveHistory(tracksHistory)
-        trackSearchPresenter.onStop()
     }
 
     override fun onDestroy() {
@@ -214,7 +213,7 @@ class SearchActivity : AppCompatActivity(), TrackView {
 
     }
 
-    private fun callPlayActivity(track: Track) {
+    private fun putPlayActivity(track: Track) {
         Intent(this, PlayActivity::class.java).also {
             it.putExtra("EXTRA_NAME", track.trackName)
             it.putExtra("EXTRA_AUTHOR", track.artistName)
@@ -309,7 +308,7 @@ class SearchActivity : AppCompatActivity(), TrackView {
 
     }
 
-    override fun render(state: TrackState) {
+    private fun render(state: TrackState) {
         when(state){
             is TrackState.Loading -> showLoading()
             is TrackState.Content -> showContent(state.track)
