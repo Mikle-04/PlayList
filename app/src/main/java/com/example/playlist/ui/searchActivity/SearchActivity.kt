@@ -1,5 +1,6 @@
 package com.example.playlist.ui.searchActivity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -16,6 +17,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +29,8 @@ import com.example.playlist.ui.playActivity.PlayActivity
 import com.example.playlist.ui.searchActivity.models.TrackState
 
 
-class SearchActivity : ComponentActivity() {
+@SuppressLint("RestrictedApi")
+class SearchActivity : AppCompatActivity() {
     private var tracksHistory = mutableListOf<Track>()
     private var tracks = mutableListOf<Track>()
     private val adapter = AdapterTrack(tracks)

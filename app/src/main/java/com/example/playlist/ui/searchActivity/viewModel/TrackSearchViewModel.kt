@@ -7,17 +7,15 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlist.creator.Creator
 import com.example.playlist.domain.search.api.TrackInteractor
-import com.example.playlist.domain.search.api.TrackPutInteractor
 import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.searchActivity.models.TrackState
 
 
-class TrackSearchViewModel(application: Application, val trackPutInteractor: TrackPutInteractor) : AndroidViewModel(application) {
+class TrackSearchViewModel(application: Application) : AndroidViewModel(application) {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
@@ -27,7 +25,6 @@ class TrackSearchViewModel(application: Application, val trackPutInteractor: Tra
             initializer {
                 TrackSearchViewModel(
                     application = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application,
-                    trackPutInteractor = Creator.providePutTrackInteractor()
                 )
             }
         }
@@ -109,9 +106,6 @@ class TrackSearchViewModel(application: Application, val trackPutInteractor: Tra
         }
     }
 
-    fun putTrackPlay(track: Track){
-        trackPutInteractor.putTrackPlay(track)
-    }
 
     override fun onCleared() {
         handler.removeCallbacks(searchRunable)

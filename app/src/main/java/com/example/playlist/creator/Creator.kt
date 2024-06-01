@@ -7,7 +7,6 @@ import com.example.playlist.data.player.impl.PlayerRepositoryImpl
 import com.example.playlist.data.search.impl.SearchHistoryImpl
 import com.example.playlist.data.settings.impl.ThemeRepositoryImpl
 import com.example.playlist.data.search.network.RetrofitNetworkClient
-import com.example.playlist.data.search.network.TrackPutRepositoryImpl
 import com.example.playlist.data.search.network.TrackRepositoryImpl
 import com.example.playlist.data.sharing.impl.ExternalNavigator
 import com.example.playlist.data.sharing.impl.SharingRepositoryImpl
@@ -15,7 +14,6 @@ import com.example.playlist.domain.player.PlayerReposiroty
 import com.example.playlist.domain.search.api.SearchHistoryRepository
 import com.example.playlist.domain.settings.api.ThemeRepository
 import com.example.playlist.domain.search.api.TrackInteractor
-import com.example.playlist.domain.search.api.TrackPutInteractor
 import com.example.playlist.domain.search.api.TrackPutRepository
 import com.example.playlist.domain.search.api.TrackRepository
 import com.example.playlist.domain.search.impl.TrackInteractorImpl
@@ -32,14 +30,6 @@ object Creator {
     }
     private fun getSharedPref(): SharedPreferences{
         return contextApp.getSharedPreferences(KEY_SP, Context.MODE_PRIVATE)
-    }
-
-    fun providePutTrackInteractor(): TrackPutInteractor{
-        return TrackPutInteractor(providePutTrackRepository())
-    }
-
-    fun providePutTrackRepository(): TrackPutRepository{
-        return TrackPutRepositoryImpl(contextApp)
     }
 
     fun provideSharingInteractor(): SharingInteractor{
