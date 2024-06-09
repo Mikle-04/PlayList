@@ -26,11 +26,18 @@ import com.example.playlist.R
 import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.searchActivity.viewModel.TrackSearchViewModel
 import com.example.playlist.ui.playActivity.PlayActivity
+import com.example.playlist.ui.searchActivity.models.TrackInfo
 import com.example.playlist.ui.searchActivity.models.TrackState
 
 
 @SuppressLint("RestrictedApi")
 class SearchActivity : AppCompatActivity() {
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        const val TRACK_INFO = "TRACK_INFO"
+    }
+
     private var tracksHistory = mutableListOf<Track>()
     private var tracks = mutableListOf<Track>()
     private val adapter = AdapterTrack(tracks)
@@ -53,6 +60,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var handler: Handler
     private val max = 10
     private var textWatcher: TextWatcher? = null
+    private lateinit var trackInfo: TrackInfo
 
 
     private lateinit var viewModel: TrackSearchViewModel
@@ -129,6 +137,7 @@ class SearchActivity : AppCompatActivity() {
         viewModel.observeState().observe(this) {
             render(it)
         }
+
 
 
         // img clean search
@@ -210,18 +219,19 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun putPlayActivity(track: Track) {
+        trackInfo = TrackInfo(
+            track.trackName,
+            track.artistName,
+            track.artworkUrl100,
+            track.trackTime,
+            track.collectionName,
+            track.releaseDate,
+            track.primaryGenreName,
+            track.country,
+            track.previewUrl
+        )
         Intent(this, PlayActivity::class.java).also {
-            it.putExtra("EXTRA_NAME", track.trackName)
-            it.putExtra("EXTRA_AUTHOR", track.artistName)
-            it.putExtra("EXTRA_IMAGE", track.artworkUrl100)
-            it.putExtra("EXTRA_DURATION", track.trackTime)
-            if (track.collectionName.isNotEmpty()) {
-                it.putExtra("EXTRA_COLLECTION", track.collectionName)
-            }
-            it.putExtra("EXTRA_DATE", track.releaseDate)
-            it.putExtra("EXTRA_GENRE", track.primaryGenreName)
-            it.putExtra("EXTRA_COUNTRY", track.country)
-            it.putExtra("EXTRA_PLAY", track.previewUrl)
+            it.putExtra(TRACK_INFO, trackInfo)
             startActivity(it)
 
         }
@@ -253,9 +263,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-    }
+
 
     private fun showLoading() {
         layoutProgressBar.visibility = View.VISIBLE

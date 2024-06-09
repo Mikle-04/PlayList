@@ -15,6 +15,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlist.R
 import com.example.playlist.ui.playActivity.models.PlayerState
 import com.example.playlist.ui.playActivity.viewModel.PlayTrackViewModel
+import com.example.playlist.ui.searchActivity.SearchActivity
+import com.example.playlist.ui.searchActivity.models.TrackInfo
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -79,19 +81,22 @@ class PlayActivity : AppCompatActivity() {
     }
 
     private fun getIntentSearchActivity() {
-        track_name.text = intent.getStringExtra("EXTRA_NAME").toString()
-        author_track.text = intent.getStringExtra("EXTRA_AUTHOR").toString()
-        time_track.text = SimpleDateFormat(
-            "mm:ss",
-            Locale.getDefault()
-        ).format(intent.getLongExtra("EXTRA_DURATION", 0))
-        album_name.text = intent.getStringExtra("EXTRA_COLLECTION").toString()
+
+        intent?.let {
+            val trackInfo = intent.extras?.getParcelable(SearchActivity.TRACK_INFO) as TrackInfo?
+            track_name.text = trackInfo?.trackName.toString()
+            author_track.text = trackInfo?.artistName.toString()
+            time_track.text = SimpleDateFormat("mm:ss",
+                Locale.getDefault()).format(trackInfo?.trackTime)
+            album_name.text = trackInfo?.collectionName.toString()
+            year_track.text = trackInfo?.releaseDate.toString()
+            genre_track.text = trackInfo?.primaryGenreName.toString()
+            country_track.text = trackInfo?.country.toString()
+            url = trackInfo?.previewUrl.toString()
+            uri_img = trackInfo?.artworkUrl100.toString()
+        }
+
         album_name.isSelected = true
-        year_track.text = intent.getStringExtra("EXTRA_DATE").toString().take(4)
-        genre_track.text = intent.getStringExtra("EXTRA_GENRE").toString()
-        country_track.text = intent.getStringExtra("EXTRA_COUNTRY").toString()
-        url = intent.getStringExtra("EXTRA_PLAY").toString()
-        uri_img = intent.getStringExtra("EXTRA_IMAGE").toString()
     }
 
     private fun getCoverArtwork() {
