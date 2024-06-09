@@ -89,7 +89,7 @@ class PlayActivity : AppCompatActivity() {
             time_track.text = SimpleDateFormat("mm:ss",
                 Locale.getDefault()).format(trackInfo?.trackTime)
             album_name.text = trackInfo?.collectionName.toString()
-            year_track.text = trackInfo?.releaseDate.toString()
+            year_track.text = trackInfo?.releaseDate.toString().take(4)
             genre_track.text = trackInfo?.primaryGenreName.toString()
             country_track.text = trackInfo?.country.toString()
             url = trackInfo?.previewUrl.toString()

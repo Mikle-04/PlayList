@@ -60,8 +60,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var handler: Handler
     private val max = 10
     private var textWatcher: TextWatcher? = null
-    private lateinit var trackInfo: TrackInfo
-
 
     private lateinit var viewModel: TrackSearchViewModel
 
@@ -219,7 +217,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun putPlayActivity(track: Track) {
-        trackInfo = TrackInfo(
+       val trackInfo = TrackInfo(
             track.trackName,
             track.artistName,
             track.artworkUrl100,
