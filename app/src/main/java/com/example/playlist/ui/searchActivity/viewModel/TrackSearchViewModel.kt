@@ -106,9 +106,12 @@ class TrackSearchViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
+    fun stopSearch(){
+        handler.removeCallbacks(searchRunable)
+    }
 
     override fun onCleared() {
-        handler.removeCallbacks(searchRunable)
+        stopSearch()
     }
 
 

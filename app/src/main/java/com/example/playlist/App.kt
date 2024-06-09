@@ -1,4 +1,4 @@
-package com.example.playlist.domain.settings
+package com.example.playlist
 
 import android.app.Application
 import com.example.playlist.creator.Creator

@@ -1,14 +1,10 @@
 package com.example.playlist.ui.settingActivity
 
-import android.content.res.Configuration
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.Im
 import android.widget.ImageView
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.ViewModelProvider
-import com.example.playlist.domain.settings.App
 import com.example.playlist.R
 import com.example.playlist.creator.Creator
 import com.example.playlist.ui.settingActivity.viewModel.SettingsViewModel
