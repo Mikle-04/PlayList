@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlist.R
-import com.example.playlist.domain.models.Track
+import com.example.playlist.domain.search.models.Track
 
 class AdapterTrack(var trackList: MutableList<Track>) : RecyclerView.Adapter<TrackViewHolder>() {
     var onItemClick : ((Track) -> Unit)? = null

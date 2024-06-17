@@ -1,14 +1,12 @@
 package com.example.playlist.ui.searchActivity
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -18,23 +16,30 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlist.Creator
+import com.example.playlist.creator.Creator
 import com.example.playlist.R
-import com.example.playlist.domain.models.Track
-import com.example.playlist.data.network.TrackApi
-import com.example.playlist.domain.api.TrackInteractor
-import com.example.playlist.ui.PlayActivity
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.playlist.domain.search.models.Track
+import com.example.playlist.ui.searchActivity.viewModel.TrackSearchViewModel
+import com.example.playlist.ui.playActivity.PlayActivity
+import com.example.playlist.ui.searchActivity.models.TrackInfo
+import com.example.playlist.ui.searchActivity.models.TrackState
 
 
+@SuppressLint("RestrictedApi")
 class SearchActivity : AppCompatActivity() {
 
-    private val tracks = mutableListOf<Track>()
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        const val TRACK_INFO = "TRACK_INFO"
+    }
+
     private var tracksHistory = mutableListOf<Track>()
+    private var tracks = mutableListOf<Track>()
     private val adapter = AdapterTrack(tracks)
     private val adapterHistory = AdapterTrack(tracksHistory)
     private lateinit var imgEmpty: ImageView
@@ -42,197 +47,130 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var imgError: ImageView
     private lateinit var txtError: TextView
     private lateinit var txtErrorIthernet: TextView
-    private lateinit var btnUpdate: Button
-    private lateinit var recyclerViewHistory: RecyclerView
-    private lateinit var txtHistory: TextView
-    private lateinit var btnHistory: Button
-    private lateinit var layoutHistory: LinearLayout
-    private lateinit var layoutProgressBar: ProgressBar
     private lateinit var recyclerTrack: RecyclerView
-    private val searchRunable = Runnable { searchRequest() }
-    lateinit var editTextSearch: EditText
+    private lateinit var layoutProgressBar: ProgressBar
+    private lateinit var btnUpdate: Button
+    private lateinit var layoutHistory: LinearLayout
+    private lateinit var recyclerViewHistory: RecyclerView
+    private lateinit var btnHistory: Button
+    private lateinit var imgBack: ImageView
+    private lateinit var editTextSearch: EditText
+    private lateinit var imgClearSearch: ImageView
     private var isClickAllowed = true
-    lateinit var handler: Handler
+    private lateinit var handler: Handler
     private val max = 10
+    private var textWatcher: TextWatcher? = null
+
+    private lateinit var viewModel: TrackSearchViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        editTextSearch = findViewById<EditText>(R.id.edit_text_search)
-        val imgBack = findViewById<ImageView>(R.id.img_back_search)
-        val imgClearSearch = findViewById<ImageView>(R.id.img_clear_search)
-        recyclerTrack = findViewById<RecyclerView>(R.id.recyclerViewTrack)
-        imgEmpty = findViewById<ImageView>(R.id.imageViewEmpty)
-        txtEmpty = findViewById<TextView>(R.id.txtEmpty)
+
+        viewModel = ViewModelProvider(
+            this, TrackSearchViewModel.getModelFactory()
+        )[TrackSearchViewModel::class.java]
+
+        editTextSearch = findViewById(R.id.edit_text_search)
+        imgClearSearch = findViewById(R.id.img_clear_search)
+        recyclerTrack = findViewById(R.id.recyclerViewTrack)
+        imgEmpty = findViewById(R.id.imageViewEmpty)
+        txtEmpty = findViewById(R.id.txtEmpty)
         txtError = findViewById(R.id.txtError)
         imgError = findViewById(R.id.imageViewError)
         txtErrorIthernet = findViewById(R.id.txtErrorIthernet)
         btnUpdate = findViewById(R.id.btn_update)
-        recyclerViewHistory = findViewById(R.id.recyclerViewHistory)
-        txtHistory = findViewById(R.id.txtHistorySearch)
-        btnHistory = findViewById(R.id.btnHistory)
-        layoutHistory = findViewById(R.id.layoutHistory)
         layoutProgressBar = findViewById(R.id.progressBarSearch)
-        handler = Handler(Looper.getMainLooper())
+        layoutHistory = findViewById(R.id.layoutHistory)
+        recyclerViewHistory = findViewById(R.id.recyclerViewHistory)
+        btnHistory = findViewById(R.id.btnHistory)
+        imgBack = findViewById(R.id.img_back_search)
+
         Creator.setContext(this)
 
-        tracksHistory = Creator.provideSearchHistoryRepository().getSearchHistory().toMutableList()
+        tracksHistory.addAll(
+            Creator.provideSearchHistoryRepository().getSearchHistory().toMutableList()
+        )
+
+        handler = Handler(Looper.getMainLooper())
+
+        recyclerTrack.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recyclerTrack.adapter = adapter
+
+        recyclerViewHistory.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recyclerViewHistory.adapter = adapterHistory
 
 
-
-        imgBack.setOnClickListener {
-            onBackPressed()
-        }
-
-
-        btnHistory.setOnClickListener {
-            Creator.provideSearchHistoryRepository().clearHistory(tracksHistory)
-            adapterHistory.notifyDataSetChanged()
-            layoutHistory.visibility = View.GONE
-        }
-
-        editTextSearch.setOnFocusChangeListener { view, hasFocus ->
+        //visible track history
+        editTextSearch.setOnFocusChangeListener { _, hasFocus ->
             layoutHistory.visibility =
                 if (hasFocus && editTextSearch.text.isEmpty() && tracksHistory.isNotEmpty()) View.VISIBLE else View.GONE
         }
 
-        val editTextForWatcher = object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (!p0.isNullOrEmpty()) {
-                    imgClearSearch.visibility = showClearIcon(p0)
-                    searchDebounce()
-                } else {
-                    imgClearSearch.visibility = showClearIcon(p0)
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s.isNullOrEmpty()) {
+                    viewModel.stopSearch()
+                    clearSearchTrack()
                     layoutHistory.visibility =
-                        if (editTextSearch.hasFocus() && p0?.isEmpty() == true && tracksHistory.isNotEmpty()) View.VISIBLE else View.GONE
+                        if (editTextSearch.hasFocus() && editTextSearch.text.isEmpty() && tracksHistory.isNotEmpty()) View.VISIBLE else View.GONE
+                } else {
+                    imgClearSearch.visibility = showClearIcon(s)
+                    viewModel.searchDebounce(
+                        changedText = s.toString()
+                    )
                 }
             }
 
-            override fun afterTextChanged(p0: Editable?) {
+            override fun afterTextChanged(s: Editable?) {
             }
-
         }
-        editTextSearch.addTextChangedListener(editTextForWatcher)
+        textWatcher?.let { editTextSearch.addTextChangedListener(it) }
+
+        viewModel.observeState().observe(this) {
+            render(it)
+        }
 
 
 
+        // img clean search
         imgClearSearch.setOnClickListener {
-            editTextSearch.text.clear()
-            tracks.clear()
-            adapter.notifyDataSetChanged()
-            val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            clearSearchTrack()
+            val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(editTextSearch.windowToken, 0)
         }
-        recyclerTrack.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerTrack.adapter = AdapterTrack(tracks)
-        recyclerViewHistory.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerViewHistory.adapter = AdapterTrack(tracksHistory)
+
+        //clear history
+        btnHistory.setOnClickListener {
+            clearHistory()
+        }
+        imgBack.setOnClickListener {
+            finish()
+        }
+        //update search
+        btnUpdate.setOnClickListener {
+            viewModel.searchRequest(editTextSearch.text.toString())
+        }
+
 
         adapter.onItemClick = { track ->
             if (clickDebounce()) {
                 addTrack(adapterHistory, track)
-
-                callPlayActivity(track)
+                putPlayActivity(track)
             }
 
         }
         adapterHistory.onItemClick = { track ->
             if (clickDebounce()) {
-                callPlayActivity(track)
+                putPlayActivity(track)
             }
 
         }
-
-
-
-        btnUpdate.setOnClickListener {
-            searchRequest()
-        }
-
-        editTextSearch.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                searchRequest()
-                true
-            }
-            false
-        }
-
-    }
-
-    fun searchRequest() {
-        if (editTextSearch.text.isNotEmpty()) {
-            handler.removeCallbacksAndMessages(RunnableTag)
-            hideError()
-            layoutProgressBar.visibility = View.VISIBLE
-            Creator.provideTrackInteractor().searchTrack(
-                editTextSearch.text.toString(),
-                object : TrackInteractor.TrackConsumer {
-                    override fun consume(foundMovies: List<Track>?) {
-                        if (foundMovies == null) {
-                            handler.post { showError() }
-                        } else {
-                            if (foundMovies.isEmpty()) {
-                                handler.post { showMessage() }
-                            } else {
-                                handler.post { render(foundMovies) }
-                            }
-                        }
-                    }
-
-                })
-        }
-    }
-
-    private fun render(foundMovies: List<Track>) {
-        tracks.clear()
-        tracks.addAll(foundMovies)
-        adapter.notifyDataSetChanged()
-        layoutProgressBar.visibility = View.GONE
-        recyclerTrack.visibility = View.VISIBLE
-    }
-
-
-    override fun onStop() {
-        super.onStop()
-        Creator.provideSearchHistoryRepository().saveHistory(tracksHistory)
-        handler.removeCallbacks(searchRunable)
-    }
-
-    private fun showMessage() {
-        layoutProgressBar.visibility = View.GONE
-        imgEmpty.visibility = View.VISIBLE
-        txtEmpty.visibility = View.VISIBLE
-        txtError.visibility = View.GONE
-        txtErrorIthernet.visibility = View.GONE
-        imgError.visibility = View.GONE
-        btnUpdate.visibility = View.GONE
-        recyclerTrack.visibility = View.GONE
-    }
-
-    private fun showError() {
-        layoutProgressBar.visibility = View.GONE
-        recyclerTrack.visibility = View.GONE
-        imgEmpty.visibility = View.GONE
-        txtEmpty.visibility = View.GONE
-        txtError.visibility = View.VISIBLE
-        txtErrorIthernet.visibility = View.VISIBLE
-        imgError.visibility = View.VISIBLE
-        btnUpdate.visibility = View.VISIBLE
-    }
-
-    private fun hideError() {
-        txtError.visibility = View.GONE
-        txtErrorIthernet.visibility = View.GONE
-        imgError.visibility = View.GONE
-        btnUpdate.visibility = View.GONE
-        imgEmpty.visibility = View.GONE
-        txtEmpty.visibility = View.GONE
     }
 
     private fun showClearIcon(s: CharSequence?): Int {
@@ -243,19 +181,55 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    fun callPlayActivity(track: Track) {
-        val intent = Intent(this, PlayActivity::class.java).also {
-            it.putExtra("EXTRA_NAME", track.trackName)
-            it.putExtra("EXTRA_AUTHOR", track.artistName)
-            it.putExtra("EXTRA_IMAGE", track.artworkUrl100)
-            it.putExtra("EXTRA_DURATION", track.trackTime)
-            if (track.collectionName.isNotEmpty()) {
-                it.putExtra("EXTRA_COLLECTION", track.collectionName)
-            }
-            it.putExtra("EXTRA_DATE", track.releaseDate)
-            it.putExtra("EXTRA_GENRE", track.primaryGenreName)
-            it.putExtra("EXTRA_COUNTRY", track.country)
-            it.putExtra("EXTRA_PLAY", track.previewUrl)
+    private fun clearHistory() {
+        Creator.provideSearchHistoryRepository().clearHistory(tracksHistory)
+        adapterHistory.notifyDataSetChanged()
+        layoutHistory.visibility = View.GONE
+    }
+
+    private fun clearSearchTrack() {
+        layoutProgressBar.visibility = View.GONE
+        imgClearSearch.visibility = View.GONE
+        imgEmpty.visibility = View.GONE
+        txtEmpty.visibility = View.GONE
+        txtError.visibility = View.GONE
+        txtErrorIthernet.visibility = View.GONE
+        imgError.visibility = View.GONE
+        btnUpdate.visibility = View.GONE
+        editTextSearch.text.clear()
+        tracks.clear()
+        adapter.notifyDataSetChanged()
+        recyclerTrack.visibility = View.GONE
+        layoutHistory.visibility =
+            if (editTextSearch.hasFocus() && editTextSearch.text.isEmpty() && tracksHistory.isNotEmpty()) View.VISIBLE else View.GONE
+    }
+
+
+    override fun onStop() {
+        super.onStop()
+        Creator.provideSearchHistoryRepository().saveHistory(tracksHistory)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        textWatcher?.let { editTextSearch.removeTextChangedListener(it) }
+
+    }
+
+    private fun putPlayActivity(track: Track) {
+       val trackInfo = TrackInfo(
+            track.trackName,
+            track.artistName,
+            track.artworkUrl100,
+            track.trackTime,
+            track.collectionName,
+            track.releaseDate,
+            track.primaryGenreName,
+            track.country,
+            track.previewUrl
+        )
+        Intent(this, PlayActivity::class.java).also {
+            it.putExtra(TRACK_INFO, trackInfo)
             startActivity(it)
 
         }
@@ -270,18 +244,13 @@ class SearchActivity : AppCompatActivity() {
         return current
     }
 
-    private fun searchDebounce() {
-        handler.removeCallbacksAndMessages(RunnableTag)
-        handler.postDelayed(searchRunable, RunnableTag, SEARCH_DEBOUNCE_DELAY)
-    }
-
-    fun addTrack(adapter: AdapterTrack, track: Track) {
+    // add track in history
+    private fun addTrack(adapter: AdapterTrack, track: Track) {
         if (adapter.trackList.contains(track)) {
             adapter.trackList.removeAt(adapter.trackList.indexOf(track))
             adapter.notifyItemRemoved(adapter.trackList.indexOf(track))
             adapter.notifyItemRangeChanged(
-                adapter.trackList.indexOf(track),
-                adapter.trackList.size - 1
+                adapter.trackList.indexOf(track), adapter.trackList.size - 1
             )
         }
         adapter.trackList.add(0, track)
@@ -292,9 +261,60 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
-        private const val RunnableTag = "SEARCH"
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+
+
+    private fun showLoading() {
+        layoutProgressBar.visibility = View.VISIBLE
+        layoutHistory.visibility = View.GONE
+    }
+
+    private fun showError() {
+        layoutProgressBar.visibility = View.GONE
+        imgEmpty.visibility = View.GONE
+        txtEmpty.visibility = View.GONE
+        txtError.visibility = View.VISIBLE
+        txtErrorIthernet.visibility = View.VISIBLE
+        imgError.visibility = View.VISIBLE
+        btnUpdate.visibility = View.VISIBLE
+        recyclerTrack.visibility = View.GONE
+        layoutHistory.visibility = View.GONE
+    }
+
+    private fun showEmpty() {
+        layoutProgressBar.visibility = View.GONE
+        imgEmpty.visibility = View.VISIBLE
+        txtEmpty.visibility = View.VISIBLE
+        txtError.visibility = View.GONE
+        txtErrorIthernet.visibility = View.GONE
+        imgError.visibility = View.GONE
+        btnUpdate.visibility = View.GONE
+        recyclerTrack.visibility = View.GONE
+        layoutHistory.visibility = View.GONE
+    }
+
+    private fun showContent(track: List<Track>) {
+        layoutProgressBar.visibility = View.GONE
+        imgEmpty.visibility = View.GONE
+        txtEmpty.visibility = View.GONE
+        txtError.visibility = View.GONE
+        txtErrorIthernet.visibility = View.GONE
+        imgError.visibility = View.GONE
+        btnUpdate.visibility = View.GONE
+        recyclerTrack.visibility = View.VISIBLE
+        layoutHistory.visibility = View.GONE
+
+        adapter.trackList.clear()
+        adapter.trackList.addAll(track)
+        adapter.notifyDataSetChanged()
+
+    }
+
+    private fun render(state: TrackState) {
+        when (state) {
+            is TrackState.Loading -> showLoading()
+            is TrackState.Content -> showContent(state.track)
+            is TrackState.Error -> showError()
+            is TrackState.Empty -> showEmpty()
+        }
     }
 }
