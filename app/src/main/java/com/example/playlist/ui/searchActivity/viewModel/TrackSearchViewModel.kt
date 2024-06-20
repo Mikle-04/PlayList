@@ -6,32 +6,26 @@ import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlist.creator.Creator
 import com.example.playlist.domain.search.api.TrackInteractor
 import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.searchActivity.models.TrackState
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 
-class TrackSearchViewModel(application: Application) : AndroidViewModel(application) {
+class TrackSearchViewModel() : ViewModel(), KoinComponent {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val RunnableTag = "SEARCH"
-
-        fun getModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                TrackSearchViewModel(
-                    application = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application,
-                )
-            }
-        }
     }
 
+    private val trackInteractor : TrackInteractor by inject()
 
-    private val trackInteractor = Creator.provideTrackInteractor(getApplication<Application>())
 
     private var handler: Handler = Handler(Looper.getMainLooper())
 

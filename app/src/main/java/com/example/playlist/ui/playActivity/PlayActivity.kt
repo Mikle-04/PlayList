@@ -19,11 +19,13 @@ import com.example.playlist.ui.searchActivity.SearchActivity
 import com.example.playlist.ui.searchActivity.models.TrackInfo
 import java.text.SimpleDateFormat
 import java.util.Locale
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.component.KoinComponent
 
 
-class PlayActivity : AppCompatActivity() {
+class PlayActivity : AppCompatActivity(){
 
-    private lateinit var viewModel: PlayTrackViewModel
+    private val viewModel: PlayTrackViewModel by viewModel()
 
     private lateinit var cover_artwork: ImageView
     private lateinit var track_name: TextView
@@ -47,7 +49,6 @@ class PlayActivity : AppCompatActivity() {
         setContentView(R.layout.activity_play)
 
 
-        viewModel = ViewModelProvider(this)[PlayTrackViewModel::class.java]
         viewModel.observeState().observe(this) {
             renderState(it)
         }

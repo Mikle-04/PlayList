@@ -8,7 +8,6 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -16,27 +15,31 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlist.creator.Creator
 import com.example.playlist.R
+import com.example.playlist.domain.search.api.SearchHistoryRepository
 import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.searchActivity.viewModel.TrackSearchViewModel
 import com.example.playlist.ui.playActivity.PlayActivity
 import com.example.playlist.ui.searchActivity.models.TrackInfo
 import com.example.playlist.ui.searchActivity.models.TrackState
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.component.KoinComponent
+
 
 
 @SuppressLint("RestrictedApi")
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(), KoinComponent {
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         const val TRACK_INFO = "TRACK_INFO"
     }
+
+    private val repositoryHistory: SearchHistoryRepository by inject()
 
     private var tracksHistory = mutableListOf<Track>()
     private var tracks = mutableListOf<Track>()
@@ -61,16 +64,12 @@ class SearchActivity : AppCompatActivity() {
     private val max = 10
     private var textWatcher: TextWatcher? = null
 
-    private lateinit var viewModel: TrackSearchViewModel
+    private  val viewModel: TrackSearchViewModel by viewModel()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        viewModel = ViewModelProvider(
-            this, TrackSearchViewModel.getModelFactory()
-        )[TrackSearchViewModel::class.java]
 
         editTextSearch = findViewById(R.id.edit_text_search)
         imgClearSearch = findViewById(R.id.img_clear_search)
@@ -87,10 +86,10 @@ class SearchActivity : AppCompatActivity() {
         btnHistory = findViewById(R.id.btnHistory)
         imgBack = findViewById(R.id.img_back_search)
 
-        Creator.setContext(this)
+        //Creator.setContext(this)
 
         tracksHistory.addAll(
-            Creator.provideSearchHistoryRepository().getSearchHistory().toMutableList()
+            repositoryHistory.getSearchHistory().toMutableList()
         )
 
         handler = Handler(Looper.getMainLooper())
@@ -182,7 +181,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clearHistory() {
-        Creator.provideSearchHistoryRepository().clearHistory(tracksHistory)
+        repositoryHistory.clearHistory(tracksHistory)
         adapterHistory.notifyDataSetChanged()
         layoutHistory.visibility = View.GONE
     }
@@ -207,7 +206,7 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        Creator.provideSearchHistoryRepository().saveHistory(tracksHistory)
+        repositoryHistory.saveHistory(tracksHistory)
     }
 
     override fun onDestroy() {

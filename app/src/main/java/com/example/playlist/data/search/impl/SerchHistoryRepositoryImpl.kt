@@ -5,7 +5,7 @@ import com.example.playlist.domain.search.api.SearchHistoryRepository
 import com.example.playlist.domain.search.models.Track
 import com.google.gson.Gson
 
-class SearchHistoryImpl(private val sharedPreferences: SharedPreferences): SearchHistoryRepository {
+class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferences): SearchHistoryRepository {
     private val SEARCH_HISTORY_TRACK = "SearchHistoryTrack"
 
     override fun saveHistory(tracks: List<Track>){
