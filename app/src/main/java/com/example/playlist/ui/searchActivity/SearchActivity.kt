@@ -19,13 +19,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlist.R
-import com.example.playlist.domain.search.api.SearchHistoryRepository
 import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.searchActivity.viewModel.TrackSearchViewModel
 import com.example.playlist.ui.playActivity.PlayActivity
 import com.example.playlist.ui.searchActivity.models.TrackInfo
 import com.example.playlist.ui.searchActivity.models.TrackState
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.component.KoinComponent
 
@@ -38,8 +36,6 @@ class SearchActivity : AppCompatActivity(), KoinComponent {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         const val TRACK_INFO = "TRACK_INFO"
     }
-
-    private val repositoryHistory: SearchHistoryRepository by inject()
 
     private var tracksHistory = mutableListOf<Track>()
     private var tracks = mutableListOf<Track>()
@@ -86,10 +82,10 @@ class SearchActivity : AppCompatActivity(), KoinComponent {
         btnHistory = findViewById(R.id.btnHistory)
         imgBack = findViewById(R.id.img_back_search)
 
-        //Creator.setContext(this)
+
 
         tracksHistory.addAll(
-            repositoryHistory.getSearchHistory().toMutableList()
+            viewModel.getSearchHistory()
         )
 
         handler = Handler(Looper.getMainLooper())
@@ -180,12 +176,14 @@ class SearchActivity : AppCompatActivity(), KoinComponent {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun clearHistory() {
-        repositoryHistory.clearHistory(tracksHistory)
+        viewModel.clearSearchHistory(tracksHistory)
         adapterHistory.notifyDataSetChanged()
         layoutHistory.visibility = View.GONE
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun clearSearchTrack() {
         layoutProgressBar.visibility = View.GONE
         imgClearSearch.visibility = View.GONE
@@ -206,7 +204,7 @@ class SearchActivity : AppCompatActivity(), KoinComponent {
 
     override fun onStop() {
         super.onStop()
-        repositoryHistory.saveHistory(tracksHistory)
+        viewModel.saveSearchHistory(tracksHistory)
     }
 
     override fun onDestroy() {
@@ -216,21 +214,28 @@ class SearchActivity : AppCompatActivity(), KoinComponent {
     }
 
     private fun putPlayActivity(track: Track) {
-       val trackInfo = TrackInfo(
-            track.trackName,
-            track.artistName,
-            track.artworkUrl100,
-            track.trackTime,
-            track.collectionName,
-            track.releaseDate,
-            track.primaryGenreName,
-            track.country,
-            track.previewUrl
-        )
+//       val trackInfo = TrackInfo(
+//            track.trackName,
+//            track.artistName,
+//            track.artworkUrl100,
+//            track.trackTime,
+//            track.collectionName,
+//            track.releaseDate,
+//            track.primaryGenreName,
+//            track.country,
+//            track.previewUrl
+//        )
         Intent(this, PlayActivity::class.java).also {
-            it.putExtra(TRACK_INFO, trackInfo)
+            it.putExtra("track_name", track.trackName)
+            it.putExtra("artist_name", track.artistName)
+            it.putExtra("artwork_url", track.artworkUrl100)
+            it.putExtra("time_track", track.trackTime)
+            it.putExtra("collection_name", track.collectionName)
+            it.putExtra("release_data", track.releaseDate)
+            it.putExtra("genre_name", track.primaryGenreName)
+            it.putExtra("country_name", track.country)
+            it.putExtra("preview_url", track.previewUrl)
             startActivity(it)
-
         }
     }
 
@@ -265,6 +270,14 @@ class SearchActivity : AppCompatActivity(), KoinComponent {
     private fun showLoading() {
         layoutProgressBar.visibility = View.VISIBLE
         layoutHistory.visibility = View.GONE
+        imgEmpty.visibility = View.GONE
+        txtEmpty.visibility = View.GONE
+        txtError.visibility = View.GONE
+        txtErrorIthernet.visibility = View.GONE
+        imgError.visibility = View.GONE
+        btnUpdate.visibility = View.GONE
+        recyclerTrack.visibility = View.GONE
+
     }
 
     private fun showError() {
@@ -291,6 +304,7 @@ class SearchActivity : AppCompatActivity(), KoinComponent {
         layoutHistory.visibility = View.GONE
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun showContent(track: List<Track>) {
         layoutProgressBar.visibility = View.GONE
         imgEmpty.visibility = View.GONE

@@ -1,15 +1,11 @@
 package com.example.playlist.ui.searchActivity.viewModel
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.playlist.domain.search.api.SearchHistoryRepository
 import com.example.playlist.domain.search.api.TrackInteractor
 import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.searchActivity.models.TrackState
@@ -17,7 +13,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 
-class TrackSearchViewModel() : ViewModel(), KoinComponent {
+class TrackSearchViewModel(private var handler: Handler) : ViewModel(), KoinComponent {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
@@ -25,9 +21,8 @@ class TrackSearchViewModel() : ViewModel(), KoinComponent {
     }
 
     private val trackInteractor : TrackInteractor by inject()
+    private val repositoryHistory: SearchHistoryRepository by inject()
 
-
-    private var handler: Handler = Handler(Looper.getMainLooper())
 
     private var lastSearchText: String? = null
 
@@ -98,6 +93,18 @@ class TrackSearchViewModel() : ViewModel(), KoinComponent {
 
                 })
         }
+    }
+
+    fun getSearchHistory() : List<Track>{
+       return repositoryHistory.getSearchHistory().toMutableList()
+    }
+
+    fun saveSearchHistory(track: List<Track>){
+        repositoryHistory.saveHistory(track)
+    }
+
+    fun clearSearchHistory(track: MutableList<Track>){
+        repositoryHistory.clearHistory(track)
     }
 
     fun stopSearch(){

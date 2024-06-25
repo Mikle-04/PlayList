@@ -1,3 +1,5 @@
+package com.example.playlist.di.dataModule
+
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.playlist.data.search.impl.SearchHistoryRepositoryImpl

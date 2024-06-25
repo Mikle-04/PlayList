@@ -1,5 +1,8 @@
 package com.example.playlist.ui.playActivity.viewModel
 
+import android.app.Application
+import android.content.Context
+import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
@@ -9,11 +12,7 @@ import com.example.playlist.domain.player.PlayerReposiroty
 import com.example.playlist.ui.playActivity.models.PlayerState
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-
-
-class PlayTrackViewModel() : ViewModel(), KoinComponent {
-
-    private val handler = Handler(Looper.getMainLooper())
+class PlayTrackViewModel(private val handler: Handler, private val url: String) : ViewModel(), KoinComponent {
 
 
 
@@ -29,24 +28,25 @@ class PlayTrackViewModel() : ViewModel(), KoinComponent {
 
     init {
         handler.post(stateRunable)
+        preparePlayer(url)
     }
 
     fun observeState(): LiveData<PlayerState> = stateLiveData
 
     fun observeTime(): LiveData<String> = timeLivedata
-    fun preparePlayer(url: String?) {
-        if (url != null) {
-            reposiroty.preparePlayer(url)
-            handler.removeCallbacks(timeRunable)
-        }
-    }
+
 
     fun startPlayer() {
         reposiroty.startPlayer()
         handler.post(timeRunable)
 
     }
-
+    fun preparePlayer(url: String?) {
+        if (url != null) {
+            reposiroty.preparePlayer(url)
+            handler.removeCallbacks(timeRunable)
+        }
+    }
     fun pausePlayer() {
        reposiroty.pausePlayer()
 

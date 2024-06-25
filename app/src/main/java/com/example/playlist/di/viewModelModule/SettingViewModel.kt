@@ -1,4 +1,4 @@
-package com.example.playlist.ui.di
+package com.example.playlist.di.viewModelModule
 
 import com.example.playlist.ui.settingActivity.viewModel.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel

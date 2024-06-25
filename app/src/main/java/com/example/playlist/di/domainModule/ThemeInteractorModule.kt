@@ -1,4 +1,4 @@
-package com.example.playlist.domain.di
+package com.example.playlist.di.domainModule
 
 import com.example.playlist.domain.settings.ThemeInteractor
 import org.koin.dsl.module

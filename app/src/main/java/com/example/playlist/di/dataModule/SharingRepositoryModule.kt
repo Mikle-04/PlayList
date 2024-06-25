@@ -1,4 +1,4 @@
-package com.example.playlist.data.di
+package com.example.playlist.di.dataModule
 
 import com.example.playlist.data.sharing.impl.SharingRepositoryImpl
 import com.example.playlist.domain.sharing.SharingRepository

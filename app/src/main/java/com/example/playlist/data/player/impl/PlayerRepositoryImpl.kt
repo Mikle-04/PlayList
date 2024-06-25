@@ -1,16 +1,12 @@
 package com.example.playlist.data.player.impl
 
 import android.media.MediaPlayer
-import android.util.Log
 import com.example.playlist.domain.player.PlayerReposiroty
 import com.example.playlist.ui.playActivity.models.PlayerState
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerRepositoryImpl() : PlayerReposiroty {
-    private var statePlayer: PlayerState = PlayerState.Default
-    private val mediaPlayer: MediaPlayer = MediaPlayer()
-
+class PlayerRepositoryImpl(var statePlayer: PlayerState, val mediaPlayer: MediaPlayer ) : PlayerReposiroty {
 
     override fun startPlayer() {
         mediaPlayer.start()

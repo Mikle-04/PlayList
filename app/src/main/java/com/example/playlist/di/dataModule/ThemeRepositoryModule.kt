@@ -1,4 +1,4 @@
-package com.example.playlist.data.di
+package com.example.playlist.di.dataModule
 
 import android.content.Context
 import android.content.SharedPreferences

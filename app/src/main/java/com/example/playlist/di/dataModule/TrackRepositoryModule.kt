@@ -1,4 +1,4 @@
-package com.example.playlist.data.di
+package com.example.playlist.di.dataModule
 
 import com.example.playlist.data.search.NetworkClient
 import com.example.playlist.data.search.network.RetrofitNetworkClient
