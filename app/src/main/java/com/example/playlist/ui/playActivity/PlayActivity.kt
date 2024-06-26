@@ -1,14 +1,9 @@
 package com.example.playlist.ui.playActivity
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -19,11 +14,15 @@ import com.example.playlist.ui.searchActivity.SearchActivity
 import com.example.playlist.ui.searchActivity.models.TrackInfo
 import java.text.SimpleDateFormat
 import java.util.Locale
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 
-class PlayActivity : AppCompatActivity() {
+class PlayActivity : AppCompatActivity(){
 
-    private lateinit var viewModel: PlayTrackViewModel
+    val viewModel: PlayTrackViewModel by viewModel(){
+        parametersOf(intent.getStringExtra("preview_url"))
+    }
 
     private lateinit var cover_artwork: ImageView
     private lateinit var track_name: TextView
@@ -35,10 +34,8 @@ class PlayActivity : AppCompatActivity() {
     private lateinit var genre_track: TextView
     private lateinit var country_track: TextView
     private lateinit var play: ImageView
-
     private lateinit var back: ImageView
 
-    private var url: String? = null
     private var uri_img: String? = null
 
 
@@ -47,7 +44,6 @@ class PlayActivity : AppCompatActivity() {
         setContentView(R.layout.activity_play)
 
 
-        viewModel = ViewModelProvider(this)[PlayTrackViewModel::class.java]
         viewModel.observeState().observe(this) {
             renderState(it)
         }
@@ -64,6 +60,10 @@ class PlayActivity : AppCompatActivity() {
         play = findViewById(R.id.play_img)
         back = findViewById(R.id.back_img)
 
+        getIntentSearchActivity()
+        getCoverArtwork()
+
+
         back.setOnClickListener {
             finish()
         }
@@ -72,9 +72,6 @@ class PlayActivity : AppCompatActivity() {
             time_play.text = it
         }
 
-        getIntentSearchActivity()
-        getCoverArtwork()
-        viewModel.preparePlayer(url)
         play.setOnClickListener {
             viewModel.playbackControl()
         }
@@ -83,17 +80,15 @@ class PlayActivity : AppCompatActivity() {
     private fun getIntentSearchActivity() {
 
         intent?.let {
-            val trackInfo = intent.extras?.getParcelable(SearchActivity.TRACK_INFO) as TrackInfo?
-            track_name.text = trackInfo?.trackName.toString()
-            author_track.text = trackInfo?.artistName.toString()
+            track_name.text = intent.getStringExtra("track_name")
+            author_track.text = intent.getStringExtra("artist_name")
             time_track.text = SimpleDateFormat("mm:ss",
-                Locale.getDefault()).format(trackInfo?.trackTime)
-            album_name.text = trackInfo?.collectionName.toString()
-            year_track.text = trackInfo?.releaseDate.toString().take(4)
-            genre_track.text = trackInfo?.primaryGenreName.toString()
-            country_track.text = trackInfo?.country.toString()
-            url = trackInfo?.previewUrl.toString()
-            uri_img = trackInfo?.artworkUrl100.toString()
+                Locale.getDefault()).format(intent.getLongExtra("time_track", 0))
+            album_name.text = intent.getStringExtra("collection_name")
+            year_track.text = intent.getStringExtra("release_data")?.take(4) ?: ""
+            genre_track.text = intent.getStringExtra("genre_name")
+            country_track.text = intent.getStringExtra("country_name")
+            uri_img = intent.getStringExtra("artwork_url")
         }
 
         album_name.isSelected = true
@@ -133,7 +128,7 @@ class PlayActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        viewModel.pausePlayer()
+      //  viewModel.pausePlayer()
     }
 
 }

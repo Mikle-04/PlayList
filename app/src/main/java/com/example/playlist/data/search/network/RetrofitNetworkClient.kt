@@ -9,6 +9,7 @@ import com.example.playlist.data.search.dto.Response
 import com.example.playlist.data.search.dto.TrackRequest
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 
 class RetrofitNetworkClient(private val context: Context): NetworkClient {
     private val baseUrls = "https://itunes.apple.com"
@@ -27,13 +28,19 @@ class RetrofitNetworkClient(private val context: Context): NetworkClient {
             return Response().apply { resultCode = 400 }
         }
 
-        val resp = trackService.search(request.expression).execute()
-        val body = resp.body()
-        return if (body != null){
-            body.apply { resultCode = resp.code() }
-        }else{
-            Response().apply { resultCode = resp.code() }
+        return try {
+            val resp = trackService.search(request.expression).execute()
+            val body = resp.body()
+            if (body != null){
+                body.apply { resultCode = resp.code() }
+            }else{
+                Response().apply { resultCode = resp.code() }
+            }
+        }catch (e: Exception){
+            Response().apply { resultCode = -1 }
         }
+
+
 
     }
 

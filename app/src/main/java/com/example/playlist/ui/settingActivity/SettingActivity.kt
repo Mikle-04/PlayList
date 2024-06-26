@@ -4,15 +4,16 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlist.R
-import com.example.playlist.creator.Creator
 import com.example.playlist.ui.settingActivity.viewModel.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SettingActivity : AppCompatActivity() {
+
+    private val viewModel: SettingsViewModel by viewModel()
+
     lateinit var switchCompat: SwitchCompat
-    lateinit var viewModel: SettingsViewModel
     lateinit var imgShare: ImageView
     lateinit var imgMode: ImageView
     lateinit var imgAgreementNext: ImageView
@@ -22,11 +23,8 @@ class SettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
-        Creator.setContext(this)
-        viewModel = ViewModelProvider(
-            this,
-            SettingsViewModel.getViewModelFactory()
-        )[SettingsViewModel::class.java]
+      //  Creator.setContext(this)
+
 
         imgShare = findViewById<ImageView>(R.id.img_share)
         imgMode = findViewById<ImageView>(R.id.img_mode)
