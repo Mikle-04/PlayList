@@ -8,7 +8,7 @@ import org.koin.dsl.module
 
 val searchViewModelModule = module {
     viewModel {
-        TrackSearchViewModel(get())
+        TrackSearchViewModel(get(), get(), get())
     }
     factory<Handler> {
         Handler(Looper.getMainLooper())

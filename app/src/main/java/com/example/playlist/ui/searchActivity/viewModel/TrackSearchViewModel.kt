@@ -13,31 +13,33 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 
-class TrackSearchViewModel(private var handler: Handler) : ViewModel(), KoinComponent {
+class TrackSearchViewModel(
+    private var handler: Handler,
+    private val trackInteractor: TrackInteractor,
+    private val repositoryHistory: SearchHistoryRepository
+) : ViewModel(), KoinComponent {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val RunnableTag = "SEARCH"
     }
 
-    private val trackInteractor : TrackInteractor by inject()
-    private val repositoryHistory: SearchHistoryRepository by inject()
-
 
     private var lastSearchText: String? = null
 
     private val searchRunable = Runnable {
         val newSearchText = lastSearchText ?: ""
-        searchRequest(newSearchText) }
+        searchRequest(newSearchText)
+    }
 
     private val tracks = mutableListOf<Track>()
 
     //create liveData
     private val stateLiveData = MutableLiveData<TrackState>()
 
-    fun observeState():LiveData<TrackState> = stateLiveData
+    fun observeState(): LiveData<TrackState> = stateLiveData
 
-    private fun renderState(state: TrackState){
+    private fun renderState(state: TrackState) {
         stateLiveData.postValue(state)
     }
 
@@ -58,35 +60,35 @@ class TrackSearchViewModel(private var handler: Handler) : ViewModel(), KoinComp
                 object : TrackInteractor.TrackConsumer {
                     override fun consume(foundMovies: List<Track>?, errorMessage: String?) {
 
-                            if (foundMovies != null) {
-                                tracks.clear()
-                                tracks.addAll(foundMovies)
+                        if (foundMovies != null) {
+                            tracks.clear()
+                            tracks.addAll(foundMovies)
+                        }
+
+                        when {
+                            errorMessage != null -> {
+                                renderState(
+                                    TrackState.Error(errorMessage)
+                                )
+
                             }
 
-                            when {
-                                errorMessage != null -> {
-                                    renderState(
-                                        TrackState.Error(errorMessage)
+                            tracks.isEmpty() -> {
+                                renderState(
+                                    TrackState.Empty(
+                                        message = ""
                                     )
-
-                                }
-
-                                tracks.isEmpty() -> {
-                                    renderState(
-                                        TrackState.Empty(
-                                            message = ""
-                                        )
-                                    )
-                                }
-
-                                else -> {
-                                   renderState(
-                                        TrackState.Content(
-                                            track = tracks
-                                        )
-                                    )
-                                }
+                                )
                             }
+
+                            else -> {
+                                renderState(
+                                    TrackState.Content(
+                                        track = tracks
+                                    )
+                                )
+                            }
+                        }
 
 
                     }
@@ -95,26 +97,25 @@ class TrackSearchViewModel(private var handler: Handler) : ViewModel(), KoinComp
         }
     }
 
-    fun getSearchHistory() : List<Track>{
-       return repositoryHistory.getSearchHistory().toMutableList()
+    fun getSearchHistory(): List<Track> {
+        return repositoryHistory.getSearchHistory().toMutableList()
     }
 
-    fun saveSearchHistory(track: List<Track>){
+    fun saveSearchHistory(track: List<Track>) {
         repositoryHistory.saveHistory(track)
     }
 
-    fun clearSearchHistory(track: MutableList<Track>){
+    fun clearSearchHistory(track: MutableList<Track>) {
         repositoryHistory.clearHistory(track)
     }
 
-    fun stopSearch(){
+    fun stopSearch() {
         handler.removeCallbacks(searchRunable)
     }
 
     override fun onCleared() {
         stopSearch()
     }
-
 
 
 }

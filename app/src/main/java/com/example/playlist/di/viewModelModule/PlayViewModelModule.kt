@@ -8,7 +8,7 @@ import org.koin.dsl.module
 
 val playViewModelModule = module {
     viewModel {params ->
-        PlayTrackViewModel(get(), url = params.get())
+        PlayTrackViewModel(get(),get(), url = params.get())
     }
 
     factory<Handler> {

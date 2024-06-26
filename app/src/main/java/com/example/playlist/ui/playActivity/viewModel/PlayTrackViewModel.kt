@@ -12,11 +12,9 @@ import com.example.playlist.domain.player.PlayerReposiroty
 import com.example.playlist.ui.playActivity.models.PlayerState
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-class PlayTrackViewModel(private val handler: Handler, private val url: String) : ViewModel(), KoinComponent {
+class PlayTrackViewModel(private val handler: Handler, private val reposiroty: PlayerReposiroty, private val url: String) : ViewModel(), KoinComponent {
 
 
-
-    private val reposiroty: PlayerReposiroty by inject()
 
     private var stateRunable = Runnable {getStateRunable()}
     private val stateLiveData = MutableLiveData<PlayerState>(PlayerState.Default)

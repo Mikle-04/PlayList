@@ -34,7 +34,6 @@ class SearchActivity : AppCompatActivity(), KoinComponent {
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
-        const val TRACK_INFO = "TRACK_INFO"
     }
 
     private var tracksHistory = mutableListOf<Track>()
@@ -214,17 +213,7 @@ class SearchActivity : AppCompatActivity(), KoinComponent {
     }
 
     private fun putPlayActivity(track: Track) {
-//       val trackInfo = TrackInfo(
-//            track.trackName,
-//            track.artistName,
-//            track.artworkUrl100,
-//            track.trackTime,
-//            track.collectionName,
-//            track.releaseDate,
-//            track.primaryGenreName,
-//            track.country,
-//            track.previewUrl
-//        )
+
         Intent(this, PlayActivity::class.java).also {
             it.putExtra("track_name", track.trackName)
             it.putExtra("artist_name", track.artistName)
