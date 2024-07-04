@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Base.Theme.PlayList"
+    android:background="?attr/colorPrimaryVariant">
+
+    <ImageView
+        android:id="@+id/FavouritesEmptyImg"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        style="@style/imgEmpty"
+        android:layout_marginTop="106dp"/>
+
+    <TextView
+        android:id="@+id/mediatekaEmptyText"
+        android:layout_width="312dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_16dp"
+        android:layout_gravity="center"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="@string/mediateka_empty"
+        android:gravity="center"
+        android:textSize="@dimen/size_19dp"
+        android:textColor="?attr/colorSecondaryVariant"/>
+
+</LinearLayout>

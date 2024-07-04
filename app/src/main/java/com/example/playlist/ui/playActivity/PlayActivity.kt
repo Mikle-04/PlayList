@@ -20,7 +20,7 @@ import org.koin.core.parameter.parametersOf
 
 class PlayActivity : AppCompatActivity(){
 
-    val viewModel: PlayTrackViewModel by viewModel(){
+   private val viewModel: PlayTrackViewModel by viewModel(){
         parametersOf(intent.getStringExtra("preview_url"))
     }
 
