@@ -27,8 +27,8 @@ class MediaActivity : AppCompatActivity() {
 
         tabMediator = TabLayoutMediator(binding.tabLayoutMedia, binding.viewPagerMedia){tab, position ->
             when(position){
-                0 -> tab.text = "Избранные треки"
-                1 -> tab.text = "Плейлисты"
+                0 -> tab.text = resources.getString(R.string.favourites_track)
+                1 -> tab.text = resources.getString(R.string.play_list)
             }
 
         }

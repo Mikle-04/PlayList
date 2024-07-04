@@ -40,11 +40,12 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayoutMedia"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        app:tabTextColor ="?attr/colorOnSecondary"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimaryVariant"
         app:tabIndicatorColor="?attr/colorOnSecondary"
         app:tabIndicatorFullWidth="false"
-/>
+        app:tabTextColor="?attr/colorOnSecondary" />
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPagerMedia"
         android:layout_width="match_parent"
