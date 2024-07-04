@@ -11,7 +11,7 @@ import com.example.playlist.ui.playActivity.PlayActivity
 import com.example.playlist.util.Resource
 
 class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepository {
-    override fun searchTrack(expression: String): Resource<List<Track>>? {
+    override fun searchTrack(expression: String): Resource<List<Track>> {
         val response = networkClient.doRequest(TrackRequest(expression))
         return when (response.resultCode) {
             -1 -> {

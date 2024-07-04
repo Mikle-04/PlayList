@@ -8,7 +8,6 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -16,26 +15,25 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlist.creator.Creator
 import com.example.playlist.R
 import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.searchActivity.viewModel.TrackSearchViewModel
 import com.example.playlist.ui.playActivity.PlayActivity
 import com.example.playlist.ui.searchActivity.models.TrackInfo
 import com.example.playlist.ui.searchActivity.models.TrackState
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.component.KoinComponent
+
 
 
 @SuppressLint("RestrictedApi")
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(), KoinComponent {
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
-        const val TRACK_INFO = "TRACK_INFO"
     }
 
     private var tracksHistory = mutableListOf<Track>()
@@ -61,16 +59,12 @@ class SearchActivity : AppCompatActivity() {
     private val max = 10
     private var textWatcher: TextWatcher? = null
 
-    private lateinit var viewModel: TrackSearchViewModel
+    private  val viewModel: TrackSearchViewModel by viewModel()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        viewModel = ViewModelProvider(
-            this, TrackSearchViewModel.getModelFactory()
-        )[TrackSearchViewModel::class.java]
 
         editTextSearch = findViewById(R.id.edit_text_search)
         imgClearSearch = findViewById(R.id.img_clear_search)
@@ -87,10 +81,10 @@ class SearchActivity : AppCompatActivity() {
         btnHistory = findViewById(R.id.btnHistory)
         imgBack = findViewById(R.id.img_back_search)
 
-        Creator.setContext(this)
+
 
         tracksHistory.addAll(
-            Creator.provideSearchHistoryRepository().getSearchHistory().toMutableList()
+            viewModel.getSearchHistory()
         )
 
         handler = Handler(Looper.getMainLooper())
@@ -181,12 +175,14 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun clearHistory() {
-        Creator.provideSearchHistoryRepository().clearHistory(tracksHistory)
+        viewModel.clearSearchHistory(tracksHistory)
         adapterHistory.notifyDataSetChanged()
         layoutHistory.visibility = View.GONE
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun clearSearchTrack() {
         layoutProgressBar.visibility = View.GONE
         imgClearSearch.visibility = View.GONE
@@ -207,7 +203,7 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        Creator.provideSearchHistoryRepository().saveHistory(tracksHistory)
+        viewModel.saveSearchHistory(tracksHistory)
     }
 
     override fun onDestroy() {
@@ -217,21 +213,18 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun putPlayActivity(track: Track) {
-       val trackInfo = TrackInfo(
-            track.trackName,
-            track.artistName,
-            track.artworkUrl100,
-            track.trackTime,
-            track.collectionName,
-            track.releaseDate,
-            track.primaryGenreName,
-            track.country,
-            track.previewUrl
-        )
-        Intent(this, PlayActivity::class.java).also {
-            it.putExtra(TRACK_INFO, trackInfo)
-            startActivity(it)
 
+        Intent(this, PlayActivity::class.java).also {
+            it.putExtra("track_name", track.trackName)
+            it.putExtra("artist_name", track.artistName)
+            it.putExtra("artwork_url", track.artworkUrl100)
+            it.putExtra("time_track", track.trackTime)
+            it.putExtra("collection_name", track.collectionName)
+            it.putExtra("release_data", track.releaseDate)
+            it.putExtra("genre_name", track.primaryGenreName)
+            it.putExtra("country_name", track.country)
+            it.putExtra("preview_url", track.previewUrl)
+            startActivity(it)
         }
     }
 
@@ -266,6 +259,14 @@ class SearchActivity : AppCompatActivity() {
     private fun showLoading() {
         layoutProgressBar.visibility = View.VISIBLE
         layoutHistory.visibility = View.GONE
+        imgEmpty.visibility = View.GONE
+        txtEmpty.visibility = View.GONE
+        txtError.visibility = View.GONE
+        txtErrorIthernet.visibility = View.GONE
+        imgError.visibility = View.GONE
+        btnUpdate.visibility = View.GONE
+        recyclerTrack.visibility = View.GONE
+
     }
 
     private fun showError() {
@@ -292,6 +293,7 @@ class SearchActivity : AppCompatActivity() {
         layoutHistory.visibility = View.GONE
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun showContent(track: List<Track>) {
         layoutProgressBar.visibility = View.GONE
         imgEmpty.visibility = View.GONE

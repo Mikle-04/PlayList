@@ -1,54 +1,45 @@
 package com.example.playlist.ui.searchActivity.viewModel
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlist.creator.Creator
+import androidx.lifecycle.ViewModel
+import com.example.playlist.domain.search.api.SearchHistoryRepository
 import com.example.playlist.domain.search.api.TrackInteractor
 import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.searchActivity.models.TrackState
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 
-class TrackSearchViewModel(application: Application) : AndroidViewModel(application) {
+class TrackSearchViewModel(
+    private var handler: Handler,
+    private val trackInteractor: TrackInteractor,
+    private val repositoryHistory: SearchHistoryRepository
+) : ViewModel(), KoinComponent {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val RunnableTag = "SEARCH"
-
-        fun getModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                TrackSearchViewModel(
-                    application = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application,
-                )
-            }
-        }
     }
 
-
-    private val trackInteractor = Creator.provideTrackInteractor(getApplication<Application>())
-
-    private var handler: Handler = Handler(Looper.getMainLooper())
 
     private var lastSearchText: String? = null
 
     private val searchRunable = Runnable {
         val newSearchText = lastSearchText ?: ""
-        searchRequest(newSearchText) }
+        searchRequest(newSearchText)
+    }
 
     private val tracks = mutableListOf<Track>()
 
     //create liveData
     private val stateLiveData = MutableLiveData<TrackState>()
 
-    fun observeState():LiveData<TrackState> = stateLiveData
+    fun observeState(): LiveData<TrackState> = stateLiveData
 
-    private fun renderState(state: TrackState){
+    private fun renderState(state: TrackState) {
         stateLiveData.postValue(state)
     }
 
@@ -69,35 +60,35 @@ class TrackSearchViewModel(application: Application) : AndroidViewModel(applicat
                 object : TrackInteractor.TrackConsumer {
                     override fun consume(foundMovies: List<Track>?, errorMessage: String?) {
 
-                            if (foundMovies != null) {
-                                tracks.clear()
-                                tracks.addAll(foundMovies)
+                        if (foundMovies != null) {
+                            tracks.clear()
+                            tracks.addAll(foundMovies)
+                        }
+
+                        when {
+                            errorMessage != null -> {
+                                renderState(
+                                    TrackState.Error(errorMessage)
+                                )
+
                             }
 
-                            when {
-                                errorMessage != null -> {
-                                    renderState(
-                                        TrackState.Error(errorMessage)
+                            tracks.isEmpty() -> {
+                                renderState(
+                                    TrackState.Empty(
+                                        message = ""
                                     )
-
-                                }
-
-                                tracks.isEmpty() -> {
-                                    renderState(
-                                        TrackState.Empty(
-                                            message = ""
-                                        )
-                                    )
-                                }
-
-                                else -> {
-                                   renderState(
-                                        TrackState.Content(
-                                            track = tracks
-                                        )
-                                    )
-                                }
+                                )
                             }
+
+                            else -> {
+                                renderState(
+                                    TrackState.Content(
+                                        track = tracks
+                                    )
+                                )
+                            }
+                        }
 
 
                     }
@@ -106,14 +97,25 @@ class TrackSearchViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun stopSearch(){
+    fun getSearchHistory(): List<Track> {
+        return repositoryHistory.getSearchHistory().toMutableList()
+    }
+
+    fun saveSearchHistory(track: List<Track>) {
+        repositoryHistory.saveHistory(track)
+    }
+
+    fun clearSearchHistory(track: MutableList<Track>) {
+        repositoryHistory.clearHistory(track)
+    }
+
+    fun stopSearch() {
         handler.removeCallbacks(searchRunable)
     }
 
     override fun onCleared() {
         stopSearch()
     }
-
 
 
 }
