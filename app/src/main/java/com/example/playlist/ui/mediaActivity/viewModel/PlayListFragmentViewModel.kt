@@ -4,5 +4,5 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import org.koin.core.component.KoinComponent
 
-class PlayListFragmentViewModel : ViewModel(), KoinComponent {
+class PlayListFragmentViewModel : ViewModel() {
 }

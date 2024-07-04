@@ -17,8 +17,8 @@
 
     <ImageView
         android:id="@+id/emptyFavourites"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="@dimen/size_120dp"
+        android:layout_height="@dimen/size_120dp"
         style="@style/imgEmpty"
         android:layout_marginTop="43dp"
         />
