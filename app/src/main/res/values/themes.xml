@@ -20,4 +20,9 @@
         <item name="colorSwitchThumbNormal">@color/gray</item>
         <item name="trackTint">@color/green_switch_light</item>
     </style>
+
+    <style name="Base.Theme.BottomNavView" parent="@style/Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimaryVariant">@color/white</item>
+
+    </style>
 </resources>
