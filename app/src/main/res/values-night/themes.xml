@@ -19,4 +19,16 @@
         <item name="colorSwitchThumbNormal">@color/blue_switch</item>
         <item name="trackTint">@color/blue_switch_light</item>
     </style>
+
+    <style name="Base.Theme.BottomNavView" parent="@style/Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorSecondary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/fiol</item>
+        <item name="colorSecondaryVariant">@color/white</item>
+        <item name="colorOnBackground">@color/fiol</item>
+        <item name="colorButtonNormal">@color/fiol</item>
+        <item name="color">@color/black</item>
+    </style>
 </resources>
