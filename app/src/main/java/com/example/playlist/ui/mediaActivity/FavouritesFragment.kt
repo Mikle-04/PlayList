@@ -1,4 +1,4 @@
-package com.example.playlist.ui.mediaActivity.fragment
+package com.example.playlist.ui.mediaActivity
 
 import android.os.Bundle
 import android.view.LayoutInflater

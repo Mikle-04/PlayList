@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Base.Theme.PlayList"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".ui.settingActivity.FragmentSettings"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,14 +19,6 @@
         android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
 
-        <ImageView
-            android:id="@+id/img_back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:paddingHorizontal="@dimen/size_12dp"
-            android:src="@drawable/ic_back_24"
-            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/txt_setting"
@@ -32,7 +26,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
-            android:paddingStart="@dimen/size_12dp"
+            android:padding="@dimen/size_12dp"
             android:text="@string/setting"
             android:textColor="?attr/colorOnSecondary"
             android:textSize="@dimen/size_text_main"

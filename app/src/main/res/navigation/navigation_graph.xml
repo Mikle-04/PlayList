@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/fragmentMedia">
+
+    <fragment
+        android:id="@+id/fragmentSearch"
+        android:name="com.example.playlist.ui.searchActivity.FragmentSearch"
+        android:label="search_fragment"
+        tools:layout="@layout/search_fragment" >
+        <action
+            android:id="@+id/action_fragmentSearch_to_playActivity"
+            app:destination="@id/playActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentMedia"
+        android:name="com.example.playlist.ui.mediaActivity.FragmentMedia"
+        android:label="media_fragment"
+        tools:layout="@layout/media_fragment" />
+    <fragment
+        android:id="@+id/fragmentSettings"
+        android:name="com.example.playlist.ui.settingActivity.FragmentSettings"
+        android:label="settings_fragment"
+        tools:layout="@layout/settings_fragment" />
+    <activity
+        android:id="@+id/playActivity"
+        android:name="com.example.playlist.ui.playActivity.PlayActivity"
+        android:label="activity_play"
+        tools:layout="@layout/activity_play" />
+</navigation>
