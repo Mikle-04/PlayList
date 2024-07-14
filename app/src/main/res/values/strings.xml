@@ -26,4 +26,10 @@
     <string name="year_str">Год</string>
     <string name="album_txt">Альбом</string>
     <string name="duration_str">Длительность</string>
+    <string name="mediateka_activity">Медиатека</string>
+    <string name="mediateka_empty">Ваша медиатека пуста</string>
+    <string name="playList_empty">Вы не создали\nни одного плейлиста</string>
+    <string name="new_playList">Новый плейлист</string>
+    <string name="favourites_track">Избранные треки</string>
+    <string name="play_list">Плейлисты</string>
 </resources>
