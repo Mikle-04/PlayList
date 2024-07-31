@@ -15,4 +15,5 @@
     <dimen name="size_16sp">16sp</dimen>
     <dimen name="size_120dp">120dp</dimen>
     <dimen name="size_text_main">22sp</dimen>
+    <dimen name="size_10dp">10dp</dimen>
 </resources>

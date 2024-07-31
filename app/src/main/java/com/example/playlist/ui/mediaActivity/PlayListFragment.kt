@@ -1,11 +1,10 @@
-package com.example.playlist.ui.mediaActivity.fragment
+package com.example.playlist.ui.mediaActivity
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.playlist.databinding.FragmentFavouritesBinding
 import com.example.playlist.databinding.FragmentPlayListBinding
 import com.example.playlist.ui.mediaActivity.viewModel.PlayListFragmentViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel

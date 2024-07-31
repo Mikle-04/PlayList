@@ -74,7 +74,7 @@
         <item name="android:visibility">gone</item>
         <item name="textAllCaps">false</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorPrimaryVariant</item>
         <item name="cornerRadius">54dp</item>
     </style>
     <style name="textPlay">

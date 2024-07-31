@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlist.R
 import com.example.playlist.ui.playActivity.models.PlayerState
 import com.example.playlist.ui.playActivity.viewModel.PlayTrackViewModel
-import com.example.playlist.ui.searchActivity.SearchActivity
-import com.example.playlist.ui.searchActivity.models.TrackInfo
 import java.text.SimpleDateFormat
 import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -19,6 +18,10 @@ import org.koin.core.parameter.parametersOf
 
 
 class PlayActivity : AppCompatActivity(){
+
+    companion object{
+        private const val KEY_PREVIEW = "preview_url"
+    }
 
    private val viewModel: PlayTrackViewModel by viewModel(){
         parametersOf(intent.getStringExtra("preview_url"))
@@ -48,6 +51,8 @@ class PlayActivity : AppCompatActivity(){
             renderState(it)
         }
 
+
+
         cover_artwork = findViewById(R.id.cover_img)
         track_name = findViewById(R.id.name_track_txt)
         author_track = findViewById(R.id.author_txt)
@@ -65,7 +70,7 @@ class PlayActivity : AppCompatActivity(){
 
 
         back.setOnClickListener {
-            finish()
+           this.onBackPressed()
         }
 
         viewModel.observeTime().observe(this){
@@ -128,7 +133,7 @@ class PlayActivity : AppCompatActivity(){
 
     override fun onPause() {
         super.onPause()
-      //  viewModel.pausePlayer()
+        viewModel.pausePlayer()
     }
 
 }

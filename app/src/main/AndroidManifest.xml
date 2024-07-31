@@ -17,26 +17,17 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.PlayList"
         tools:targetApi="31">
-        <activity
-            android:name=".ui.mediaActivity.MediaActivity"
-            android:exported="false"
-            android:theme="@style/Base.Theme.PlayList"/>
+
         <activity
             android:name=".ui.playActivity.PlayActivity"
             android:exported="false"
             android:theme="@style/Base.Theme.PlayList"/>
-        <activity
-            android:name=".ui.searchActivity.SearchActivity"
-            android:exported="false"
-            android:theme="@style/Base.Theme.PlayList" />
-        <activity
-            android:name=".ui.settingActivity.SettingActivity"
-            android:exported="false"
-            android:theme="@style/Base.Theme.PlayList" />
+
         <activity
             android:name=".ui.mainActivity.MainActivity"
             android:exported="true"
-            android:theme="@style/Base.Theme.PlayList">
+            android:theme="@style/Base.Theme.PlayList"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
