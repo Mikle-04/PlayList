@@ -1,5 +1,6 @@
 package com.example.playlist.di.viewModelModule
 
+import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import com.example.playlist.ui.playActivity.viewModel.PlayTrackViewModel
@@ -8,10 +9,11 @@ import org.koin.dsl.module
 
 val playViewModelModule = module {
     viewModel {params ->
-        PlayTrackViewModel(get(),get(), url = params.get())
+        PlayTrackViewModel(url = params.get(), get())
     }
 
-    factory<Handler> {
-        Handler(Looper.getMainLooper())
+    factory<MediaPlayer> {
+        MediaPlayer()
     }
+
 }

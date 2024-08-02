@@ -1,96 +1,99 @@
 package com.example.playlist.ui.playActivity.viewModel
 
-import android.app.Application
-import android.content.Context
-import android.content.Intent
-import android.os.Handler
-import android.os.Looper
+import android.media.MediaPlayer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.playlist.domain.player.PlayerReposiroty
+import androidx.lifecycle.viewModelScope
 import com.example.playlist.ui.playActivity.models.PlayerState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-class PlayTrackViewModel(private val handler: Handler, private val reposiroty: PlayerReposiroty, private val url: String) : ViewModel(), KoinComponent {
+import java.text.SimpleDateFormat
+import java.util.Locale
+
+class PlayTrackViewModel(
+    private val url: String,
+    private val medaPlayer: MediaPlayer
+) : ViewModel(), KoinComponent {
 
 
+    private var timerJob: Job? = null
 
-    private var stateRunable = Runnable {getStateRunable()}
-    private val stateLiveData = MutableLiveData<PlayerState>(PlayerState.Default)
-
-
-    private var timeRunable = Runnable { getTimeRunable() }
-    private val timeLivedata = MutableLiveData<String>("00:00")
-
+    private val stateLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
+    fun observeState(): LiveData<PlayerState> = stateLiveData
 
     init {
-        handler.post(stateRunable)
         preparePlayer(url)
     }
 
-    fun observeState(): LiveData<PlayerState> = stateLiveData
 
-    fun observeTime(): LiveData<String> = timeLivedata
-
-
-    fun startPlayer() {
-        reposiroty.startPlayer()
-        handler.post(timeRunable)
-
-    }
     fun preparePlayer(url: String?) {
         if (url != null) {
-            reposiroty.preparePlayer(url)
-            handler.removeCallbacks(timeRunable)
+            medaPlayer.setDataSource(url)
+            medaPlayer.prepareAsync()
+            medaPlayer.setOnPreparedListener {
+                stateLiveData.postValue(PlayerState.Prepared())
+            }
+            medaPlayer.setOnCompletionListener {
+                stateLiveData.postValue(PlayerState.Prepared())
+                timerJob?.cancel()
+            }
         }
     }
-    fun pausePlayer() {
-       reposiroty.pausePlayer()
 
+    fun startPlayer() {
+        medaPlayer.start()
+        stateLiveData.postValue(PlayerState.Playing(getCurrentPlayerPosition()))
+        startTimer()
+    }
+
+    fun pausePlayer() {
+        medaPlayer.pause()
+        timerJob?.cancel()
+        stateLiveData.postValue(PlayerState.Paused(getCurrentPlayerPosition()))
 
     }
 
     fun playbackControl() {
         when (stateLiveData.value) {
-            PlayerState.Play -> {
+            is PlayerState.Playing -> {
                 pausePlayer()
-
             }
 
-            PlayerState.Prepare -> {
-                handler.removeCallbacks(timeRunable)
+            is PlayerState.Prepared, is PlayerState.Paused -> {
                 startPlayer()
-
-
-            }
-            PlayerState.Pause -> {
-                startPlayer()
-
-
             }
 
             else -> {}
+
         }
     }
 
-    private fun getStateRunable() {
-        stateLiveData.postValue(reposiroty.getPlayerState())
-        handler.postDelayed(stateRunable, 300)
+
+    private fun startTimer() {
+        timerJob = viewModelScope.launch {
+            while (medaPlayer.isPlaying) {
+                delay(300L)
+                stateLiveData.postValue(PlayerState.Playing(getCurrentPlayerPosition()))
+            }
+        }
     }
 
-    private fun getTimeRunable() {
-        timeLivedata.postValue(reposiroty.getCurrentTime())
-        handler.postDelayed(timeRunable, 300)
+    private fun releasePlayer() {
+        medaPlayer.stop()
+        medaPlayer.release()
+        stateLiveData.value = PlayerState.Default()
     }
 
     override fun onCleared() {
-        reposiroty.releasePlayer()
-        handler.removeCallbacks(timeRunable)
-        handler.removeCallbacks(stateRunable)
-
+        releasePlayer()
     }
 
-
-
+    private fun getCurrentPlayerPosition(): String {
+        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(medaPlayer.currentPosition)
+            ?: "00:00"
+    }
 }
+

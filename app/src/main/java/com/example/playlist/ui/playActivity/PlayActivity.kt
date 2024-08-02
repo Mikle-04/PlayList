@@ -46,13 +46,6 @@ class PlayActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
 
-
-        viewModel.observeState().observe(this) {
-            renderState(it)
-        }
-
-
-
         cover_artwork = findViewById(R.id.cover_img)
         track_name = findViewById(R.id.name_track_txt)
         author_track = findViewById(R.id.author_txt)
@@ -69,17 +62,26 @@ class PlayActivity : AppCompatActivity(){
         getCoverArtwork()
 
 
+
+
         back.setOnClickListener {
            this.onBackPressed()
         }
 
-        viewModel.observeTime().observe(this){
-            time_play.text = it
-        }
 
         play.setOnClickListener {
             viewModel.playbackControl()
         }
+
+        viewModel.observeState().observe(this){
+            renderState(it)
+            play.isEnabled = it.isPlayButtonEnabled
+            play.setImageResource(it.imgPlay)
+            time_play.text = it.progress
+
+        }
+
+
     }
 
     private fun getIntentSearchActivity() {
@@ -112,28 +114,24 @@ class PlayActivity : AppCompatActivity(){
 
 
 
-    private fun renderState(playerState: PlayerState) {
-        when (playerState) {
-            PlayerState.Play -> {
-                play.setImageResource(R.drawable.stop_button)
-            }
-
-            PlayerState.Prepare -> {
-                play.isEnabled = true
-                play.setImageResource(R.drawable.play_button)
-                time_play.text = "00:00"
-            }
-
-            PlayerState.Pause, PlayerState.Default -> {
-                play.setImageResource(R.drawable.play_button)
-            }
-        }
-    }
-
-
     override fun onPause() {
         super.onPause()
         viewModel.pausePlayer()
+    }
+
+    private fun renderState(playerState: PlayerState){
+        when (playerState) {
+            is PlayerState.Playing-> {
+                play.setImageResource(R.drawable.stop_button)
+            }
+
+           is PlayerState.Prepared,is PlayerState.Paused, is PlayerState.Default -> {
+                play.setImageResource(R.drawable.play_button)
+
+            }
+
+        }
+
     }
 
 }
