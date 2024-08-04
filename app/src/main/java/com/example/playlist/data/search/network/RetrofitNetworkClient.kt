@@ -7,9 +7,10 @@ import android.net.NetworkCapabilities
 import com.example.playlist.data.search.NetworkClient
 import com.example.playlist.data.search.dto.Response
 import com.example.playlist.data.search.dto.TrackRequest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.IOException
 
 class RetrofitNetworkClient(private val context: Context): NetworkClient {
     private val baseUrls = "https://itunes.apple.com"
@@ -19,7 +20,7 @@ class RetrofitNetworkClient(private val context: Context): NetworkClient {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val trackService = retrofit.create(TrackApi::class.java)
-    override fun doRequest(request: TrackRequest): Response {
+    override suspend fun doRequest(request: TrackRequest): Response {
 
         if (isConnected() == false) {
             return Response().apply { resultCode = -1 }
@@ -28,17 +29,15 @@ class RetrofitNetworkClient(private val context: Context): NetworkClient {
             return Response().apply { resultCode = 400 }
         }
 
-        return try {
-            val resp = trackService.search(request.expression).execute()
-            val body = resp.body()
-            if (body != null){
-                body.apply { resultCode = resp.code() }
-            }else{
-                Response().apply { resultCode = resp.code() }
+        return withContext(Dispatchers.IO){
+            try {
+                val response = trackService.search(request.expression)
+                response.apply { resultCode = 200 }
+            }catch (e: Exception){
+                Response().apply { resultCode = -1 }
             }
-        }catch (e: Exception){
-            Response().apply { resultCode = -1 }
         }
+
 
 
 

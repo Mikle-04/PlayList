@@ -12,6 +12,7 @@ import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.searchActivity.models.TrackState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -30,8 +31,6 @@ class TrackSearchViewModel(
 
 
     private var lastSearchText: String? = null
-
-    private val tracks = mutableListOf<Track>()
 
     //create liveData
     private val stateLiveData = MutableLiveData<TrackState>()
@@ -58,49 +57,54 @@ class TrackSearchViewModel(
 
     fun searchRequest(newSearchText: String) {
         if (newSearchText.isNotEmpty()) {
-            searchJob?.cancel()
+
             renderState(TrackState.Loading)
 
-            trackInteractor.searchTrack(
-                newSearchText,
-                object : TrackInteractor.TrackConsumer {
-                    override fun consume(foundMovies: List<Track>?, errorMessage: String?) {
-
-                        if (foundMovies != null) {
-                            tracks.clear()
-                            tracks.addAll(foundMovies)
-                        }
-
-                        when {
-                            errorMessage != null -> {
-                                renderState(
-                                    TrackState.Error(errorMessage)
-                                )
-
-                            }
-
-                            tracks.isEmpty() -> {
-                                renderState(
-                                    TrackState.Empty(
-                                        message = ""
-                                    )
-                                )
-                            }
-
-                            else -> {
-                                renderState(
-                                    TrackState.Content(
-                                        track = tracks
-                                    )
-                                )
-                            }
-                        }
-
-
+            viewModelScope.launch {
+                trackInteractor
+                    .searchTrack(newSearchText)
+                    .collect{pair ->
+                        processResult(pair.first, pair.second)
                     }
 
-                })
+            }
+
         }
+    }
+
+    private fun processResult(listTrack: List<Track>?, errorMessage: String?){
+
+        val track = mutableListOf<Track>()
+
+        if (listTrack != null){
+            track.addAll(listTrack)
+        }
+
+        when {
+            errorMessage != null -> {
+                renderState(
+                    TrackState.Error(errorMessage)
+                )
+
+            }
+
+            track.isEmpty() -> {
+                renderState(
+                    TrackState.Empty(
+                        message = ""
+                    )
+                )
+            }
+
+            else -> {
+                renderState(
+                    TrackState.Content(
+                        track = track
+                    )
+                )
+            }
+        }
+
     }
 
     fun getSearchHistory(): List<Track> {

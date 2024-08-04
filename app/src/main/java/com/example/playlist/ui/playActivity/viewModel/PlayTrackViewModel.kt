@@ -37,6 +37,7 @@ class PlayTrackViewModel(
                 stateLiveData.postValue(PlayerState.Prepared())
             }
             medaPlayer.setOnCompletionListener {
+                medaPlayer.seekTo(0)
                 stateLiveData.postValue(PlayerState.Prepared())
                 timerJob?.cancel()
             }
