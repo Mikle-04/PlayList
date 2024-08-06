@@ -17,6 +17,10 @@ class FragmentMedia : Fragment() {
 
     private lateinit var tabMediator : TabLayoutMediator
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,7 +32,7 @@ class FragmentMedia : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.viewPagerMedia.adapter = MediaViewPagerAdapter(requireActivity().supportFragmentManager, lifecycle)
+        binding.viewPagerMedia.adapter = MediaViewPagerAdapter(childFragmentManager, lifecycle)
 
         tabMediator = TabLayoutMediator(binding.tabLayoutMedia, binding.viewPagerMedia){tab, position ->
             when(position){

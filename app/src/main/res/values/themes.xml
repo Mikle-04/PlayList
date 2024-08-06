@@ -16,7 +16,7 @@
     <style name="Theme.PlayList" parent="Base.Theme.PlayList" />
 
     <style name="MySwitch" parent="Theme.AppCompat.Light">
-        <item name="colorControlActivated">@color/blue_switch</item>
+        <item name="colorControlActivated">@color/blue</item>
         <item name="colorSwitchThumbNormal">@color/gray</item>
         <item name="trackTint">@color/green_switch_light</item>
     </style>

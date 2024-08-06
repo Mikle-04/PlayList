@@ -1,11 +1,9 @@
 package com.example.playlist.domain.search.api
 
 import com.example.playlist.domain.search.models.Track
+import kotlinx.coroutines.flow.Flow
 
 interface TrackInteractor {
-    fun searchTrack(expression: String, consumer: TrackConsumer)
+    fun searchTrack(expression: String): Flow<Pair<List<Track>?, String?>>
 
-    interface TrackConsumer {
-        fun consume(foundMovies: List<Track>?, errorMessage: String?)
-    }
 }

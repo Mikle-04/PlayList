@@ -1,13 +1,18 @@
 package com.example.playlist.ui.playActivity.models
 
-sealed interface PlayerState {
+import android.widget.ImageView
+import com.example.playlist.R
 
-    object  Default: PlayerState
 
-    object Prepare: PlayerState
+sealed class PlayerState(val isPlayButtonEnabled: Boolean, val imgPlay: Int, val progress: String) {
 
-    object Play : PlayerState
+        class Default : PlayerState(false, R.drawable.play_button,  "00:00")
 
-    object Pause : PlayerState
-}
+        class Prepared : PlayerState(true,R.drawable.play_button,  "00:00")
+
+        class Playing(progress: String) : PlayerState(true,R.drawable.stop_button, progress)
+
+        class Paused(progress: String) : PlayerState(true,R.drawable.play_button, progress)
+    }
+
 
