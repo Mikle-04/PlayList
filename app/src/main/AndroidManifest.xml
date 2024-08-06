@@ -21,12 +21,12 @@
         <activity
             android:name=".ui.playActivity.PlayActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Base.Theme.PlayList"/>
 
         <activity
             android:name=".ui.mainActivity.MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
             android:theme="@style/Base.Theme.PlayList"
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
