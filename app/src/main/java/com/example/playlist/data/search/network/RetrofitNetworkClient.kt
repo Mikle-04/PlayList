@@ -22,7 +22,7 @@ class RetrofitNetworkClient(private val context: Context): NetworkClient {
     private val trackService = retrofit.create(TrackApi::class.java)
     override suspend fun doRequest(request: TrackRequest): Response {
 
-        if (isConnected() == false) {
+        if (!isConnected()) {
             return Response().apply { resultCode = -1 }
         }
         if (request !is TrackRequest){
