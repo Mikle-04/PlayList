@@ -1,8 +1,13 @@
-package com.example.playlist.domain.search.models
+package com.example.playlist.data.favourite.db
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
-data class Track(
+@Entity(tableName = "track_table")
+data class TrackEntity(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long,
     val trackId: Int,
     val trackName: String?,
     val artistName: String?,
@@ -12,6 +17,5 @@ data class Track(
     val releaseDate: String?,
     val primaryGenreName: String?,
     val previewUrl:String?,
-    val country: String?,
-    var isFavourite:Boolean = false
+    val country: String?
 )

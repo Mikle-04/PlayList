@@ -8,6 +8,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlist.R
+import com.example.playlist.domain.search.models.Track
+import com.example.playlist.ui.playActivity.models.FavouriteState
 import com.example.playlist.ui.playActivity.models.PlayerState
 import com.example.playlist.ui.playActivity.viewModel.PlayTrackViewModel
 import java.text.SimpleDateFormat
@@ -16,13 +18,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 
-class PlayActivity : AppCompatActivity(){
+class PlayActivity : AppCompatActivity() {
 
-    companion object{
-        private const val KEY_PREVIEW = "preview_url"
-    }
 
-   private val viewModel: PlayTrackViewModel by viewModel(){
+
+
+    private val viewModel: PlayTrackViewModel by viewModel() {
         parametersOf(intent.getStringExtra("preview_url"))
     }
 
@@ -37,6 +38,20 @@ class PlayActivity : AppCompatActivity(){
     private lateinit var countryTrack: TextView
     private lateinit var play: ImageView
     private lateinit var back: ImageView
+    private lateinit var favourite: ImageView
+
+    private var trackId: Int = 0
+    private var trackNames: String? = null
+    private var authorTracks: String? = null
+    private var trackTime: Long = 0
+    private var artworkUrls: String? = null
+    private var collectionName: String? = null
+    private var releaseDate = ""
+    private var primaryGenreName: String? = null
+    private var country: String? = null
+    private var isFavourite: Boolean = false
+    private var previewUrl:String? = null
+
 
     private var uri_img: String? = null
 
@@ -56,6 +71,7 @@ class PlayActivity : AppCompatActivity(){
         countryTrack = findViewById(R.id.country_txt)
         play = findViewById(R.id.play_img)
         back = findViewById(R.id.back_img)
+        favourite = findViewById(R.id.like_img)
 
         getIntentSearchActivity()
         getCoverArtwork()
@@ -64,7 +80,7 @@ class PlayActivity : AppCompatActivity(){
 
 
         back.setOnClickListener {
-           this.onBackPressed()
+            this.onBackPressed()
         }
 
 
@@ -72,7 +88,7 @@ class PlayActivity : AppCompatActivity(){
             viewModel.playbackControl()
         }
 
-        viewModel.observeState().observe(this){
+        viewModel.observeState().observe(this) {
             renderState(it)
             play.isEnabled = it.isPlayButtonEnabled
             play.setImageResource(it.imgPlay)
@@ -80,22 +96,56 @@ class PlayActivity : AppCompatActivity(){
 
         }
 
+        viewModel.observeStateFavourite().observe(this){
+            favouriteState(it)
+//            favourite.isEnabled = it.isFavourite
+//            favourite.setImageResource(it.imgFavourite)
+        }
+
+        favourite.setOnClickListener {
+            val track = Track(
+                trackId,
+                trackNames,
+                authorTracks,
+                trackTime,
+                artworkUrls,
+                collectionName,
+                releaseDate,
+                primaryGenreName,
+                previewUrl,
+                country,
+                isFavourite
+            )
+
+            viewModel.favouriteControl(track)
+        }
+
 
     }
 
     private fun getIntentSearchActivity() {
-
         intent?.let {
-            trackName.text = intent.getStringExtra("track_name")
-            authorTrack.text = intent.getStringExtra("artist_name")
-            timeTrack.text = SimpleDateFormat("mm:ss",
-                Locale.getDefault()).format(intent.getLongExtra("time_track", 0))
-            albumName.text = intent.getStringExtra("collection_name")
-            yearTrack.text = intent.getStringExtra("release_data")?.take(4) ?: ""
-            genreTrack.text = intent.getStringExtra("genre_name")
-            countryTrack.text = intent.getStringExtra("country_name")
-            uri_img = intent.getStringExtra("artwork_url")
+            trackId = intent.getIntExtra("trackId", 0)
+            trackNames = intent.getStringExtra("track_name")
+            authorTracks = intent.getStringExtra("artist_name")
+            trackTime = intent.getLongExtra("time_track", 0)
+            collectionName = intent.getStringExtra("collection_name")
+            releaseDate = intent.getStringExtra("release_data")?.take(4) ?: ""
+            primaryGenreName = intent.getStringExtra("genre_name")
+            artworkUrls = intent.getStringExtra("artwork_url")
+            country = intent.getStringExtra("country_name")
+            previewUrl = intent.getStringExtra("preview_url")
+            isFavourite = intent.getBooleanExtra("isFavourite", false)
         }
+
+        trackName.text = trackNames
+        authorTrack.text = authorTracks
+        timeTrack.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTime)
+        albumName.text = collectionName
+        yearTrack.text = releaseDate
+        genreTrack.text = primaryGenreName
+        countryTrack.text = country
+        uri_img = artworkUrls
 
         albumName.isSelected = true
     }
@@ -112,25 +162,36 @@ class PlayActivity : AppCompatActivity(){
     }
 
 
-
     override fun onPause() {
         super.onPause()
         viewModel.pausePlayer()
     }
 
-    private fun renderState(playerState: PlayerState){
+    private fun renderState(playerState: PlayerState) {
         when (playerState) {
-            is PlayerState.Playing-> {
+            is PlayerState.Playing -> {
                 play.setImageResource(R.drawable.stop_button)
             }
 
-           is PlayerState.Prepared,is PlayerState.Paused, is PlayerState.Default -> {
+            is PlayerState.Prepared, is PlayerState.Paused, is PlayerState.Default -> {
                 play.setImageResource(R.drawable.play_button)
 
             }
 
         }
 
+    }
+
+    private fun favouriteState(favouriteState: FavouriteState) {
+        when (favouriteState) {
+            is FavouriteState.Default -> {
+                favourite.setImageResource(R.drawable.like_button)
+            }
+
+            is FavouriteState.Favourite -> {
+                favourite.setImageResource(R.drawable.like_click_button)
+            }
+        }
     }
 
 }

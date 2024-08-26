@@ -193,6 +193,7 @@ class FragmentSearch : Fragment(), KoinComponent {
     private fun putPlayActivity(track: Track) {
         viewModel.saveSearchHistory(tracksHistory)
         Intent(requireActivity(), PlayActivity::class.java).also {
+            it.putExtra("trackId", track.trackId)
             it.putExtra("track_name", track.trackName)
             it.putExtra("artist_name", track.artistName)
             it.putExtra("artwork_url", track.artworkUrl100)
@@ -202,6 +203,7 @@ class FragmentSearch : Fragment(), KoinComponent {
             it.putExtra("genre_name", track.primaryGenreName)
             it.putExtra("country_name", track.country)
             it.putExtra("preview_url", track.previewUrl)
+            it.putExtra("isFavourite", track.isFavourite)
             startActivity(it)
         }
 

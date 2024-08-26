@@ -5,6 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlist.data.favourite.db.TrackEntity
+import com.example.playlist.domain.favorite.db.api.FavouriteInteractor
+import com.example.playlist.domain.search.models.Track
+import com.example.playlist.ui.playActivity.models.FavouriteState
 import com.example.playlist.ui.playActivity.models.PlayerState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -15,7 +19,8 @@ import java.util.Locale
 
 class PlayTrackViewModel(
     private val url: String,
-    private val medaPlayer: MediaPlayer
+    private val medaPlayer: MediaPlayer,
+    private val favouriteInteractor: FavouriteInteractor
 ) : ViewModel(), KoinComponent {
 
 
@@ -23,6 +28,10 @@ class PlayTrackViewModel(
 
     private val stateLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observeState(): LiveData<PlayerState> = stateLiveData
+
+    private val stateLiveDataFavourite = MutableLiveData<FavouriteState>(FavouriteState.Default())
+
+    fun observeStateFavourite(): LiveData<FavouriteState> = stateLiveDataFavourite
 
     init {
         preparePlayer(url)
@@ -95,6 +104,24 @@ class PlayTrackViewModel(
     private fun getCurrentPlayerPosition(): String {
         return SimpleDateFormat("mm:ss", Locale.getDefault()).format(medaPlayer.currentPosition)
             ?: "00:00"
+    }
+
+
+    fun favouriteControl(track: Track){
+        when(stateLiveDataFavourite.value){
+            is FavouriteState.Default ->{
+                track.isFavourite = true
+                favouriteInteractor.insertFavoriteTrack(track)
+                stateLiveDataFavourite.postValue(FavouriteState.Favourite())
+            }
+
+            is FavouriteState.Favourite ->{
+                track.isFavourite = false
+                favouriteInteractor.deleteFavoriteTrack(track)
+                stateLiveDataFavourite.postValue(FavouriteState.Default())
+            }
+            else -> {}
+        }
     }
 }
 
