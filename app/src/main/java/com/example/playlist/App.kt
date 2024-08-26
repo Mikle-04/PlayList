@@ -2,7 +2,6 @@ package com.example.playlist
 
 import android.app.Application
 import com.example.playlist.di.dataModule.externalNavigatorModule
-import com.example.playlist.di.dataModule.playerRepositoryModule
 import com.example.playlist.di.dataModule.sharingRepositoryModule
 import com.example.playlist.di.dataModule.themeRepositoryModule
 import com.example.playlist.di.dataModule.trackRepositoryModule
@@ -29,7 +28,6 @@ class App : Application(), KoinComponent {
         startKoin {
             androidContext(this@App)
             modules(
-                playerRepositoryModule,
                 playViewModelModule,
                 historySearchRepositoryModule,
                 trackRepositoryModule,

@@ -20,6 +20,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +30,9 @@ import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.searchActivity.viewModel.TrackSearchViewModel
 import com.example.playlist.ui.playActivity.PlayActivity
 import com.example.playlist.ui.searchActivity.models.TrackState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.component.KoinComponent
 
@@ -40,12 +44,13 @@ class FragmentSearch : Fragment(), KoinComponent {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
+
+
     private var tracksHistory = mutableListOf<Track>()
     private var tracks = mutableListOf<Track>()
     private val adapter = AdapterTrack(tracks)
     private val adapterHistory = AdapterTrack(tracksHistory)
     private var isClickAllowed = true
-    private lateinit var handler: Handler
     private val max = 10
     private var textWatcher: TextWatcher? = null
 
@@ -65,7 +70,6 @@ class FragmentSearch : Fragment(), KoinComponent {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        handler = Handler(Looper.getMainLooper())
 
         tracksHistory.addAll(
             viewModel.getSearchHistory()
@@ -91,7 +95,6 @@ class FragmentSearch : Fragment(), KoinComponent {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
-                    viewModel.stopSearch()
                     clearSearchTrack()
                     binding.layoutHistory.visibility =
                         if (binding.editTextSearch.hasFocus() && binding.editTextSearch.text.isEmpty() && tracksHistory.isNotEmpty()) View.VISIBLE else View.GONE
@@ -115,7 +118,8 @@ class FragmentSearch : Fragment(), KoinComponent {
         // img clean search
         binding.imgClearSearch.setOnClickListener {
             clearSearchTrack()
-            val inputMethodManager = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+            val inputMethodManager =
+                requireActivity().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(binding.editTextSearch.windowToken, 0)
         }
 
@@ -144,8 +148,6 @@ class FragmentSearch : Fragment(), KoinComponent {
         }
 
     }
-
-
 
 
     private fun showClearIcon(s: CharSequence?): Int {
@@ -188,7 +190,6 @@ class FragmentSearch : Fragment(), KoinComponent {
     }
 
 
-
     private fun putPlayActivity(track: Track) {
         viewModel.saveSearchHistory(tracksHistory)
         Intent(requireActivity(), PlayActivity::class.java).also {
@@ -210,7 +211,10 @@ class FragmentSearch : Fragment(), KoinComponent {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
         }
         return current
     }
