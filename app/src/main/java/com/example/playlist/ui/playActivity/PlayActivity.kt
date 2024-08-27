@@ -39,6 +39,7 @@ class PlayActivity : AppCompatActivity() {
     private lateinit var play: ImageView
     private lateinit var back: ImageView
     private lateinit var favourite: ImageView
+    private var track: Track? = null
 
     private var trackId: Int = 0
     private var trackNames: String? = null
@@ -97,31 +98,31 @@ class PlayActivity : AppCompatActivity() {
         }
 
         viewModel.observeStateFavourite().observe(this){
-            favouriteState(it)
-//            favourite.isEnabled = it.isFavourite
-//            favourite.setImageResource(it.imgFavourite)
+
         }
 
         favourite.setOnClickListener {
-            val track = Track(
-                trackId,
-                trackNames,
-                authorTracks,
-                trackTime,
-                artworkUrls,
-                collectionName,
-                releaseDate,
-                primaryGenreName,
-                previewUrl,
-                country,
-                isFavourite
-            )
+            track?.let { viewModel.onFavouriteClicked(it) }
 
-            viewModel.favouriteControl(track)
+        }
+
+        viewModel.observeStateFavourite().observe(this){state ->
+            isFavourite = state
+            changeIconOfFavorite(isFavourite)
         }
 
 
     }
+
+    private fun changeIconOfFavorite(isFavourites : Boolean){
+        if (isFavourites){
+            favourite.setImageResource(R.drawable.like_click_button)
+        }
+        else{
+            favourite.setImageResource(R.drawable.like_button)
+        }
+    }
+
 
     private fun getIntentSearchActivity() {
         intent?.let {
@@ -182,17 +183,6 @@ class PlayActivity : AppCompatActivity() {
 
     }
 
-    private fun favouriteState(favouriteState: FavouriteState) {
-        when (favouriteState) {
-            is FavouriteState.Default -> {
-                favourite.setImageResource(R.drawable.like_button)
-            }
-
-            is FavouriteState.Favourite -> {
-                favourite.setImageResource(R.drawable.like_click_button)
-            }
-        }
-    }
 
 }
 //

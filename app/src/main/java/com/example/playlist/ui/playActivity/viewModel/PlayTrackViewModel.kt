@@ -6,7 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlist.data.favourite.db.TrackEntity
+import com.example.playlist.data.favourite.db.converters.TrackDbConverter
 import com.example.playlist.domain.favorite.db.api.FavouriteInteractor
+import com.example.playlist.domain.favorite.db.api.FavouriteRepository
+import com.example.playlist.domain.player.api.PlayerRepository
 import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.playActivity.models.FavouriteState
 import com.example.playlist.ui.playActivity.models.PlayerState
@@ -20,7 +23,9 @@ import java.util.Locale
 class PlayTrackViewModel(
     private val url: String,
     private val medaPlayer: MediaPlayer,
-    private val favouriteInteractor: FavouriteInteractor
+    private val playerRepository: PlayerRepository,
+    private val trackDbConverter: TrackDbConverter,
+    track: Track?
 ) : ViewModel(), KoinComponent {
 
 
@@ -29,9 +34,8 @@ class PlayTrackViewModel(
     private val stateLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observeState(): LiveData<PlayerState> = stateLiveData
 
-    private val stateLiveDataFavourite = MutableLiveData<FavouriteState>(FavouriteState.Default())
-
-    fun observeStateFavourite(): LiveData<FavouriteState> = stateLiveDataFavourite
+    private val stateLiveDataFavourite = MutableLiveData(track?.isFavourite ?: false)
+    fun observeStateFavourite(): LiveData<Boolean> = stateLiveDataFavourite
 
     init {
         preparePlayer(url)
@@ -107,21 +111,11 @@ class PlayTrackViewModel(
     }
 
 
-    fun favouriteControl(track: Track){
-        when(stateLiveDataFavourite.value){
-            is FavouriteState.Default ->{
-                track.isFavourite = true
-                favouriteInteractor.insertFavoriteTrack(track)
-                stateLiveDataFavourite.postValue(FavouriteState.Favourite())
-            }
+    fun onFavouriteClicked(track: Track){
+        playerRepository.onFavouriteClick(track)
+        track.isFavourite = !track.isFavourite
+        stateLiveDataFavourite.postValue(track.isFavourite)
 
-            is FavouriteState.Favourite ->{
-                track.isFavourite = false
-                favouriteInteractor.deleteFavoriteTrack(track)
-                stateLiveDataFavourite.postValue(FavouriteState.Default())
-            }
-            else -> {}
-        }
     }
 }
 

@@ -12,12 +12,5 @@ class FavouriteInteractorImpl(private val favouriteRepository: FavouriteReposito
         return favouriteRepository.getFavouriteTrack()
     }
 
-    override fun deleteFavoriteTrack(track: Track) {
-        return favouriteRepository.deleteFavoriteTrack(track)
-    }
-
-    override fun insertFavoriteTrack(track: Track) {
-        return favouriteRepository.insertFavoriteTrack(track)
-    }
 
 }

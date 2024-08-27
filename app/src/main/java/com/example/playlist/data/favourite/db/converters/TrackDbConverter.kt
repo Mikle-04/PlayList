@@ -6,7 +6,7 @@ import com.example.playlist.domain.search.models.Track
 
 class TrackDbConverter {
 
-    fun mapTrackToTrackEntity(track: Track): TrackEntity {
+    fun map(track: Track): TrackEntity {
         return TrackEntity(
             0L,
             track.trackId,
@@ -19,10 +19,11 @@ class TrackDbConverter {
             track.primaryGenreName,
             track.previewUrl,
             track.country
+
         )
     }
 
-    fun mapTrackEntityToTrack(track: TrackEntity): Track{
+    fun map(track: TrackEntity): Track {
         return Track(
             track.trackId,
             track.trackName,
@@ -33,7 +34,8 @@ class TrackDbConverter {
             track.releaseDate,
             track.primaryGenreName,
             track.previewUrl,
-            track.country)
+            track.country
+        )
     }
 
 
