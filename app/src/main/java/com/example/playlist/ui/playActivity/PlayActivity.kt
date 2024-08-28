@@ -42,19 +42,19 @@ class PlayActivity : AppCompatActivity() {
     private var track: Track? = null
 
     private var trackId: Int = 0
-    private var trackNames: String? = null
-    private var authorTracks: String? = null
+    private var trackNames: String = ""
+    private var authorTracks: String = ""
     private var trackTime: Long = 0
-    private var artworkUrls: String? = null
-    private var collectionName: String? = null
+    private var artworkUrls: String = ""
+    private var collectionName: String = ""
     private var releaseDate = ""
-    private var primaryGenreName: String? = null
-    private var country: String? = null
+    private var primaryGenreName: String = ""
+    private var country: String = ""
     private var isFavourite: Boolean = false
-    private var previewUrl:String? = null
+    private var previewUrl:String = ""
 
 
-    private var uri_img: String? = null
+    private var uri_img: String = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,19 +97,18 @@ class PlayActivity : AppCompatActivity() {
 
         }
 
-        viewModel.observeStateFavourite().observe(this){
 
-        }
 
         favourite.setOnClickListener {
-            track?.let { viewModel.onFavouriteClicked(it) }
+            val track = Track(trackId, trackNames, authorTracks, trackTime, collectionName, releaseDate, primaryGenreName, artworkUrls,
+                collectionName, previewUrl, isFavourite)
+            viewModel.onFavouriteClicked(track)
 
         }
-
-        viewModel.observeStateFavourite().observe(this){state ->
-            isFavourite = state
-            changeIconOfFavorite(isFavourite)
+        viewModel.observeStateFavourite().observe(this){
+            favouriteState(it)
         }
+
 
 
     }
@@ -125,17 +124,17 @@ class PlayActivity : AppCompatActivity() {
 
 
     private fun getIntentSearchActivity() {
-        intent?.let {
+        intent.let {
             trackId = intent.getIntExtra("trackId", 0)
-            trackNames = intent.getStringExtra("track_name")
-            authorTracks = intent.getStringExtra("artist_name")
+            trackNames = intent.getStringExtra("track_name")?: ""
+            authorTracks = intent.getStringExtra("artist_name")?: ""
             trackTime = intent.getLongExtra("time_track", 0)
-            collectionName = intent.getStringExtra("collection_name")
+            collectionName = intent.getStringExtra("collection_name")?: ""
             releaseDate = intent.getStringExtra("release_data")?.take(4) ?: ""
-            primaryGenreName = intent.getStringExtra("genre_name")
-            artworkUrls = intent.getStringExtra("artwork_url")
-            country = intent.getStringExtra("country_name")
-            previewUrl = intent.getStringExtra("preview_url")
+            primaryGenreName = intent.getStringExtra("genre_name")?: ""
+            artworkUrls = intent.getStringExtra("artwork_url")?: ""
+            country = intent.getStringExtra("country_name")?: ""
+            previewUrl = intent.getStringExtra("preview_url")?: ""
             isFavourite = intent.getBooleanExtra("isFavourite", false)
         }
 
@@ -181,6 +180,17 @@ class PlayActivity : AppCompatActivity() {
 
         }
 
+    }
+
+    private fun favouriteState(favouriteState: FavouriteState){
+        when(favouriteState){
+            is FavouriteState.Default ->{
+                favourite.setImageResource(R.drawable.like_button)
+            }
+            is FavouriteState.Favourite -> {
+                favourite.setImageResource(R.drawable.like_click_button)
+            }
+        }
     }
 
 

@@ -2,9 +2,9 @@ package com.example.playlist.ui.playActivity.models
 
 import com.example.playlist.R
 
-sealed class FavouriteState(val isFavourite: Boolean) {
+sealed class FavouriteState() {
 
-    class Default : FavouriteState(false)
+    class Default : FavouriteState()
 
-    class Favourite : FavouriteState(true)
+    class Favourite : FavouriteState()
 }

@@ -23,9 +23,8 @@ import java.util.Locale
 class PlayTrackViewModel(
     private val url: String,
     private val medaPlayer: MediaPlayer,
-    private val playerRepository: PlayerRepository,
+    private val favouriteInteractor: FavouriteInteractor,
     private val trackDbConverter: TrackDbConverter,
-    track: Track?
 ) : ViewModel(), KoinComponent {
 
 
@@ -34,8 +33,8 @@ class PlayTrackViewModel(
     private val stateLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observeState(): LiveData<PlayerState> = stateLiveData
 
-    private val stateLiveDataFavourite = MutableLiveData(track?.isFavourite ?: false)
-    fun observeStateFavourite(): LiveData<Boolean> = stateLiveDataFavourite
+    private val stateLiveDataFavourite = MutableLiveData<FavouriteState>(FavouriteState.Default())
+    fun observeStateFavourite(): LiveData<FavouriteState> = stateLiveDataFavourite
 
     init {
         preparePlayer(url)
@@ -112,10 +111,16 @@ class PlayTrackViewModel(
 
 
     fun onFavouriteClicked(track: Track){
-        playerRepository.onFavouriteClick(track)
-        track.isFavourite = !track.isFavourite
-        stateLiveDataFavourite.postValue(track.isFavourite)
-
+        val trackEntity = trackDbConverter.map(track)
+        if (track.isFavourite){
+            favouriteInteractor.deleteFavoriteTrack(trackEntity)
+            stateLiveDataFavourite.postValue(FavouriteState.Default())
+        }
+        else{
+            track.isFavourite = true
+            favouriteInteractor.insertFavoriteTrack(trackEntity)
+            stateLiveDataFavourite.postValue(FavouriteState.Favourite())
+        }
     }
 }
 
