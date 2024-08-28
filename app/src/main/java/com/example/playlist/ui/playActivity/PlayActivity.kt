@@ -39,7 +39,6 @@ class PlayActivity : AppCompatActivity() {
     private lateinit var play: ImageView
     private lateinit var back: ImageView
     private lateinit var favourite: ImageView
-    private var track: Track? = null
 
     private var trackId: Int = 0
     private var trackNames: String = ""
@@ -106,20 +105,11 @@ class PlayActivity : AppCompatActivity() {
 
         }
         viewModel.observeStateFavourite().observe(this){
-            favouriteState(it)
+            favouriteState(isFavourite)
         }
 
 
 
-    }
-
-    private fun changeIconOfFavorite(isFavourites : Boolean){
-        if (isFavourites){
-            favourite.setImageResource(R.drawable.like_click_button)
-        }
-        else{
-            favourite.setImageResource(R.drawable.like_button)
-        }
     }
 
 
@@ -182,15 +172,14 @@ class PlayActivity : AppCompatActivity() {
 
     }
 
-    private fun favouriteState(favouriteState: FavouriteState){
-        when(favouriteState){
-            is FavouriteState.Default ->{
-                favourite.setImageResource(R.drawable.like_button)
-            }
-            is FavouriteState.Favourite -> {
-                favourite.setImageResource(R.drawable.like_click_button)
-            }
+    private fun favouriteState(isFavourite: Boolean){
+        if (isFavourite){
+            favourite.setImageResource(R.drawable.like_click_button)
         }
+        else{
+            favourite.setImageResource(R.drawable.like_button)
+        }
+
     }
 
 

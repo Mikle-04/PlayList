@@ -29,12 +29,13 @@ class PlayTrackViewModel(
 
 
     private var timerJob: Job? = null
+    private val track: Track? = null
 
     private val stateLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observeState(): LiveData<PlayerState> = stateLiveData
 
-    private val stateLiveDataFavourite = MutableLiveData<FavouriteState>(FavouriteState.Default())
-    fun observeStateFavourite(): LiveData<FavouriteState> = stateLiveDataFavourite
+    private val stateLiveDataFavourite = MutableLiveData<Boolean>(track?.isFavourite)
+    fun observeStateFavourite(): LiveData<Boolean> = stateLiveDataFavourite
 
     init {
         preparePlayer(url)
@@ -113,13 +114,14 @@ class PlayTrackViewModel(
     fun onFavouriteClicked(track: Track){
         val trackEntity = trackDbConverter.map(track)
         if (track.isFavourite){
+            track.isFavourite = false
             favouriteInteractor.deleteFavoriteTrack(trackEntity)
-            stateLiveDataFavourite.postValue(FavouriteState.Default())
+            stateLiveDataFavourite.postValue(track.isFavourite)
         }
         else{
             track.isFavourite = true
             favouriteInteractor.insertFavoriteTrack(trackEntity)
-            stateLiveDataFavourite.postValue(FavouriteState.Favourite())
+            stateLiveDataFavourite.postValue(track.isFavourite)
         }
     }
 }
