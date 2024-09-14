@@ -22,6 +22,7 @@ import java.util.Locale
 
 class PlayTrackViewModel(
     private val url: String,
+    private val isFavourite: Boolean,
     private val medaPlayer: MediaPlayer,
     private val favouriteInteractor: FavouriteInteractor,
     private val trackDbConverter: TrackDbConverter,
@@ -29,12 +30,11 @@ class PlayTrackViewModel(
 
 
     private var timerJob: Job? = null
-    private val track: Track? = null
 
     private val stateLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observeState(): LiveData<PlayerState> = stateLiveData
 
-    private val stateLiveDataFavourite = MutableLiveData<Boolean>(track?.isFavourite)
+    private val stateLiveDataFavourite = MutableLiveData<Boolean>(isFavourite)
     fun observeStateFavourite(): LiveData<Boolean> = stateLiveDataFavourite
 
     init {
@@ -111,17 +111,18 @@ class PlayTrackViewModel(
     }
 
 
-    fun onFavouriteClicked(track: Track){
-        val trackEntity = trackDbConverter.map(track)
-        if (track.isFavourite){
-            track.isFavourite = false
-            favouriteInteractor.deleteFavoriteTrack(trackEntity)
-            stateLiveDataFavourite.postValue(track.isFavourite)
-        }
-        else{
-            track.isFavourite = true
-            favouriteInteractor.insertFavoriteTrack(trackEntity)
-            stateLiveDataFavourite.postValue(track.isFavourite)
+    fun onFavouriteClicked(track: Track?){
+        if (track != null) {
+            if (track.isFavourite){
+                track.isFavourite = false
+                favouriteInteractor.deleteFavoriteTrack(track)
+                stateLiveDataFavourite.postValue(track.isFavourite)
+            }
+            else{
+                track.isFavourite = true
+                favouriteInteractor.insertFavoriteTrack(track)
+                stateLiveDataFavourite.postValue(track.isFavourite)
+            }
         }
     }
 }

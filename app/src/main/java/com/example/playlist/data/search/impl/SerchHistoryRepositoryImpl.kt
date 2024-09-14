@@ -1,6 +1,7 @@
 package com.example.playlist.data.search.impl
 
 import android.content.SharedPreferences
+import com.example.playlist.data.favourite.db.AppDatabase
 import com.example.playlist.domain.search.api.SearchHistoryRepository
 import com.example.playlist.domain.search.models.Track
 import com.google.gson.Gson

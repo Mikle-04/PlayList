@@ -10,7 +10,7 @@ import com.example.playlist.data.favourite.db.TrackEntity
 @Dao
 interface TrackDao {
     @Insert(entity = TrackEntity::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTrack(track: TrackEntity)
+    fun insertTrack(track: TrackEntity)
 
     @Delete(entity = TrackEntity::class)
     fun deleteTrack (track: TrackEntity)
@@ -19,6 +19,6 @@ interface TrackDao {
     suspend fun getTrack(): List<TrackEntity>
 
     @Query("SELECT trackId FROM track_table")
-    fun getTrackId(): List<Int>
+    suspend fun getTrackId(): List<Int>
 
 }

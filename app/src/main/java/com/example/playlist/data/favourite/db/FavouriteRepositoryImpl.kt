@@ -19,21 +19,27 @@ class FavouriteRepositoryImpl(
         emit(convertFromTrackEntityToTrack(track))
     }
 
-    override fun deleteFavoriteTrack(track: TrackEntity) {
+    override  fun deleteFavoriteTrack(track: Track) {
         CoroutineScope(Dispatchers.IO).launch {
-            appDatabase.trackDao().deleteTrack(track)
+            appDatabase.trackDao().deleteTrack(convertFromTrackToTrackEntity(track))
         }
+
+
     }
 
-    override fun insertFavoriteTrack(track: TrackEntity) {
+    override  fun insertFavoriteTrack(track: Track) {
         CoroutineScope(Dispatchers.IO).launch {
-            appDatabase.trackDao().insertTrack(track)
+            appDatabase.trackDao().insertTrack(convertFromTrackToTrackEntity(track))
         }
+
+
     }
 
     private fun convertFromTrackEntityToTrack(track: List<TrackEntity>): List<Track> {
         return track.map { track -> trackDbConverter.map(track) }
     }
 
-
+    private fun convertFromTrackToTrackEntity(track: Track): TrackEntity {
+        return trackDbConverter.map(track)
+    }
 }

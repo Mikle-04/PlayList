@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface FavouriteInteractor {
     fun getFavouriteTrack(): Flow<List<Track>>
 
-    fun deleteFavoriteTrack(track: TrackEntity)
+     fun deleteFavoriteTrack(track: Track)
 
-    fun insertFavoriteTrack(track: TrackEntity)
+    fun insertFavoriteTrack(track: Track)
 }

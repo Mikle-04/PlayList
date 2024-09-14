@@ -6,13 +6,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlist.data.favourite.db.AppDatabase
 import com.example.playlist.domain.search.api.SearchHistoryRepository
 import com.example.playlist.domain.search.api.TrackInteractor
 import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.searchActivity.models.TrackState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -20,7 +25,8 @@ import org.koin.core.component.inject
 
 class TrackSearchViewModel(
     private val trackInteractor: TrackInteractor,
-    private val repositoryHistory: SearchHistoryRepository
+    private val repositoryHistory: SearchHistoryRepository,
+    private val appDatabase: AppDatabase
 ) : ViewModel(), KoinComponent {
 
     companion object {
@@ -29,7 +35,7 @@ class TrackSearchViewModel(
 
     private var searchJob: Job? = null
 
-
+    var historyTrack : List<Track>? = null
     private var lastSearchText: String? = null
 
     //create liveData
@@ -43,7 +49,7 @@ class TrackSearchViewModel(
 
 
     fun searchDebounce(changedText: String) {
-        if (lastSearchText == changedText){
+        if (lastSearchText == changedText) {
             return
         }
         lastSearchText = changedText
@@ -63,7 +69,7 @@ class TrackSearchViewModel(
             viewModelScope.launch {
                 trackInteractor
                     .searchTrack(newSearchText)
-                    .collect{pair ->
+                    .collect { pair ->
                         processResult(pair.first, pair.second)
                     }
 
@@ -72,11 +78,11 @@ class TrackSearchViewModel(
         }
     }
 
-    private fun processResult(listTrack: List<Track>?, errorMessage: String?){
+    private fun processResult(listTrack: List<Track>?, errorMessage: String?) {
 
         val track = mutableListOf<Track>()
 
-        if (listTrack != null){
+        if (listTrack != null) {
             track.addAll(listTrack)
         }
 
@@ -107,18 +113,29 @@ class TrackSearchViewModel(
 
     }
 
-    fun getSearchHistory(): List<Track> {
-        return repositoryHistory.getSearchHistory().toMutableList()
-    }
 
-    fun saveSearchHistory(track: List<Track>) {
-        repositoryHistory.saveHistory(track)
-    }
+    fun getSearchHistory(): Flow<List<Track>> = flow{
+        val historyList = repositoryHistory.getSearchHistory()
+        val favoritesIdList = appDatabase.trackDao().getTrackId()
+        if (favoritesIdList.isNotEmpty()){
+            historyList.forEach{
+                it.isFavourite = isFavourite(it.trackId, favoritesIdList)
+            }
+        }
+        emit(historyList)
+}
 
-    fun clearSearchHistory(track: MutableList<Track>) {
-        repositoryHistory.clearHistory(track)
-    }
+fun saveSearchHistory(track: List<Track>) {
+    repositoryHistory.saveHistory(track)
+}
 
-// инит подписываемся на получение списка возврат flow
+fun clearSearchHistory(track: MutableList<Track>) {
+    repositoryHistory.clearHistory(track)
+}
+
+private fun isFavourite(trackId: Int, favoritesIdList: List<Int>): Boolean {
+    val favorite = favoritesIdList.find { it == trackId }
+    return favorite != null
+}
 
 }

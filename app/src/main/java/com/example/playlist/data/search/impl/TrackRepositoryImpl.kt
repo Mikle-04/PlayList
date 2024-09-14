@@ -1,19 +1,16 @@
-package com.example.playlist.data.search.network
+package com.example.playlist.data.search.impl
 
-import android.content.Context
-import android.content.Intent
 import com.example.playlist.data.favourite.db.AppDatabase
-import com.example.playlist.data.favourite.db.converters.TrackDbConverter
 import com.example.playlist.data.search.NetworkClient
-import com.example.playlist.data.search.dto.TrackDto
 import com.example.playlist.data.search.dto.TrackRequest
 import com.example.playlist.data.search.dto.TrackResponse
 import com.example.playlist.domain.search.api.TrackRepository
 import com.example.playlist.domain.search.models.Track
-import com.example.playlist.ui.playActivity.PlayActivity
 import com.example.playlist.util.Resource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class TrackRepositoryImpl(
     private val appDatabase: AppDatabase,
@@ -41,13 +38,12 @@ class TrackRepositoryImpl(
                     it.country,
                     isFavourite(it.trackId, favoritesIdList)
                 ) }))
-
-
             }
 
             else -> emit(Resource.Success(emptyList()))
         }
-    }
+    }.flowOn(Dispatchers.IO)
+
     private fun isFavourite (trackId: Int, favoritesIdList: List<Int>): Boolean {
         val favorite = favoritesIdList.find { it == trackId }
         return favorite != null

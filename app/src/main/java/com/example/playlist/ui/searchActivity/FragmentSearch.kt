@@ -64,6 +64,7 @@ class FragmentSearch : Fragment(), KoinComponent {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         _binding = SearchFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
