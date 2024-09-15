@@ -4,17 +4,21 @@ import com.example.playlist.data.favourite.db.AppDatabase
 import com.example.playlist.data.search.NetworkClient
 import com.example.playlist.data.search.dto.TrackRequest
 import com.example.playlist.data.search.dto.TrackResponse
+import com.example.playlist.domain.search.api.SearchHistoryRepository
 import com.example.playlist.domain.search.api.TrackRepository
 import com.example.playlist.domain.search.models.Track
 import com.example.playlist.util.Resource
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 
 class TrackRepositoryImpl(
     private val appDatabase: AppDatabase,
-    private val networkClient: NetworkClient
+    private val networkClient: NetworkClient,
+    private val repositoryHistory: SearchHistoryRepository
 ) : TrackRepository {
     override fun searchTrack(expression: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TrackRequest(expression))
@@ -43,6 +47,19 @@ class TrackRepositoryImpl(
             else -> emit(Resource.Success(emptyList()))
         }
     }.flowOn(Dispatchers.IO)
+
+    override fun getHistoryTrack(): List<Track> {
+        val historyList = repositoryHistory.getSearchHistory()
+        CoroutineScope(Dispatchers.IO).launch{
+            val favoritesIdList = appDatabase.trackDao().getTrackId()
+            if (favoritesIdList.isNotEmpty()){
+                historyList.forEach{
+                    it.isFavourite = isFavourite(it.trackId, favoritesIdList)
+                }
+            }
+        }
+        return historyList
+    }
 
     private fun isFavourite (trackId: Int, favoritesIdList: List<Int>): Boolean {
         val favorite = favoritesIdList.find { it == trackId }

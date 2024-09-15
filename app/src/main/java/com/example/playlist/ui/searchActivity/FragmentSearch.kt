@@ -73,7 +73,7 @@ class FragmentSearch : Fragment(), KoinComponent {
         super.onViewCreated(view, savedInstanceState)
 
         tracksHistory.addAll(
-            viewModel.getSearchHistory()
+            viewModel.getHistoryTrack()
         )
 
         binding.recyclerViewTrack.layoutManager =
