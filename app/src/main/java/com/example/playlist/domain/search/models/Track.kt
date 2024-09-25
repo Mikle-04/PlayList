@@ -14,4 +14,13 @@ data class Track(
     val previewUrl:String,
     val country: String,
     var isFavourite:Boolean = false
-)
+){
+    override fun equals(other: Any?): Boolean {
+        return if (other is Track){
+            (trackId == other.trackId)
+        }else{
+            super.equals(other)
+        }
+    }
+}
+

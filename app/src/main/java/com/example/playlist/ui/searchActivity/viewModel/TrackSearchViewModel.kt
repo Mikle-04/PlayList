@@ -22,6 +22,9 @@ class TrackSearchViewModel(
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
+    init {
+        getHistoryTrack()
+    }
 
     private var searchJob: Job? = null
 
