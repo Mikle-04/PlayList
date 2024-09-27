@@ -9,7 +9,7 @@ import org.koin.dsl.module
 
 val trackRepositoryModule = module {
     factory<TrackRepository> {
-        TrackRepositoryImpl(get(), get(), get())
+        TrackRepositoryImpl(get())
     }
 
     factory<NetworkClient> {

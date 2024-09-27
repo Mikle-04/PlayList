@@ -7,11 +7,12 @@
     android:background="?attr/colorPrimaryVariant">
 
     <ImageView
-        android:id="@+id/FavouritesEmptyImg"
+        android:id="@+id/favouriteEmptyImg"
         android:layout_width="@dimen/size_120dp"
         android:layout_height="@dimen/size_120dp"
         style="@style/imgEmpty"
-        android:layout_marginTop="106dp"/>
+        android:layout_marginTop="106dp"
+       />
 
     <TextView
         android:id="@+id/mediatekaEmptyText"
@@ -23,6 +24,14 @@
         android:text="@string/mediateka_empty"
         android:gravity="center"
         android:textSize="@dimen/size_19dp"
-        android:textColor="?attr/colorSecondaryVariant"/>
+        android:textColor="?attr/colorSecondaryVariant"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewFavourite"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/size_20dp"/>
 
 </LinearLayout>

@@ -16,9 +16,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 class TrackRepositoryImpl(
-    private val appDatabase: AppDatabase,
-    private val networkClient: NetworkClient,
-    private val repositoryHistory: SearchHistoryRepository
+    private val networkClient: NetworkClient
 ) : TrackRepository {
     override fun searchTrack(expression: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TrackRequest(expression))
@@ -28,7 +26,6 @@ class TrackRepositoryImpl(
             }
 
             200 -> {
-                val favoritesIdList = appDatabase.trackDao().getTrackId()
                 emit(Resource.Success((response as TrackResponse).results.map { Track(
                     it.trackId,
                     it.trackName,
@@ -39,32 +36,13 @@ class TrackRepositoryImpl(
                     it.releaseDate,
                     it.primaryGenreName,
                     it.previewUrl,
-                    it.country,
-                    isFavourite(it.trackId, favoritesIdList)
+                    it.country
                 ) }))
             }
 
             else -> emit(Resource.Success(emptyList()))
         }
     }.flowOn(Dispatchers.IO)
-
-    override fun getHistoryTrack(): List<Track> {
-        val historyList = repositoryHistory.getSearchHistory()
-        CoroutineScope(Dispatchers.IO).launch{
-            val favoritesIdList = appDatabase.trackDao().getTrackId()
-            if (favoritesIdList.isNotEmpty()){
-                historyList.forEach{
-                    it.isFavourite = isFavourite(it.trackId, favoritesIdList)
-                }
-            }
-        }
-        return historyList
-    }
-
-    private fun isFavourite (trackId: Int, favoritesIdList: List<Int>): Boolean {
-        val favorite = favoritesIdList.find { it == trackId }
-        return favorite != null
-    }
 
 }
 

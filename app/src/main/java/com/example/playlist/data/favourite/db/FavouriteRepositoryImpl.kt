@@ -35,6 +35,11 @@ class FavouriteRepositoryImpl(
 
     }
 
+    override fun getFavouriteTrackId(trackId: Int): Flow<Boolean> = flow{
+        emit(appDatabase.trackDao().getTrackById(trackId) != null)
+
+    }
+
     private fun convertFromTrackEntityToTrack(track: List<TrackEntity>): List<Track> {
         return track.map { track -> trackDbConverter.map(track) }
     }

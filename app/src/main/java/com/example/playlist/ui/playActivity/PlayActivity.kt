@@ -23,8 +23,8 @@ class PlayActivity : AppCompatActivity() {
 
     private val viewModel: PlayTrackViewModel by viewModel() {
         parametersOf(
+            intent.getIntExtra("trackId", 0),
             intent.getStringExtra("preview_url"),
-            intent.getBooleanExtra("isFavourite", false)
         )
     }
 
@@ -41,19 +41,6 @@ class PlayActivity : AppCompatActivity() {
     private lateinit var back: ImageView
     private lateinit var favourite: ImageView
     private var track: Track? = null
-
-    private var trackId: Int = 0
-    private var trackNames: String = ""
-    private var authorTracks: String = ""
-    private var trackTime: Long = 0
-    private var artworkUrls: String = ""
-    private var collectionName: String = ""
-    private var releaseDate = ""
-    private var primaryGenreName: String = ""
-    private var country: String = ""
-    private var isFavourite: Boolean = false
-    private var previewUrl: String = ""
-
 
     private var uri_img: String = ""
 
@@ -111,43 +98,28 @@ class PlayActivity : AppCompatActivity() {
 
     }
 
-
     private fun getIntentSearchActivity() {
-        intent.let {
-            trackId = intent.getIntExtra("trackId", 0)
-            trackNames = intent.getStringExtra("track_name") ?: ""
-            authorTracks = intent.getStringExtra("artist_name") ?: ""
-            trackTime = intent.getLongExtra("time_track", 0)
-            collectionName = intent.getStringExtra("collection_name") ?: ""
-            releaseDate = intent.getStringExtra("release_data")?.take(4) ?: ""
-            primaryGenreName = intent.getStringExtra("genre_name") ?: ""
-            artworkUrls = intent.getStringExtra("artwork_url") ?: ""
-            country = intent.getStringExtra("country_name") ?: ""
-            previewUrl = intent.getStringExtra("preview_url") ?: ""
-            isFavourite = intent.getBooleanExtra("isFavourite", false)
-        }
         track = Track(
-            trackId,
-            trackNames,
-            authorTracks,
-            trackTime,
-            collectionName,
-            releaseDate,
-            primaryGenreName,
-            artworkUrls,
-            collectionName,
-            previewUrl,
-            isFavourite
+            trackId = intent.getIntExtra("trackId", 0),
+            trackName = intent.getStringExtra("track_name") ?: "",
+            artistName = intent.getStringExtra("artist_name") ?: "",
+            trackTime = intent.getLongExtra("time_track", 0),
+            collectionName = intent.getStringExtra("collection_name") ?: "",
+            releaseDate = intent.getStringExtra("release_data")?.take(4) ?: "",
+            primaryGenreName = intent.getStringExtra("genre_name") ?: "",
+            artworkUrl100 = intent.getStringExtra("artwork_url") ?: "",
+            country = intent.getStringExtra("country_name") ?: "",
+            previewUrl = intent.getStringExtra("preview_url") ?: ""
         )
 
-        trackName.text = trackNames
-        authorTrack.text = authorTracks
-        timeTrack.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTime)
-        albumName.text = collectionName
-        yearTrack.text = releaseDate
-        genreTrack.text = primaryGenreName
-        countryTrack.text = country
-        uri_img = artworkUrls
+        trackName.text = track?.trackName
+        authorTrack.text = track?.artistName
+        timeTrack.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track?.trackTime)
+        albumName.text = track?.collectionName
+        yearTrack.text = track?.releaseDate
+        genreTrack.text = track?.primaryGenreName
+        countryTrack.text = track?.country
+        uri_img = track?.artworkUrl100.toString()
 
         albumName.isSelected = true
     }

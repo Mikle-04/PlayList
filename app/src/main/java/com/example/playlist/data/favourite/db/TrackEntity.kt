@@ -1,5 +1,6 @@
 package com.example.playlist.data.favourite.db
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
@@ -16,5 +17,7 @@ data class TrackEntity(
     val releaseDate: String,
     val primaryGenreName: String,
     val previewUrl:String,
-    val country: String
+    val country: String,
+    @ColumnInfo(name = "created_date")
+    val createdAt: Long
 )

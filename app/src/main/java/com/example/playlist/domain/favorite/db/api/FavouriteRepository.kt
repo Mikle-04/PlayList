@@ -10,4 +10,6 @@ interface FavouriteRepository {
      fun deleteFavoriteTrack(track: Track)
 
      fun insertFavoriteTrack(track: Track)
+
+     fun getFavouriteTrackId(trackId: Int) : Flow<Boolean>
 }

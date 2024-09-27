@@ -21,5 +21,9 @@ class FavouriteInteractorImpl(private val favouriteRepository: FavouriteReposito
         favouriteRepository.insertFavoriteTrack(track)
     }
 
+    override fun getFavouriteTrackId(trackId: Int): Flow<Boolean> {
+       return favouriteRepository.getFavouriteTrackId(trackId)
+    }
+
 
 }

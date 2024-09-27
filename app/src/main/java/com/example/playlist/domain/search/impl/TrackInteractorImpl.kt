@@ -22,9 +22,5 @@ class TrackInteractorImpl(private val repository: TrackRepository) : TrackIntera
         }
     }
 
-    override fun getHistoryTrack(): List<Track> {
-      return repository.getHistoryTrack()
-    }
-
 
 }

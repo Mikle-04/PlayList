@@ -9,6 +9,7 @@
     <dimen name="size_19dp">19dp</dimen>
     <dimen name="size_18dp">18dp</dimen>
     <dimen name="size_16dp">16dp</dimen>
+    <dimen name="size_20dp">16dp</dimen>
     <dimen name="size_45dp">45dp</dimen>
     <dimen name="size_11sp">11sp</dimen>
     <dimen name="size_12sp">12sp</dimen>
