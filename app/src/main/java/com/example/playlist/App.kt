@@ -1,7 +1,10 @@
 package com.example.playlist
 
 import android.app.Application
+import com.example.playlist.di.dataModule.dataDbConverterModule
+import com.example.playlist.di.dataModule.dataDbModule
 import com.example.playlist.di.dataModule.externalNavigatorModule
+import com.example.playlist.di.dataModule.favouriteRepositoryModule
 import com.example.playlist.di.dataModule.sharingRepositoryModule
 import com.example.playlist.di.dataModule.themeRepositoryModule
 import com.example.playlist.di.dataModule.trackRepositoryModule
@@ -12,6 +15,9 @@ import com.example.playlist.domain.settings.ThemeInteractor
 import com.example.playlist.di.viewModelModule.searchViewModelModule
 import com.example.playlist.di.viewModelModule.settingViewModelModule
 import com.example.playlist.di.dataModule.historySearchRepositoryModule
+import com.example.playlist.di.domainModule.playerFavouriteImpl
+import com.example.playlist.di.domainModule.favouriteInteractorModule
+import com.example.playlist.di.viewModelModule.favoriteViewModelModule
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.component.KoinComponent
@@ -38,7 +44,13 @@ class App : Application(), KoinComponent {
                 externalNavigatorModule,
                 sharingRepositoryModule,
                 sharingInteractorModule,
-                settingViewModelModule
+                settingViewModelModule,
+                dataDbConverterModule,
+                dataDbModule,
+                favouriteRepositoryModule,
+                favouriteInteractorModule,
+                favoriteViewModelModule,
+                playerFavouriteImpl
             )
         }
         darkTheme = themeInteractor.getThemeSettings()

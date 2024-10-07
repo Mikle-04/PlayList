@@ -1,7 +1,5 @@
 package com.example.playlist.ui.searchActivity.viewModel
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,23 +10,21 @@ import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.searchActivity.models.TrackState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 
 class TrackSearchViewModel(
     private val trackInteractor: TrackInteractor,
-    private val repositoryHistory: SearchHistoryRepository
+    private val repositoryHistory: SearchHistoryRepository,
 ) : ViewModel(), KoinComponent {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
-    private var searchJob: Job? = null
 
+    private var searchJob: Job? = null
 
     private var lastSearchText: String? = null
 
@@ -37,13 +33,13 @@ class TrackSearchViewModel(
 
     fun observeState(): LiveData<TrackState> = stateLiveData
 
-    private fun renderState(state: TrackState) {
-        stateLiveData.postValue(state)
+    private fun renderState(trackState: TrackState) {
+        stateLiveData.postValue(trackState)
     }
 
 
     fun searchDebounce(changedText: String) {
-        if (lastSearchText == changedText){
+        if (lastSearchText == changedText) {
             return
         }
         lastSearchText = changedText
@@ -63,7 +59,7 @@ class TrackSearchViewModel(
             viewModelScope.launch {
                 trackInteractor
                     .searchTrack(newSearchText)
-                    .collect{pair ->
+                    .collect { pair ->
                         processResult(pair.first, pair.second)
                     }
 
@@ -72,11 +68,11 @@ class TrackSearchViewModel(
         }
     }
 
-    private fun processResult(listTrack: List<Track>?, errorMessage: String?){
+    private fun processResult(listTrack: List<Track>?, errorMessage: String?) {
 
         val track = mutableListOf<Track>()
 
-        if (listTrack != null){
+        if (listTrack != null) {
             track.addAll(listTrack)
         }
 
@@ -107,18 +103,18 @@ class TrackSearchViewModel(
 
     }
 
-    fun getSearchHistory(): List<Track> {
-        return repositoryHistory.getSearchHistory().toMutableList()
-    }
 
-    fun saveSearchHistory(track: List<Track>) {
-        repositoryHistory.saveHistory(track)
-    }
+fun getHistoryTrack() : List<Track>{
+    return repositoryHistory.getSearchHistory()
+}
 
-    fun clearSearchHistory(track: MutableList<Track>) {
-        repositoryHistory.clearHistory(track)
-    }
+fun saveSearchHistory(track: List<Track>) {
+    repositoryHistory.saveHistory(track)
+}
 
+fun clearSearchHistory(track: MutableList<Track>) {
+    repositoryHistory.clearHistory(track)
+}
 
 
 }

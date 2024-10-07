@@ -29,4 +29,13 @@
         android:name="com.example.playlist.ui.playActivity.PlayActivity"
         android:label="activity_play"
         tools:layout="@layout/activity_play" />
+    <fragment
+        android:id="@+id/fragmentFavourite"
+        android:name="com.example.playlist.ui.mediaActivity.favoriteFragment.FavouritesFragment"
+        android:label="favourite_track"
+        tools:layout="@layout/fragment_favourites" >
+        <action
+            android:id="@+id/action_fragmentFavourite_to_playActivity"
+            app:destination="@id/playActivity" />
+    </fragment>
 </navigation>

@@ -5,7 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlist.domain.favorite.db.api.FavouriteInteractor
+import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.playActivity.models.PlayerState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -14,8 +17,11 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayTrackViewModel(
+    private val id : Int,
     private val url: String,
-    private val medaPlayer: MediaPlayer
+    private val medaPlayer: MediaPlayer,
+    private val favouriteInteractor: FavouriteInteractor,
+
 ) : ViewModel(), KoinComponent {
 
 
@@ -24,8 +30,12 @@ class PlayTrackViewModel(
     private val stateLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observeState(): LiveData<PlayerState> = stateLiveData
 
+    private val stateLiveDataFavourite = MutableLiveData<Boolean>()
+    fun observeStateFavourite(): LiveData<Boolean> = stateLiveDataFavourite
+
     init {
         preparePlayer(url)
+        checkIsFavouriteTrack(id)
     }
 
 
@@ -96,5 +106,30 @@ class PlayTrackViewModel(
         return SimpleDateFormat("mm:ss", Locale.getDefault()).format(medaPlayer.currentPosition)
             ?: "00:00"
     }
+
+
+    fun onFavouriteClicked(track: Track?) {
+        if (track != null) {
+            if (track.isFavourite) {
+                track.isFavourite = false
+                favouriteInteractor.deleteFavoriteTrack(track)
+                stateLiveDataFavourite.postValue(track.isFavourite)
+            } else {
+                track.isFavourite = true
+                favouriteInteractor.insertFavoriteTrack(track)
+                stateLiveDataFavourite.postValue(track.isFavourite)
+            }
+        }
+    }
+
+    private fun checkIsFavouriteTrack(trackId: Int){
+        viewModelScope.launch(Dispatchers.IO){
+            favouriteInteractor.getFavouriteTrackId(trackId).collect{
+                stateLiveDataFavourite.postValue(it)
+            }
+        }
+    }
+
+
 }
 
