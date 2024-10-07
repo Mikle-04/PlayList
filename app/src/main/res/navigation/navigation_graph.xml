@@ -49,7 +49,7 @@
     </fragment>
     <fragment
         android:id="@+id/createPlayList"
-        android:name="com.example.playlist.CreatePlayList"
+        android:name="com.example.playlist.ui.mediaActivity.playListFragment.CreateAlbumFragment.CreatePlayList"
         android:label="fragment_create_play_list"
         tools:layout="@layout/fragment_create_play_list" />
 </navigation>

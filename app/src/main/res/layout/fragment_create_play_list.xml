@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:theme="@style/Base.Theme.PlayList"
     android:windowSoftInputMode="adjustResize"
-    tools:context=".ui.mediaActivity.playListFragment.CreateAlbumFragment.CreateAlbumFragment">
+    tools:context=".ui.mediaActivity.playListFragment.CreateAlbumFragment.CreatePlayList">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/leftBorder"

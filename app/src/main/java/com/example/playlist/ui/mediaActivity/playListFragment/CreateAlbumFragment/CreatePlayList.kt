@@ -26,7 +26,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class CreateAlbumFragment : Fragment() {
+class CreatePlayList : Fragment() {
 
 
     private val viewModel: CreateAlbumFragmentViewModel by viewModel()
