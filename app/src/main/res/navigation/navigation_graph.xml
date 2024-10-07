@@ -38,4 +38,18 @@
             android:id="@+id/action_fragmentFavourite_to_playActivity"
             app:destination="@id/playActivity" />
     </fragment>
+    <fragment
+        android:id="@+id/fragmentPlayList"
+        android:name="com.example.playlist.ui.mediaActivity.playListFragment.FragmentPlayList"
+        android:label="fragment_play_list2"
+        tools:layout="@layout/fragment_play_list" >
+        <action
+            android:id="@+id/action_fragmentPlayList_to_createPlayList"
+            app:destination="@id/createPlayList" />
+    </fragment>
+    <fragment
+        android:id="@+id/createPlayList"
+        android:name="com.example.playlist.CreatePlayList"
+        android:label="fragment_create_play_list"
+        tools:layout="@layout/fragment_create_play_list" />
 </navigation>
