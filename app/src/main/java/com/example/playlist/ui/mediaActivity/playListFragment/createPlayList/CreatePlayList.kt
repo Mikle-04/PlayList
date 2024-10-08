@@ -1,4 +1,4 @@
-package com.example.playlist.ui.mediaActivity.playListFragment.CreateAlbumFragment
+package com.example.playlist.ui.mediaActivity.playListFragment.createPlayList
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -20,7 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.playlist.R
 import com.example.playlist.databinding.FragmentCreatePlayListBinding
-import com.example.playlist.ui.mediaActivity.playListFragment.CreateAlbumFragment.viewModel.CreateAlbumFragmentViewModel
+import com.example.playlist.ui.mediaActivity.playListFragment.createPlayList.viewModel.CreateAlbumFragmentViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File

@@ -18,7 +18,11 @@
         android:id="@+id/fragmentMedia"
         android:name="com.example.playlist.ui.mediaActivity.FragmentMedia"
         android:label="media_fragment"
-        tools:layout="@layout/media_fragment" />
+        tools:layout="@layout/media_fragment" >
+        <action
+            android:id="@+id/action_fragmentMedia_to_createPlayList"
+            app:destination="@id/createPlayList" />
+    </fragment>
     <fragment
         android:id="@+id/fragmentSettings"
         android:name="com.example.playlist.ui.settingActivity.FragmentSettings"
@@ -41,7 +45,7 @@
     <fragment
         android:id="@+id/fragmentPlayList"
         android:name="com.example.playlist.ui.mediaActivity.playListFragment.FragmentPlayList"
-        android:label="fragment_play_list2"
+        android:label="fragment_play_list"
         tools:layout="@layout/fragment_play_list" >
         <action
             android:id="@+id/action_fragmentPlayList_to_createPlayList"
@@ -49,7 +53,7 @@
     </fragment>
     <fragment
         android:id="@+id/createPlayList"
-        android:name="com.example.playlist.ui.mediaActivity.playListFragment.CreateAlbumFragment.CreatePlayList"
+        android:name="com.example.playlist.ui.mediaActivity.playListFragment.createPlayList.CreatePlayList"
         android:label="fragment_create_play_list"
         tools:layout="@layout/fragment_create_play_list" />
 </navigation>

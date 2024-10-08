@@ -1,4 +1,4 @@
-package com.example.playlist.ui.mediaActivity.playListFragment.CreateAlbumFragment.viewModel
+package com.example.playlist.ui.mediaActivity.playListFragment.createPlayList.viewModel
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel

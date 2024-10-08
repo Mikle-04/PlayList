@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:theme="@style/Base.Theme.PlayList"
     android:windowSoftInputMode="adjustResize"
-    tools:context=".ui.mediaActivity.playListFragment.CreateAlbumFragment.CreatePlayList">
+    tools:context=".ui.mediaActivity.playListFragment.createPlayList.CreatePlayList">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/leftBorder"
@@ -81,7 +81,8 @@
         android:inputType="text"
         android:maxLines="1"
         android:padding="@dimen/size_16dp"
-        android:textColorHint="?attr/colorOnBackground"
+        android:textColorHint="?attr/colorOnSecondary"
+        android:textColor="?attr/colorOnSecondary"
         android:textCursorDrawable="@drawable/cursor"
         android:textFontWeight="400"
         android:textSize="@dimen/size_16sp"
@@ -101,7 +102,8 @@
         android:inputType="text"
         android:maxLines="1"
         android:padding="@dimen/size_16dp"
-        android:textColorHint="?attr/colorOnBackground"
+        android:textColorHint="?attr/colorOnSecondary"
+        android:textColor="?attr/colorOnSecondary"
         android:textCursorDrawable="@drawable/cursor"
         android:textFontWeight="400"
         android:textSize="@dimen/size_16dp"
