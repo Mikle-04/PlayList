@@ -11,6 +11,7 @@
         <item name="colorOnBackground">@color/blue</item>
         <item name="colorButtonNormal">@color/gray</item>
         <item name="color">@color/white</item>
+        <item name="colorContainer">@color/light_grey</item>
     </style>
 
     <style name="Theme.PlayList" parent="Base.Theme.PlayList" />

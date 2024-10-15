@@ -10,6 +10,7 @@
         <item name="colorOnBackground">@color/fiol</item>
         <item name="colorButtonNormal">@color/fiol</item>
         <item name="color">@color/black</item>
+        <item name="colorContainer">@color/white</item>
     </style>
 
     <style name="Theme.PlayList" parent="Base.Theme.PlayList" />

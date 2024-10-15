@@ -1,12 +1,12 @@
-package com.example.playlist.data.favourite.db
+package com.example.playlist.data.selectedTrack.db
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "track_table")
-data class TrackEntity(
+@Entity(tableName = "select_track_table")
+data class SelectedTrackEntity(
     @PrimaryKey
     val trackId: Int,
     val playlistId: Int,
@@ -19,6 +19,5 @@ data class TrackEntity(
     val primaryGenreName: String,
     val previewUrl:String,
     val country: String,
-    @ColumnInfo(name = "created_date")
-    val createdAt: Long
+    var isFavorite: Boolean,
 )

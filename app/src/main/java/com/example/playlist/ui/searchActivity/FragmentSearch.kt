@@ -205,6 +205,7 @@ class FragmentSearch : Fragment(), KoinComponent {
             it.putExtra("country_name", track.country)
             it.putExtra("preview_url", track.previewUrl)
             it.putExtra("isFavourite", track.isFavourite)
+            it.putExtra("playlistId", track.playlistId)
             startActivity(it)
         }
 

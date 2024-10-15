@@ -43,4 +43,11 @@
     <string name="complete">Завершить</string>
     <string name="cancel">Отмена</string>
     <string name="create_playlist">Плейлист %1$s создан</string>
+    <string name="add_in_playlist">Добавить в плейлист</string>
+    <string name="empty_playlist">Вы не создали ни одного плейлиста</string>
+    <string name="tracks">треков</string>
+    <string name="track">трек</string>
+    <string name="track_a">трека</string>
+    <string name="track_is_in_playlist">Трек уже добавлен в плейлист</string>
+    <string name="add_to_the_playlist">Добавлено в плейлист</string>
 </resources>
