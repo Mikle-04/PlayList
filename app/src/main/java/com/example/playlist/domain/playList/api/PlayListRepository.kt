@@ -10,4 +10,5 @@ interface PlayListRepository {
     suspend fun getListPlayList(): Flow<MutableList<PlayList>>
 
     suspend fun insertTrackToPlaylist(track: Track): Flow<Long>
+
 }

@@ -7,7 +7,7 @@ import org.koin.dsl.module
 
 val playViewModelModule = module {
     viewModel {params ->
-        PlayViewModel(id = params.get(), url = params.get(),  get(), get())
+        PlayViewModel(id = params.get(), url = params.get(),  get(), get(), get())
     }
 
     factory<MediaPlayer> {

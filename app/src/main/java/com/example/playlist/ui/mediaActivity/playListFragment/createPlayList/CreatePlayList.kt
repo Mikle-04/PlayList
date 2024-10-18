@@ -17,6 +17,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.playlist.R
 import com.example.playlist.databinding.FragmentCreatePlayListBinding
@@ -113,12 +114,12 @@ class CreatePlayList : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
                     binding.nameEditText.isActivated = false
-                    binding.hintName.isActivated = false
+                    binding.hintName.isVisible= false
                     binding.btnCreate.isActivated = false
 
                 } else {
                     binding.nameEditText.isActivated = true
-                    binding.hintName.isActivated = true
+                    binding.hintName.isVisible = true
                     binding.btnCreate.isActivated = true
                 }
             }
@@ -126,6 +127,8 @@ class CreatePlayList : Fragment() {
             override fun afterTextChanged(s: Editable?) {
             }
         }
+
+        binding.nameEditText.addTextChangedListener(nameTextWatcher)
 
         descriptionWatcher = object : TextWatcher {
             override fun beforeTextChanged(
@@ -136,17 +139,19 @@ class CreatePlayList : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
                     binding.descriptionEditText.isActivated = false
-                    binding.hintDescription.isActivated = false
+                    binding.hintDescription.isVisible= false
 
                 } else {
                     binding.descriptionEditText.isActivated = true
-                    binding.hintDescription.isActivated = true
+                    binding.hintDescription.isVisible = true
                 }
             }
 
             override fun afterTextChanged(s: Editable?) {
             }
         }
+
+        binding.descriptionEditText.addTextChangedListener(descriptionWatcher)
 
     }
 

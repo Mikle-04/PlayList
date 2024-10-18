@@ -8,4 +8,5 @@ interface PlayListInteractor {
     suspend fun insertPlaylist(playlist: PlayList)
     suspend fun getListPlaylist(): Flow<MutableList<PlayList>>
     suspend fun insertTrackToPlaylist(track: Track): Flow<Long>
+
 }

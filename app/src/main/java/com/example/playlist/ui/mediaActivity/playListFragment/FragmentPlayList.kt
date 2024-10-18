@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -16,6 +17,7 @@ class FragmentPlayList : Fragment() {
 
     companion object {
         fun newInstance() = FragmentPlayList()
+
     }
 
     private val viewModel: PlayListViewModel by viewModel()
@@ -24,6 +26,7 @@ class FragmentPlayList : Fragment() {
     private val binding get() = _binding!!
 
     private val adapter = PlayListAdapter()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,6 +53,7 @@ class FragmentPlayList : Fragment() {
                     adapter.listPlayList = state.playlists
                     adapter.notifyDataSetChanged()
                 }
+
                 is PlayListState.Empty -> {
                     binding.imgEmptyList.isVisible = true
                     binding.txtEmptyList.isVisible = true

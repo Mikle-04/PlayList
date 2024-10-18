@@ -6,11 +6,13 @@ import com.example.playlist.data.favourite.db.AppDatabase
 import com.example.playlist.data.playList.converter.PlayListConverter
 import com.example.playlist.data.playList.db.PlayListEntity
 import com.example.playlist.data.selectedTrack.convertor.SelectTrackDbConverter
+import com.example.playlist.data.selectedTrack.db.SelectedTrackEntity
 import com.example.playlist.domain.playList.models.PlayList
 import com.example.playlist.domain.playList.api.PlayListRepository
 import com.example.playlist.domain.search.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlin.time.Duration.Companion.milliseconds
 
 class PlayListRepositoryImpl(
     private val appDatabase: AppDatabase,
@@ -20,7 +22,7 @@ class PlayListRepositoryImpl(
     private val context: Context
 ) : PlayListRepository {
     override suspend fun insertPlayList(playList: PlayList) {
-        val playListEntity = converter.mapPlayListToPlayListEntity(playList)
+        val playListEntity = converter.mapPlayListEntityToPlayList(playList)
         appDatabase.playListDao().insertPlaylist(playListEntity)
     }
 
@@ -42,31 +44,38 @@ class PlayListRepositoryImpl(
         }
     }
 
+
+
     private suspend fun updatePlaylist(track: Track) {
 
         val playlistEntity = appDatabase.playListDao().getPlaylistById(track.playlistId)
-        val playlist = playListConverter.mapPlayListToPlayListEntity(playlistEntity)
+        val playlist = playListConverter.mapPlayListEntityToPlayList(playlistEntity)
 
         val listTrackIds = appDatabase.selectedTrackDao()
             .getListTrackIdOfPlaylistByPlaylistId(track.playlistId)
         val amountTracks = listTrackIds.size
-//        val listTracksTime =
-//            appDatabase.selectedTrackDao().getListTrackTimeOfPlaylistById(track.playlistId)
-//        val totalTimePlaylist = listTracksTime.sum()
+        val listTracksTime =
+            appDatabase.selectedTrackDao().getListTrackTimeOfPlaylistById(track.playlistId)
+        val totalTimePlaylist = listTracksTime.sum()
 
         playlist.listTrackIds = listTrackIds
         playlist.amountTracks = amountTracks
         playlist.trackSpelling = lastCharsTrack(amountTracks)
-       // playlist.totalPlaylistTime = totalTimePlaylist
-       // playlist.minutesSpelling = chooseSpellingMinutes(playlist.totalPlaylistTime)
+        playlist.totalPlaylistTime = totalTimePlaylist
+        playlist.minutesSpelling = chooseSpellingMinutes(playlist.totalPlaylistTime)
 
-        val playlistEntityNew = playListConverter.mapPlayListToPlayListEntity(playlist)
+        val playlistEntityNew = playListConverter.mapPlayListEntityToPlayList(playlist)
         appDatabase.playListDao().updatePlaylist(playlistEntityNew)
     }
 
     private fun convertPlayListEntityToPlayList(playlists: MutableList<PlayListEntity>): MutableList<PlayList> {
         return playlists.map { playlistEntity ->
-            converter.mapPlayListToPlayListEntity(playlistEntity)
+            converter.mapPlayListEntityToPlayList(playlistEntity)
+        }.toMutableList()
+    }
+    private fun convertListTracksEntityToTrack(listTracksEntity: MutableList<SelectedTrackEntity>): MutableList<Track> {
+        return listTracksEntity.map { selectedTrackEntity ->
+            selectTrackDbConverter.mapEntityToModel(selectedTrackEntity)
         }.toMutableList()
     }
 
@@ -78,6 +87,19 @@ class PlayListRepositoryImpl(
                 1 -> context.getString(R.string.track)
                 2, 3, 4 -> context.getString(R.string.track_a)
                 else -> context.getString(R.string.tracks)
+            }
+        }
+    }
+
+    private fun chooseSpellingMinutes(totalPlaylistTime: Int): String {
+        val timeInMinutes = totalPlaylistTime.milliseconds.inWholeMinutes
+        return if (timeInMinutes % 100 in 11..19) {
+            context.getString(R.string.minut)
+        } else {
+            when (timeInMinutes % 10) {
+                1L -> context.getString(R.string.minuta)
+                2L, 3L, 4L -> context.getString(R.string.minuti)
+                else -> context.getString(R.string.minut)
             }
         }
     }

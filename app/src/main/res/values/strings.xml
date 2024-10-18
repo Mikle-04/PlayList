@@ -50,4 +50,7 @@
     <string name="track_a">трека</string>
     <string name="track_is_in_playlist">Трек уже добавлен в плейлист</string>
     <string name="add_to_the_playlist">Добавлено в плейлист</string>
+    <string name="minut">минут</string>
+    <string name="minuta">минута\n</string>
+    <string name="minuti">минуты</string>
 </resources>

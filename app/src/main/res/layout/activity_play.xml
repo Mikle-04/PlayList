@@ -10,7 +10,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="?attr/colorPrimaryVariant"
+        >
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/left_guideline"
@@ -283,7 +285,7 @@
             android:gravity="center"
             android:paddingVertical="@dimen/size_16dp"
             android:text="@string/add_in_playlist"
-            android:textColor="?attr/colorOnBackground"
+            android:textColor="?attr/colorOnSecondary"
             android:textFontWeight="500"
             android:textSize="@dimen/size_19sp"
             />
@@ -292,10 +294,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/size_16dp"
-            android:backgroundTint="?attr/colorOnBackground"
+            android:backgroundTint="?attr/colorOnSecondary"
             android:fontFamily="@font/ys_display_medium"
             android:text="@string/new_playlist"
-            android:textColor="?attr/colorSecondary"
+            android:textColor="?attr/colorPrimaryVariant"
             android:textFontWeight="500"
             android:textSize="@dimen/size_14sp"
             android:layout_gravity="center_horizontal"
@@ -334,28 +336,7 @@
                 android:layout_height="@dimen/size_120dp"
                 android:layout_marginTop="102dp">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="9dp"
-                    android:layout_marginTop="3dp"
-                    android:src="@drawable/union_bottom"
-                    app:tint="?attr/colorOnBackground" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="37dp"
-                    android:layout_marginTop="28dp"
-                    android:src="@drawable/smile_sadness" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="80dp"
-                    android:layout_marginTop="6dp"
-                    android:src="@drawable/union_top"
-                    app:tint="?attr/colorOnBackground" />
 
             </FrameLayout>
 
@@ -372,13 +353,13 @@
 
         </LinearLayout>
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/fragment_container_view_player"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-
     </LinearLayout>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view_player"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

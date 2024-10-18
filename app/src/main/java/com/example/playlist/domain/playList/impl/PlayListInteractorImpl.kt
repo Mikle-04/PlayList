@@ -18,4 +18,5 @@ class PlayListInteractorImpl(private val playListRepository: PlayListRepository)
     override suspend fun insertTrackToPlaylist(track: Track): Flow<Long> {
         return playListRepository.insertTrackToPlaylist(track)
     }
+
 }

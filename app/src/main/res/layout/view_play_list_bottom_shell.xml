@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:theme="@style/Base.Theme.PlayList"
     android:layout_marginHorizontal="@dimen/size_12dp">
 
     <androidx.cardview.widget.CardView
@@ -34,7 +35,7 @@
         android:layout_marginStart="@dimen/size_8dp"
         android:ellipsize="end"
         android:fontFamily="@font/ys_display_regular"
-        android:textColor="?attr/colorOnBackground"
+        android:textColor="?attr/colorOnContainer"
         android:textFontWeight="400"
         android:textSize="@dimen/size_16dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/size_2dp"
         android:fontFamily="@font/ys_display_regular"
-        android:textColor="?attr/colorPrimaryVariant"
+        android:textColor="?attr/colorSecondaryContainer"
         android:textFontWeight="400"
         android:textSize="@dimen/size_11sp"
         app:layout_constraintStart_toStartOf="@id/name_playlist_in_player"
@@ -66,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/size_4dp"
         android:fontFamily="@font/ys_display_regular"
-        android:textColor="?attr/colorPrimaryVariant"
+        android:textColor="?attr/colorSecondaryContainer"
         android:textFontWeight="400"
         android:textSize="@dimen/size_11sp"
         app:layout_constraintBottom_toBottomOf="@id/amount_track_in_player"

@@ -12,6 +12,7 @@ import com.example.playlist.R
 import com.example.playlist.databinding.ActivityPlayBinding
 import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.mediaActivity.playListFragment.createPlayList.CreatePlayList
+import com.example.playlist.ui.mediaActivity.playListFragment.state.PlayListState
 import com.example.playlist.ui.playActivity.models.PlayerState
 import com.example.playlist.ui.playActivity.state.InsertTrackPlayListState
 import com.example.playlist.ui.playActivity.viewModel.PlayViewModel
@@ -52,7 +53,7 @@ class PlayActivity : AppCompatActivity() {
         getCoverArtwork()
 
         adapterList = PlayerListAdapter{playlist ->
-            track?.let { viewModel.insertTrackToPlayList(it, playlist) }
+            viewModel.insertTrackToPlayList(track!!, playlist)
         }
 
         binding.recyclePlayList.adapter = adapterList
@@ -127,6 +128,21 @@ class PlayActivity : AppCompatActivity() {
             viewModel.getPlayListDb()
         }
 
+        viewModel.getStatePlaylist().observe(this){statePlayList ->
+        when(statePlayList){
+            is PlayListState.Content -> {
+                binding.scrollViewRecycler.isVisible = true
+                adapterList.playlists = statePlayList.playlists
+                adapterList.notifyDataSetChanged()
+            }
+
+            is PlayListState.Empty -> {
+                binding.scrollViewRecycler.isVisible = false
+            }
+        }
+
+        }
+
         viewModel.getStateInsertTrack().observe(this){insertTrackState ->
             when(insertTrackState){
                 is InsertTrackPlayListState.Fail ->{
@@ -145,6 +161,8 @@ class PlayActivity : AppCompatActivity() {
                     ).show()
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 }
+
+                else -> {}
             }
         }
 

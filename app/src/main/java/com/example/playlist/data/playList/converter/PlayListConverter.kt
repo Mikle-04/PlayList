@@ -7,7 +7,7 @@ import com.google.gson.Gson
 
 class PlayListConverter (private val gson: Gson) {
 
-    fun mapPlayListToPlayListEntity(playlist: PlayList): PlayListEntity = PlayListEntity(
+    fun mapPlayListEntityToPlayList(playlist: PlayList): PlayListEntity = PlayListEntity(
         id = playlist.id,
         namePlaylist = playlist.namePlaylist,
         descriptionPlaylist = playlist.descriptionPlaylist,
@@ -19,7 +19,7 @@ class PlayListConverter (private val gson: Gson) {
         playlist.minutesSpelling
     )
 
-    fun mapPlayListToPlayListEntity(playlistEntity: PlayListEntity): PlayList = PlayList(
+    fun mapPlayListEntityToPlayList(playlistEntity: PlayListEntity): PlayList = PlayList(
         id = playlistEntity.id,
         namePlaylist = playlistEntity.namePlaylist,
         descriptionPlaylist = playlistEntity.descriptionPlaylist,

@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlist.R
 import com.example.playlist.domain.playList.models.PlayList
 
-class PlayerListAdapter (val onPlaylistClickListener: OnPlaylistClickListener
+class PlayerListAdapter (
+    private val onPlaylistClickListener: OnPlaylistClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var playlists: MutableList<PlayList> = mutableListOf()
