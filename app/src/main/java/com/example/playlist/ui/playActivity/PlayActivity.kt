@@ -1,5 +1,6 @@
 package com.example.playlist.ui.playActivity
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -25,21 +26,24 @@ import org.koin.core.parameter.parametersOf
 
 class PlayActivity : AppCompatActivity() {
 
+    companion object{
+        private const val KEY_TRACK = "track"
+    }
+
+    private lateinit var track: Track
 
     private val viewModel: PlayViewModel by viewModel() {
-        parametersOf(
-            intent.getIntExtra("trackId", 0),
-            intent.getStringExtra("preview_url"),
-        )
+        parametersOf(track)
     }
 
     private lateinit var binding: ActivityPlayBinding
 
-    private var track: Track? = null
 
     private var uri_img: String = ""
 
-    private lateinit var adapterList: PlayerListAdapter
+    private val adapterList = PlayerListAdapter { playList ->
+        viewModel.insertTrackToPlayList(track, playList )
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,9 +56,6 @@ class PlayActivity : AppCompatActivity() {
         getIntentSearchActivity()
         getCoverArtwork()
 
-        adapterList = PlayerListAdapter{playlist ->
-            viewModel.insertTrackToPlayList(track!!, playlist)
-        }
 
         binding.recyclePlayList.adapter = adapterList
 
@@ -170,29 +171,22 @@ class PlayActivity : AppCompatActivity() {
     }
 
     private fun getIntentSearchActivity() {
-        track = Track(
-            trackId = intent.getIntExtra("trackId", 0),
-            trackName = intent.getStringExtra("track_name") ?: "",
-            artistName = intent.getStringExtra("artist_name") ?: "",
-            trackTime = intent.getLongExtra("time_track", 0),
-            collectionName = intent.getStringExtra("collection_name") ?: "",
-            releaseDate = intent.getStringExtra("release_data")?.take(4) ?: "",
-            primaryGenreName = intent.getStringExtra("genre_name") ?: "",
-            artworkUrl100 = intent.getStringExtra("artwork_url") ?: "",
-            country = intent.getStringExtra("country_name") ?: "",
-            previewUrl = intent.getStringExtra("preview_url") ?: "",
-            playlistId = intent.getIntExtra("playlistId", 0)
-        )
-        binding.apply {
-            nameTrackTxt.text = track?.trackName
-            authorTxt.text = track?.artistName
-            timeTxt.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track?.trackTime)
-            albumNameTxt.text = track?.collectionName
-            yearTxt.text = track?.releaseDate
-            genreTxt.text = track?.primaryGenreName
-            countryTxt.text = track?.country
+        track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(KEY_TRACK, Track::class.java)!!
+        } else {
+            intent.getParcelableExtra(KEY_TRACK)!!
         }
-        uri_img = track?.artworkUrl100.toString()
+
+        binding.apply {
+            nameTrackTxt.text = track.trackName
+            authorTxt.text = track.artistName
+            timeTxt.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTime)
+            albumNameTxt.text = track.collectionName
+            yearTxt.text = track.releaseDate
+            genreTxt.text = track.primaryGenreName
+            countryTxt.text = track.country
+        }
+        uri_img = track.artworkUrl100.toString()
 
         binding.albumNameTxt.isSelected = true
 

@@ -15,15 +15,13 @@ import com.example.playlist.ui.playActivity.state.InsertTrackPlayListState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayViewModel(
-    private val id: Int,
-    private val url: String,
+    private val track: Track,
     private val medaPlayer: MediaPlayer,
     private val favouriteInteractor: FavouriteInteractor,
     private val playListInteractor: PlayListInteractor
@@ -46,8 +44,8 @@ class PlayViewModel(
     fun getStateInsertTrack(): LiveData<InsertTrackPlayListState> = stateInsertTrack
 
     init {
-        preparePlayer(url)
-        checkIsFavouriteTrack(id)
+        preparePlayer(track.previewUrl)
+        checkIsFavouriteTrack(track.trackId)
     }
 
 
