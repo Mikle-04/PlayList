@@ -113,4 +113,24 @@
         <item name="android:textColor">?attr/color</item>
         <item name="cornerRadius">54dp</item>
     </style>
+
+    <style name="btnCreateAlbum" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_marginHorizontal">17dp</item>
+        <item name="android:backgroundTint">@color/gray</item>
+        <item name="android:gravity">center</item>
+        <item name="textAllCaps">false</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="PlaylistDialogStyle" parent="MaterialAlertDialog.Material3">
+        <item name="android:textFontWeight">400</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:dialogCornerRadius">@dimen/size_4dp</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="colorOnSurfaceVariant">@color/black</item>
+        <item name="colorPrimary">@color/blue</item>
+    </style>
 </resources>

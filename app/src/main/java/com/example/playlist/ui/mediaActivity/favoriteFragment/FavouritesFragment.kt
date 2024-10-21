@@ -28,6 +28,7 @@ class FavouritesFragment : Fragment(){
     companion object{
         fun newInstance() = FavouritesFragment()
         private const val CLICK_DEBOUNCE = 1000L
+        private const val KEY_TRACK = "track"
     }
 
     private val viewModel  by viewModel<FavouriteFragmentViewModel>()
@@ -114,20 +115,9 @@ class FavouritesFragment : Fragment(){
     }
 
     private fun putPlayActivity(track: Track) {
-        Intent(requireActivity(), PlayActivity::class.java).also {
-            it.putExtra("trackId", track.trackId)
-            it.putExtra("track_name", track.trackName)
-            it.putExtra("artist_name", track.artistName)
-            it.putExtra("artwork_url", track.artworkUrl100)
-            it.putExtra("time_track", track.trackTime)
-            it.putExtra("collection_name", track.collectionName)
-            it.putExtra("release_data", track.releaseDate)
-            it.putExtra("genre_name", track.primaryGenreName)
-            it.putExtra("country_name", track.country)
-            it.putExtra("preview_url", track.previewUrl)
-            it.putExtra("isFavourite", track.isFavourite)
-            startActivity(it)
-        }
+        val intent = Intent(context, PlayActivity::class.java)
+        intent.putExtra(KEY_TRACK, track)
+        startActivity(intent)
 
     }
 

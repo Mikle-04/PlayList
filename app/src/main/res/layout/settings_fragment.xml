@@ -25,15 +25,15 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
+            android:fontFamily="@font/ys_display_medium"
             android:gravity="center_vertical"
             android:padding="@dimen/size_12dp"
             android:text="@string/setting"
             android:textColor="?attr/colorOnSecondary"
+            android:textFontWeight="500"
             android:textSize="@dimen/size_text_main"
             android:textStyle="bold"
-            tools:ignore="RtlSymmetry"
-            android:fontFamily="@font/ys_display_medium"
-            android:textFontWeight="500"/>
+            tools:ignore="RtlSymmetry" />
 
     </LinearLayout>
 

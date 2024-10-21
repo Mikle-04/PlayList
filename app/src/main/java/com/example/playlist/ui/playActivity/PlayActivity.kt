@@ -1,17 +1,23 @@
 package com.example.playlist.ui.playActivity
 
+import android.os.Build
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlist.R
+import com.example.playlist.databinding.ActivityPlayBinding
 import com.example.playlist.domain.search.models.Track
-import com.example.playlist.ui.playActivity.models.FavouriteState
+import com.example.playlist.ui.mediaActivity.playListFragment.createPlayList.CreatePlayListFragment
+import com.example.playlist.ui.mediaActivity.playListFragment.state.PlayListState
 import com.example.playlist.ui.playActivity.models.PlayerState
-import com.example.playlist.ui.playActivity.viewModel.PlayTrackViewModel
+import com.example.playlist.ui.playActivity.state.InsertTrackPlayListState
+import com.example.playlist.ui.playActivity.viewModel.PlayViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import java.text.SimpleDateFormat
 import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -20,74 +26,59 @@ import org.koin.core.parameter.parametersOf
 
 class PlayActivity : AppCompatActivity() {
 
-
-    private val viewModel: PlayTrackViewModel by viewModel() {
-        parametersOf(
-            intent.getIntExtra("trackId", 0),
-            intent.getStringExtra("preview_url"),
-        )
+    companion object{
+        private const val KEY_TRACK = "track"
     }
 
-    private lateinit var coverArtwork: ImageView
-    private lateinit var trackName: TextView
-    private lateinit var authorTrack: TextView
-    private lateinit var timePlay: TextView
-    private lateinit var timeTrack: TextView
-    private lateinit var albumName: TextView
-    private lateinit var yearTrack: TextView
-    private lateinit var genreTrack: TextView
-    private lateinit var countryTrack: TextView
-    private lateinit var play: ImageView
-    private lateinit var back: ImageView
-    private lateinit var favourite: ImageView
-    private var track: Track? = null
+    private lateinit var track: Track
+
+    private val viewModel: PlayViewModel by viewModel() {
+        parametersOf(track)
+    }
+
+    private lateinit var binding: ActivityPlayBinding
+
 
     private var uri_img: String = ""
+
+    private val adapterList = PlayerListAdapter { playList ->
+        viewModel.insertTrackToPlayList(track, playList )
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_play)
+        binding = ActivityPlayBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        coverArtwork = findViewById(R.id.cover_img)
-        trackName = findViewById(R.id.name_track_txt)
-        authorTrack = findViewById(R.id.author_txt)
-        timePlay = findViewById(R.id.play_second_txt)
-        timeTrack = findViewById(R.id.time_txt)
-        albumName = findViewById(R.id.album_name_txt)
-        yearTrack = findViewById(R.id.year_txt)
-        genreTrack = findViewById(R.id.genre_txt)
-        countryTrack = findViewById(R.id.country_txt)
-        play = findViewById(R.id.play_img)
-        back = findViewById(R.id.back_img)
-        favourite = findViewById(R.id.like_img)
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistBottomSheet)
 
         getIntentSearchActivity()
         getCoverArtwork()
 
 
+        binding.recyclePlayList.adapter = adapterList
 
-
-        back.setOnClickListener {
+        binding.backImg.setOnClickListener {
             this.onBackPressed()
         }
 
 
-        play.setOnClickListener {
+        binding.playImg.setOnClickListener {
             viewModel.playbackControl()
         }
 
         viewModel.observeState().observe(this) {
             renderState(it)
-            play.isEnabled = it.isPlayButtonEnabled
-            play.setImageResource(it.imgPlay)
-            timePlay.text = it.progress
+            binding.playImg.isEnabled = it.isPlayButtonEnabled
+            binding.playImg.setImageResource(it.imgPlay)
+            binding.playSecondTxt.text = it.progress
 
         }
 
 
 
-        favourite.setOnClickListener {
+        binding.likeImg.setOnClickListener {
             viewModel.onFavouriteClicked(track)
         }
         viewModel.observeStateFavourite().observe(this) { favourite ->
@@ -95,44 +86,121 @@ class PlayActivity : AppCompatActivity() {
                 favouriteState(favourite)
         }
 
+        binding.addInPlayList.setOnClickListener {
+            viewModel.getPlayListDb()
+            binding.apply {
+                overlay.isVisible = true
+                playlistBottomSheet.isVisible = true
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        }
+
+        binding.btnNewPlaylist.setOnClickListener {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragment_container_view_player, CreatePlayListFragment())
+                .addToBackStack(null)
+                .setReorderingAllowed(true)
+                .commit()
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                when (newState) {
+
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.isVisible = false
+                    }
+
+                    else -> {
+                        binding.overlay.isVisible = true
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                //
+            }
+
+        })
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            viewModel.getPlayListDb()
+        }
+
+        viewModel.getStatePlaylist().observe(this){statePlayList ->
+        when(statePlayList){
+            is PlayListState.Content -> {
+                binding.scrollViewRecycler.isVisible = true
+                adapterList.playlists = statePlayList.playlists
+                adapterList.notifyDataSetChanged()
+            }
+
+            is PlayListState.Empty -> {
+                binding.scrollViewRecycler.isVisible = false
+            }
+        }
+
+        }
+
+        viewModel.getStateInsertTrack().observe(this){insertTrackState ->
+            when(insertTrackState){
+                is InsertTrackPlayListState.Fail ->{
+                    Toast.makeText(
+                        this,
+                        getString(R.string.track_is_in_playlist) + insertTrackState.namePlaylist,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                is InsertTrackPlayListState.Success -> {
+                    Toast.makeText(
+                        this,
+                        getString(R.string.add_to_the_playlist) + insertTrackState.namePlaylist,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+
+                else -> {}
+            }
+        }
+
 
     }
 
     private fun getIntentSearchActivity() {
-        track = Track(
-            trackId = intent.getIntExtra("trackId", 0),
-            trackName = intent.getStringExtra("track_name") ?: "",
-            artistName = intent.getStringExtra("artist_name") ?: "",
-            trackTime = intent.getLongExtra("time_track", 0),
-            collectionName = intent.getStringExtra("collection_name") ?: "",
-            releaseDate = intent.getStringExtra("release_data")?.take(4) ?: "",
-            primaryGenreName = intent.getStringExtra("genre_name") ?: "",
-            artworkUrl100 = intent.getStringExtra("artwork_url") ?: "",
-            country = intent.getStringExtra("country_name") ?: "",
-            previewUrl = intent.getStringExtra("preview_url") ?: ""
-        )
+        track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(KEY_TRACK, Track::class.java)!!
+        } else {
+            intent.getParcelableExtra(KEY_TRACK)!!
+        }
 
-        trackName.text = track?.trackName
-        authorTrack.text = track?.artistName
-        timeTrack.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track?.trackTime)
-        albumName.text = track?.collectionName
-        yearTrack.text = track?.releaseDate
-        genreTrack.text = track?.primaryGenreName
-        countryTrack.text = track?.country
-        uri_img = track?.artworkUrl100.toString()
+        binding.apply {
+            nameTrackTxt.text = track.trackName
+            authorTxt.text = track.artistName
+            timeTxt.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTime)
+            albumNameTxt.text = track.collectionName
+            yearTxt.text = track.releaseDate.take(4)
+            genreTxt.text = track.primaryGenreName
+            countryTxt.text = track.country
+        }
+        uri_img = track.artworkUrl100.toString()
 
-        albumName.isSelected = true
+        binding.albumNameTxt.isSelected = true
+
     }
 
     private fun getCoverArtwork() {
         Glide.with(applicationContext)
-            .load(uri_img?.replaceAfterLast('/', "512x512bb.jpg"))
+            .load(uri_img.replaceAfterLast('/', "512x512bb.jpg"))
             .transform(
                 CenterCrop(),
                 RoundedCorners(applicationContext.resources.getDimensionPixelSize(R.dimen.size_8dp))
             )
             .placeholder(R.drawable.img_track_default)
-            .into(coverArtwork)
+            .into(binding.coverImg)
     }
 
 
@@ -144,11 +212,11 @@ class PlayActivity : AppCompatActivity() {
     private fun renderState(playerState: PlayerState) {
         when (playerState) {
             is PlayerState.Playing -> {
-                play.setImageResource(R.drawable.stop_button)
+                binding.playImg.setImageResource(R.drawable.stop_button)
             }
 
             is PlayerState.Prepared, is PlayerState.Paused, is PlayerState.Default -> {
-                play.setImageResource(R.drawable.play_button)
+                binding.playImg.setImageResource(R.drawable.play_button)
 
             }
 
@@ -158,9 +226,9 @@ class PlayActivity : AppCompatActivity() {
 
     private fun favouriteState(isFavourite: Boolean) {
         if (isFavourite) {
-            favourite.setImageResource(R.drawable.like_click_button)
+            binding.likeImg.setImageResource(R.drawable.like_click_button)
         } else {
-            favourite.setImageResource(R.drawable.like_button)
+            binding.likeImg.setImageResource(R.drawable.like_button)
         }
 
     }

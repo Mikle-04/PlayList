@@ -6,8 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlist.domain.favorite.db.api.FavouriteInteractor
+import com.example.playlist.domain.playList.api.PlayListInteractor
+import com.example.playlist.domain.playList.models.PlayList
+import com.example.playlist.domain.playList.models.SelectTrack
 import com.example.playlist.domain.search.models.Track
+import com.example.playlist.ui.mediaActivity.playListFragment.state.PlayListState
 import com.example.playlist.ui.playActivity.models.PlayerState
+import com.example.playlist.ui.playActivity.state.InsertTrackPlayListState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -16,11 +21,11 @@ import org.koin.core.component.KoinComponent
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayTrackViewModel(
-    private val id : Int,
-    private val url: String,
+class PlayViewModel(
+    private val track: Track,
     private val medaPlayer: MediaPlayer,
     private val favouriteInteractor: FavouriteInteractor,
+    private val playListInteractor: PlayListInteractor
 
 ) : ViewModel(), KoinComponent {
 
@@ -33,9 +38,15 @@ class PlayTrackViewModel(
     private val stateLiveDataFavourite = MutableLiveData<Boolean>()
     fun observeStateFavourite(): LiveData<Boolean> = stateLiveDataFavourite
 
+    private var statePlaylist = MutableLiveData<PlayListState>()
+    fun getStatePlaylist(): LiveData<PlayListState> = statePlaylist
+
+    private var stateInsertTrack = MutableLiveData<InsertTrackPlayListState>()
+    fun getStateInsertTrack(): LiveData<InsertTrackPlayListState> = stateInsertTrack
+
     init {
-        preparePlayer(url)
-        checkIsFavouriteTrack(id)
+        preparePlayer(track.previewUrl)
+        checkIsFavouriteTrack(track.trackId)
     }
 
 
@@ -122,10 +133,49 @@ class PlayTrackViewModel(
         }
     }
 
-    private fun checkIsFavouriteTrack(trackId: Int){
-        viewModelScope.launch(Dispatchers.IO){
-            favouriteInteractor.getFavouriteTrackId(trackId).collect{
+    private fun checkIsFavouriteTrack(trackId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            favouriteInteractor.getFavouriteTrackId(trackId).collect {
                 stateLiveDataFavourite.postValue(it)
+            }
+        }
+    }
+
+    fun getPlayListDb() {
+        viewModelScope.launch(Dispatchers.IO) {
+            playListInteractor.getPlaylist().collect() { listPlayList ->
+                if (listPlayList.isEmpty()) {
+                    statePlaylist.postValue(PlayListState.Empty())
+                } else {
+                    statePlaylist.postValue(PlayListState.Content(listPlayList))
+                }
+            }
+        }
+    }
+
+    fun insertTrackToPlayList(track: Track, playlist: PlayList) {
+        viewModelScope.launch {
+            val selectTrack = SelectTrack(
+                0,
+                track.trackId,
+                playlist.id,
+                track.trackName,
+                track.artistName,
+                track.trackTime,
+                track.artworkUrl100,
+                track.collectionName,
+                track.releaseDate,
+                track.primaryGenreName,
+                track.previewUrl,
+                track.country,
+                track.isFavourite
+            )
+            playListInteractor.insertTrackToPlaylist(selectTrack).collect { numberInsert ->
+                if (numberInsert == 1L) {
+                    stateInsertTrack.postValue(InsertTrackPlayListState.Success(playlist.namePlaylist))
+                } else {
+                    stateInsertTrack.postValue(InsertTrackPlayListState.Fail(playlist.namePlaylist))
+                }
             }
         }
     }
