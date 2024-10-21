@@ -16,7 +16,7 @@ data class TrackEntity(
     val collectionName: String,
     val releaseDate: String,
     val primaryGenreName: String,
-    val previewUrl:String,
+    val previewUrl:String?,
     val country: String,
     @ColumnInfo(name = "created_date")
     val createdAt: Long

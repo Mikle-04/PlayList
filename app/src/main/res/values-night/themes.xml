@@ -11,6 +11,7 @@
         <item name="colorButtonNormal">@color/fiol</item>
         <item name="color">@color/black</item>
         <item name="colorContainer">@color/white</item>
+        <item name="colorControlNormal">@color/white</item>
         <item name="colorOnContainer">@color/white</item>
         <item name="colorSecondaryContainer">@color/white</item>
     </style>

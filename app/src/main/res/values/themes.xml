@@ -12,6 +12,7 @@
         <item name="colorButtonNormal">@color/gray</item>
         <item name="color">@color/white</item>
         <item name="colorContainer">@color/light_grey</item>
+        <item name="colorControlNormal">@color/light_grey</item>
         <item name="colorOnContainer">@color/black</item>
         <item name="colorSecondaryContainer">@color/gray</item>
     </style>
