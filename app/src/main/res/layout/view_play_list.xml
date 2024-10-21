@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/cover_playlist_in_player"
+            android:id="@+id/cover_playlist_in_playlist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
@@ -30,7 +30,7 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/name_playlist_in_player"
+        android:id="@+id/name_playlist_in_playlist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/size_4dp"
@@ -53,25 +53,25 @@
         android:textColor="?attr/colorOnSecondary"
         android:textFontWeight="400"
         android:textSize="@dimen/size_12sp"
-        app:layout_constraintStart_toStartOf="@id/name_playlist_in_player"
-        app:layout_constraintTop_toBottomOf="@id/name_playlist_in_player"
+        app:layout_constraintStart_toStartOf="@id/name_playlist_in_playlist"
+        app:layout_constraintTop_toBottomOf="@id/name_playlist_in_playlist"
         tools:text="55"
 
         />
 
     <TextView
-        android:id="@+id/name_track"
+        android:id="@+id/title_track"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/size_4dp"
         android:fontFamily="@font/ys_display_regular"
-        android:textColor="?attr/colorOnBackground"
+        android:textColor="?attr/colorOnSecondary"
         android:textFontWeight="400"
         android:textSize="@dimen/size_12sp"
         app:layout_constraintBottom_toBottomOf="@id/quantity_track"
         app:layout_constraintStart_toEndOf="@id/quantity_track"
         app:layout_constraintTop_toTopOf="@id/quantity_track"
-
+        tools:text="треков"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

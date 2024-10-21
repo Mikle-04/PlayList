@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlist.domain.favorite.db.api.FavouriteInteractor
 import com.example.playlist.domain.playList.api.PlayListInteractor
 import com.example.playlist.domain.playList.models.PlayList
+import com.example.playlist.domain.playList.models.SelectTrack
 import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.mediaActivity.playListFragment.state.PlayListState
 import com.example.playlist.ui.playActivity.models.PlayerState
@@ -142,7 +143,7 @@ class PlayViewModel(
 
     fun getPlayListDb() {
         viewModelScope.launch(Dispatchers.IO) {
-            playListInteractor.getListPlaylist().collect() { listPlayList ->
+            playListInteractor.getPlaylist().collect() { listPlayList ->
                 if (listPlayList.isEmpty()) {
                     statePlaylist.postValue(PlayListState.Empty())
                 } else {
@@ -154,9 +155,10 @@ class PlayViewModel(
 
     fun insertTrackToPlayList(track: Track, playlist: PlayList) {
         viewModelScope.launch {
-            val track = Track(
+            val selectTrack = SelectTrack(
+                0,
                 track.trackId,
-                track.playlistId,
+                playlist.id,
                 track.trackName,
                 track.artistName,
                 track.trackTime,
@@ -165,9 +167,10 @@ class PlayViewModel(
                 track.releaseDate,
                 track.primaryGenreName,
                 track.previewUrl,
-                track.country
+                track.country,
+                track.isFavourite
             )
-            playListInteractor.insertTrackToPlaylist(track).collect { numberInsert ->
+            playListInteractor.insertTrackToPlaylist(selectTrack).collect { numberInsert ->
                 if (numberInsert == 1L) {
                     stateInsertTrack.postValue(InsertTrackPlayListState.Success(playlist.namePlaylist))
                 } else {

@@ -50,11 +50,13 @@ class FragmentPlayList : Fragment() {
                 is PlayListState.Content -> {
                     binding.imgEmptyList.isVisible = false
                     binding.txtEmptyList.isVisible = false
+                    binding.recyclerPlaylist.isVisible = true
                     adapter.listPlayList = state.playlists
                     adapter.notifyDataSetChanged()
                 }
 
                 is PlayListState.Empty -> {
+                    binding.recyclerPlaylist.isVisible = false
                     binding.imgEmptyList.isVisible = true
                     binding.txtEmptyList.isVisible = true
                 }

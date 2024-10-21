@@ -23,8 +23,8 @@ class PlayListAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.view_play_list, parent, false)
         return when (viewType) {
-            1 -> PlayListImgDefaultViewHolder(view)
-            else -> PlayListImgStorageViewHolder(view)
+            1 -> PlayListImgDefaultViewHolder(view, parent.context)
+            else -> PlayListImgStorageViewHolder(view, parent.context)
         }
     }
 

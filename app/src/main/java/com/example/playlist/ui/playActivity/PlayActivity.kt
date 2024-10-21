@@ -12,7 +12,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlist.R
 import com.example.playlist.databinding.ActivityPlayBinding
 import com.example.playlist.domain.search.models.Track
-import com.example.playlist.ui.mediaActivity.playListFragment.createPlayList.CreatePlayList
+import com.example.playlist.ui.mediaActivity.playListFragment.createPlayList.CreatePlayListFragment
 import com.example.playlist.ui.mediaActivity.playListFragment.state.PlayListState
 import com.example.playlist.ui.playActivity.models.PlayerState
 import com.example.playlist.ui.playActivity.state.InsertTrackPlayListState
@@ -97,7 +97,7 @@ class PlayActivity : AppCompatActivity() {
 
         binding.btnNewPlaylist.setOnClickListener {
             supportFragmentManager.beginTransaction()
-                .add(R.id.fragment_container_view_player, CreatePlayList())
+                .add(R.id.fragment_container_view_player, CreatePlayListFragment())
                 .addToBackStack(null)
                 .setReorderingAllowed(true)
                 .commit()
@@ -182,7 +182,7 @@ class PlayActivity : AppCompatActivity() {
             authorTxt.text = track.artistName
             timeTxt.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTime)
             albumNameTxt.text = track.collectionName
-            yearTxt.text = track.releaseDate
+            yearTxt.text = track.releaseDate.take(4)
             genreTxt.text = track.primaryGenreName
             countryTxt.text = track.country
         }
@@ -194,7 +194,7 @@ class PlayActivity : AppCompatActivity() {
 
     private fun getCoverArtwork() {
         Glide.with(applicationContext)
-            .load(uri_img?.replaceAfterLast('/', "512x512bb.jpg"))
+            .load(uri_img.replaceAfterLast('/', "512x512bb.jpg"))
             .transform(
                 CenterCrop(),
                 RoundedCorners(applicationContext.resources.getDimensionPixelSize(R.dimen.size_8dp))

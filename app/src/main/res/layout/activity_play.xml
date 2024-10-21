@@ -340,16 +340,6 @@
 
             </FrameLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/size_20dp"
-                android:fontFamily="@font/ys_display_medium"
-                android:gravity="center"
-                android:text="@string/empty_playlist"
-                android:textColor="?attr/colorOnBackground"
-                android:textFontWeight="400"
-                android:textSize="@dimen/size_19dp" />
 
         </LinearLayout>
 

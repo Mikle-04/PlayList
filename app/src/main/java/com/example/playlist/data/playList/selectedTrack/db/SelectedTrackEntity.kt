@@ -1,4 +1,4 @@
-package com.example.playlist.data.selectedTrack.db
+package com.example.playlist.data.playList.selectedTrack.db
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -7,7 +7,8 @@ import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "select_track_table")
 data class SelectedTrackEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
     val trackId: Int,
     val playlistId: Int,
     val trackName: String,
@@ -19,5 +20,5 @@ data class SelectedTrackEntity(
     val primaryGenreName: String,
     val previewUrl:String,
     val country: String,
-    var isFavorite: Boolean,
+    var isFavorite: Boolean
 )

@@ -20,12 +20,9 @@ class PlayListViewModel(val playListInteractor: PlayListInteractor) : ViewModel(
     fun getStatePlayList(): LiveData<PlayListState> = statePlayList
 
 
-    private var playlistState = MutableLiveData<PlayList>()
-    fun getPlaylistState(): LiveData<PlayList> = playlistState
-
     fun getPlayListDb() {
         viewModelScope.launch(Dispatchers.IO) {
-            playListInteractor.getListPlaylist().collect() { listPlayList ->
+            playListInteractor.getPlaylist().collect() { listPlayList ->
                 if (listPlayList.isEmpty()) {
                     statePlayList.postValue(PlayListState.Empty())
                 } else {

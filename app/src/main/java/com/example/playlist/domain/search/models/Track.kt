@@ -6,7 +6,6 @@ import android.os.Parcelable
 
 data class Track(
     val trackId: Int,
-    var playlistId:Int,
     val trackName: String,
     val artistName: String,
     @SerializedName("trackTimeMillis") val trackTime: Long,
@@ -43,7 +42,6 @@ data class Track(
 
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
-        parcel.readInt(),
         parcel.readString()?:"",
         parcel.readString()?:"",
         parcel.readLong(),
@@ -58,7 +56,6 @@ data class Track(
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(trackId)
-        parcel.writeInt(playlistId)
         parcel.writeString(trackName)
         parcel.writeString(artistName)
         parcel.writeLong(trackTime ?: 0L)

@@ -27,10 +27,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class CreatePlayList : Fragment() {
+open class CreatePlayListFragment : Fragment() {
 
 
-    private val viewModel: CreateAlbumFragmentViewModel by viewModel()
+    open val viewModel: CreateAlbumFragmentViewModel by viewModel()
 
     private var _binding: FragmentCreatePlayListBinding? = null
     private val binding get() = _binding!!
@@ -88,6 +88,9 @@ class CreatePlayList : Fragment() {
 
         //создать плейлист
         binding.btnCreate.setOnClickListener {
+
+            saveImgPlayList()
+
             if (binding.btnCreate.isActivated) {
                 Toast.makeText(
                     requireContext(),
@@ -99,7 +102,7 @@ class CreatePlayList : Fragment() {
             viewModel.createPlaylist(
                 binding.nameEditText.text.toString(),
                 binding.descriptionEditText.text.toString(),
-                saveImgPlayList()
+                uriImgStorage
             )
 
             requireActivity().supportFragmentManager.popBackStack()

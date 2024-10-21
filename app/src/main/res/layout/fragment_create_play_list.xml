@@ -7,7 +7,7 @@
     android:background="?attr/colorPrimaryVariant"
     android:theme="@style/Base.Theme.PlayList"
     android:windowSoftInputMode="adjustResize"
-    tools:context=".ui.mediaActivity.playListFragment.createPlayList.CreatePlayList">
+    tools:context=".ui.mediaActivity.playListFragment.createPlayList.CreatePlayListFragment">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/leftBorder"
@@ -159,8 +159,10 @@
         android:textColor="@color/white"
         android:textFontWeight="500"
         android:textSize="@dimen/size_16sp"
+        android:layout_marginTop="170dp"
         app:layout_constraintBottom_toBottomOf="@id/bottomBoarder"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
-        app:layout_constraintStart_toStartOf="@id/leftBorder" />
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintTop_toBottomOf="@+id/description_edit_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
