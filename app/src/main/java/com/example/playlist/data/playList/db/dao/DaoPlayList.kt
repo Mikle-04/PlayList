@@ -1,6 +1,7 @@
 package com.example.playlist.data.playList.db.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -11,7 +12,7 @@ interface DaoPlayList {
     @Insert(entity = PlayListEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlaylist(playlistEntity: PlayListEntity)
 
-    @Update(entity = PlayListEntity::class, onConflict = OnConflictStrategy.REPLACE) //Repo
+    @Update(entity = PlayListEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updatePlaylist(playlistEntity: PlayListEntity)
 
     @Query("SELECT * FROM playlist_table")
@@ -19,5 +20,7 @@ interface DaoPlayList {
 
     @Query("SELECT * FROM playlist_table WHERE id = :playlistId")
     suspend fun getPlaylistById(playlistId: Int): PlayListEntity
+    @Delete(entity = PlayListEntity::class)
+    suspend fun deletePlaylist(playlistEntity: PlayListEntity): Int
 
 }

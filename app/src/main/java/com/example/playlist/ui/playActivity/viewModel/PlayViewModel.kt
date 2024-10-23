@@ -143,7 +143,7 @@ class PlayViewModel(
 
     fun getPlayListDb() {
         viewModelScope.launch(Dispatchers.IO) {
-            playListInteractor.getPlaylist().collect() { listPlayList ->
+            playListInteractor.getListPlaylist().collect() { listPlayList ->
                 if (listPlayList.isEmpty()) {
                     statePlaylist.postValue(PlayListState.Empty())
                 } else {
@@ -170,7 +170,7 @@ class PlayViewModel(
                 track.country,
                 track.isFavourite
             )
-            playListInteractor.insertTrackToPlaylist(selectTrack).collect { numberInsert ->
+            playListInteractor.insertTrackToPlaylist(track).collect { numberInsert ->
                 if (numberInsert == 1L) {
                     stateInsertTrack.postValue(InsertTrackPlayListState.Success(playlist.namePlaylist))
                 } else {

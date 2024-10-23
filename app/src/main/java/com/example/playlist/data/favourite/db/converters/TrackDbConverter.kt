@@ -1,13 +1,14 @@
 package com.example.playlist.data.favourite.db.converters
 
-import com.example.playlist.data.favourite.db.TrackEntity
-import com.example.playlist.data.search.dto.TrackDto
+import com.example.playlist.data.favourite.db.FavouriteEntity
 import com.example.playlist.domain.search.models.Track
 
 class TrackDbConverter {
 
-    fun map(track: Track): TrackEntity {
-        return TrackEntity(
+    fun map(track: Track): FavouriteEntity {
+        return FavouriteEntity(
+            track.id,
+            track.playlistId,
             track.trackId,
             track.trackName,
             track.artistName,
@@ -18,13 +19,15 @@ class TrackDbConverter {
             track.primaryGenreName,
             track.previewUrl,
             track.country,
-            System.currentTimeMillis()
+            true
 
         )
     }
 
-    fun map(track: TrackEntity): Track {
+    fun map(track: FavouriteEntity): Track {
         return Track(
+            track.id,
+            track.playlistId,
             track.trackId,
             track.trackName,
             track.artistName,
@@ -34,10 +37,10 @@ class TrackDbConverter {
             track.releaseDate,
             track.primaryGenreName,
             track.previewUrl,
-            track.country
+            track.country,
+            track.isFavourite
         )
     }
-
 
 
 }

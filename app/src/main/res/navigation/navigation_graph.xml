@@ -44,17 +44,25 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentPlayList"
-        android:name="com.example.playlist.ui.mediaActivity.playListFragment.FragmentPlayList"
+        android:name="com.example.playlist.ui.mediaActivity.playListFragment.FragmentListPlayList"
         android:label="fragment_play_list"
         tools:layout="@layout/fragment_play_list" >
         <action
             android:id="@+id/action_fragmentPlayList_to_createPlayList"
             app:destination="@id/createPlayList" />
+        <action
+            android:id="@+id/action_fragmentPlayList_to_fragmentPlayListDesc"
+            app:destination="@id/fragmentPlayListDesc" />
     </fragment>
     <fragment
         android:id="@+id/createPlayList"
         android:name="com.example.playlist.ui.mediaActivity.playListFragment.createPlayList.CreatePlayListFragment"
         android:label="fragment_create_play_list"
         tools:layout="@layout/fragment_create_play_list" />
+    <fragment
+        android:id="@+id/fragmentPlayListDesc"
+        android:name="com.example.playlist.ui.mediaActivity.playListFragment.FragmentPlayListDesc"
+        android:label="fragment_play_list_desc"
+        tools:layout="@layout/fragment_play_list_desc" />
 
 </navigation>

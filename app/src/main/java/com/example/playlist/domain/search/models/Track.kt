@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName
 import android.os.Parcelable
 
 data class Track(
+    var id: Int,
+    var playlistId: Int,
     val trackId: Int,
     val trackName: String,
     val artistName: String,
@@ -13,14 +15,14 @@ data class Track(
     val collectionName: String,
     val releaseDate: String,
     val primaryGenreName: String,
-    val previewUrl:String?,
+    val previewUrl: String?,
     val country: String,
-    var isFavourite:Boolean = false
-):Parcelable{
+    var isFavourite: Boolean = false
+) : Parcelable {
     override fun equals(other: Any?): Boolean {
-        return if (other is Track){
+        return if (other is Track) {
             (trackId == other.trackId)
-        }else{
+        } else {
             super.equals(other)
         }
     }
@@ -42,19 +44,23 @@ data class Track(
 
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
-        parcel.readString()?:"",
-        parcel.readString()?:"",
+        parcel.readInt(),
+        parcel.readInt(),
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
         parcel.readLong(),
-        parcel.readString()?:"",
-        parcel.readString()?:"",
-        parcel.readString()?:"",
-        parcel.readString()?:"",
-        parcel.readString()?:"",
-        parcel.readString()?:"",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
         parcel.readBoolean()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(id)
+        parcel.writeInt(playlistId)
         parcel.writeInt(trackId)
         parcel.writeString(trackName)
         parcel.writeString(artistName)
@@ -65,7 +71,7 @@ data class Track(
         parcel.writeString(primaryGenreName)
         parcel.writeString(previewUrl)
         parcel.writeString(country)
-        parcel.readBoolean()
+        parcel.writeBoolean(isFavourite)
     }
 
     override fun describeContents(): Int {

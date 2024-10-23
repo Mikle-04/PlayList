@@ -6,8 +6,10 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "track_table")
-data class TrackEntity(
-    @PrimaryKey
+data class FavouriteEntity(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
+    val playlistId: Int,
     val trackId: Int,
     val trackName: String,
     val artistName: String,
@@ -18,6 +20,5 @@ data class TrackEntity(
     val primaryGenreName: String,
     val previewUrl:String?,
     val country: String,
-    @ColumnInfo(name = "created_date")
-    val createdAt: Long
+    var isFavourite : Boolean = true,
 )

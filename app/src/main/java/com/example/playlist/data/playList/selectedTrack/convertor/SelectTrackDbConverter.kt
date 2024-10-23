@@ -2,25 +2,26 @@ package com.example.playlist.data.playList.selectedTrack.convertor
 
 import com.example.playlist.data.playList.selectedTrack.db.SelectedTrackEntity
 import com.example.playlist.domain.playList.models.SelectTrack
+import com.example.playlist.domain.search.models.Track
 
 class SelectTrackDbConverter {
-    fun mapModelToEntity(selectTrack: SelectTrack): SelectedTrackEntity = SelectedTrackEntity(
-        selectTrack.id,
-        selectTrack.trackId,
-        selectTrack.playlistId,
-        selectTrack.trackName,
-        selectTrack.artistName,
-        selectTrack.trackTime,
-        selectTrack.artworkUrl100,
-        selectTrack.collectionName,
-        selectTrack.releaseDate,
-        selectTrack.primaryGenreName,
-        selectTrack.previewUrl,
-        selectTrack.country,
-        selectTrack.isFavorite
+    fun mapModelToEntity(track: Track): SelectedTrackEntity = SelectedTrackEntity(
+        track.id,
+        track.trackId,
+        track.playlistId,
+        track.trackName,
+        track.artistName,
+        track.trackTime,
+        track.artworkUrl100,
+        track.collectionName,
+        track.releaseDate,
+        track.primaryGenreName,
+        track.previewUrl,
+        track.country,
+        track.isFavourite
     )
 
-    fun mapEntityToModel(selectedTrackEntity: SelectedTrackEntity): SelectTrack = SelectTrack(
+    fun mapEntityToModel(selectedTrackEntity: SelectedTrackEntity): Track = Track(
         selectedTrackEntity.id,
         selectedTrackEntity.trackId,
         selectedTrackEntity.playlistId,

@@ -16,8 +16,6 @@ import com.example.playlist.domain.search.models.Track
 import com.example.playlist.ui.mediaActivity.favoriteFragment.state.HistoryState
 import com.example.playlist.ui.mediaActivity.favoriteFragment.viewModel.FavouriteFragmentViewModel
 import com.example.playlist.ui.playActivity.PlayActivity
-import com.example.playlist.ui.playActivity.models.FavouriteState
-import com.example.playlist.ui.searchActivity.FragmentSearch
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -87,7 +85,7 @@ class FavouritesFragment : Fragment(){
 
     override fun onStart() {
         super.onStart()
-        viewModel.getTrackData()
+        viewModel.getFavouriteTrack()
     }
 
     private fun render(state: HistoryState){

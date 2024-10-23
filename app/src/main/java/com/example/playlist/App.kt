@@ -23,6 +23,7 @@ import com.example.playlist.di.domainModule.playerFavouriteImpl
 import com.example.playlist.di.domainModule.favouriteInteractorModule
 import com.example.playlist.di.viewModelModule.favoriteViewModelModule
 import com.example.playlist.di.viewModelModule.createPlayListViewModelModule
+import com.example.playlist.di.viewModelModule.playListDescViewModelModule
 import com.example.playlist.di.viewModelModule.playListViewModelModule
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
@@ -62,7 +63,8 @@ class App : Application(), KoinComponent {
                 createPlayListInteractor,
                 createPlayListViewModelModule,
                 playListViewModelModule,
-                selectTrackDbConverterModule
+                selectTrackDbConverterModule,
+                playListDescViewModelModule
             )
         }
         darkTheme = themeInteractor.getThemeSettings()

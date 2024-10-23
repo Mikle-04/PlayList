@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:theme="@style/Base.Theme.PlayList"
     android:background="?attr/colorPrimaryVariant"
-    tools:context=".ui.mediaActivity.playListFragment.FragmentPlayList">
+    tools:context=".ui.mediaActivity.playListFragment.FragmentListPlayList">
 
     <Button
         android:id="@+id/btnNewPlayList"
