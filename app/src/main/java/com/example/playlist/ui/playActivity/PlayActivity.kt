@@ -27,7 +27,7 @@ import org.koin.core.parameter.parametersOf
 class PlayActivity : AppCompatActivity() {
 
     companion object{
-        private const val KEY_TRACK = "track"
+        const val KEY_TRACK = "track"
     }
 
     private lateinit var track: Track

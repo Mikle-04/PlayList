@@ -63,6 +63,14 @@
         android:id="@+id/fragmentPlayListDesc"
         android:name="com.example.playlist.ui.mediaActivity.playListFragment.FragmentPlayListDesc"
         android:label="fragment_play_list_desc"
-        tools:layout="@layout/fragment_play_list_desc" />
+        tools:layout="@layout/fragment_play_list_desc" >
+        <action
+            android:id="@+id/action_fragmentPlayListDesc_to_fragmentEditor"
+            app:destination="@id/fragmentEditor" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentEditor"
+        android:name="com.example.playlist.ui.mediaActivity.playListFragment.FragmentEditor"
+        android:label="fragment_editor" />
 
 </navigation>

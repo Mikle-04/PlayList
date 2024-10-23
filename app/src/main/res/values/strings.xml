@@ -62,4 +62,11 @@
     <string name="delete_track">Удалить трек</string>
     <string name="do_you_want_to_delete_track">Вы уверены, что хотите удалить трек из плейлиста?</string>
     <string name="delete">Удалить</string>
+    <string name="do_you_wont_to_delete_playlist">Хотите удалить плейлист?</string>
+    <string name="no">Нет</string>
+    <string name="yes">Да</string>
+    <string name="playlist_not_have_tracks">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="null_value">null</string>
+    <string name="edit_text">Редакировать</string>
+    <string name="save">Сохранить\n</string>
 </resources>

@@ -13,13 +13,19 @@ import androidx.navigation.fragment.findNavController
 import com.example.playlist.R
 import com.example.playlist.databinding.FragmentPlayListBinding
 import com.example.playlist.databinding.FragmentPlayListDescBinding
+import com.example.playlist.domain.playList.models.PlayList
 import com.example.playlist.domain.search.models.Track
+import com.example.playlist.ui.mediaActivity.playListFragment.state.TrackPlayListState
 import com.example.playlist.ui.mediaActivity.playListFragment.viewModel.PlayListDescViewModel
+import com.example.playlist.ui.playActivity.PlayActivity
+import com.example.playlist.ui.playActivity.PlayActivity.Companion.KEY_TRACK
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.time.Duration.Companion.milliseconds
 
 class FragmentPlayListDesc : Fragment() {
+
 
     private var _binding: FragmentPlayListDescBinding? = null
     private val binding get() = _binding!!
@@ -114,8 +120,8 @@ class FragmentPlayListDesc : Fragment() {
 
         binding.textEditInformation.setOnClickListener {
             findNavController().navigate(
-                R.id.action_playlistFragment_to_playlistEditorFragment,
-                PlaylistEditorFragment.createArgs(playlistId)
+                R.id.action_fragmentPlayListDesc_to_fragmentEditor,
+                FragmentEditor.createArgs(playlistId)
             )
         }
 
@@ -128,13 +134,12 @@ class FragmentPlayListDesc : Fragment() {
             .observe(viewLifecycleOwner) { tracksOfPlaylistState ->
                 when (tracksOfPlaylistState) {
 
-                    is TracksOfPlaylistState.ContentPlaylist -> {
+                    is TrackPlayListState.ContentPlaylist -> {
 
-                        val reverseListTracksOfPlaylist =
-                            tracksOfPlaylistState.listTracksOfPlaylist.reversed()
-                        adapterTracksOfPlaylist.listTracksOfPlaylist =
-                            reverseListTracksOfPlaylist as MutableList<Track>
-                        adapterTracksOfPlaylist.notifyDataSetChanged()
+                        val reverseListTracksOfPlaylist = tracksOfPlaylistState.listTracksPlaylist.reversed()
+
+                        adapterTrackPlaylist.listTracksOfPlaylist = reverseListTracksOfPlaylist as MutableList<Track>
+                        adapterTrackPlaylist.notifyDataSetChanged()
 
                         binding.buttonShare.setOnClickListener {
                             viewModel.shareLinkPlaylist(playlistId)
@@ -146,7 +151,7 @@ class FragmentPlayListDesc : Fragment() {
                         }
                     }
 
-                    is TracksOfPlaylistState.EmptyPlaylist -> {
+                    is TrackPlayListState.EmptyPlaylist -> {
 
                         binding.apply {
                             trackRecyclerView.isVisible = false
@@ -179,7 +184,7 @@ class FragmentPlayListDesc : Fragment() {
 
     private fun startPlayer(track: Track) {
         val playerIntent = Intent(
-            context, PlayerActivity::class.java
+            context, PlayActivity::class.java
         )
         playerIntent.putExtra(
             KEY_TRACK, track
@@ -190,12 +195,12 @@ class FragmentPlayListDesc : Fragment() {
     private fun messageEmptyPlaylist() {
         Toast.makeText(
             requireContext(),
-            requireContext().getString(R.string.playlist_does_not_have_tracks),
+            requireContext().getString(R.string.playlist_not_have_tracks),
             Toast.LENGTH_SHORT
         ).show()
     }
 
-    private fun renderTracksBottomSheet(playlist: Playlist) {
+    private fun renderTracksBottomSheet(playlist: PlayList) {
         binding.apply {
             namePlaylist.text = playlist.namePlaylist
             if (playlist.descriptionPlaylist.isNullOrEmpty()) {
@@ -204,17 +209,17 @@ class FragmentPlayListDesc : Fragment() {
                 descriptionPlaylist.isVisible = true
                 descriptionPlaylist.text = playlist.descriptionPlaylist
             }
-            coverPlaylist.setImageURI(playlist.uriImageStorage)
+            coverPlaylist.setImageURI(playlist.imgStorage)
             totalTime.text =
                 "${playlist.totalPlaylistTime.milliseconds.inWholeMinutes} ${playlist.minutesSpelling}"
             amountTracks.text = "${playlist.amountTracks} ${playlist.trackSpelling}"
         }
     }
 
-    private fun renderMenuBottomSheet(playlist: Playlist) {
+    private fun renderMenuBottomSheet(playlist: PlayList) {
         binding.apply {
-            if (playlist.uriImageStorage.toString() != getString(R.string.null_title)) {
-                coverPlaylistLinear.setImageURI(playlist.uriImageStorage)
+            if (playlist.imgStorage.toString() != getString(R.string.null_value)) {
+                coverPlaylistLinear.setImageURI(playlist.imgStorage)
             }
             namePlaylistLinear.text = playlist.namePlaylist
             amountTracksLinear.text = playlist.amountTracks.toString()

@@ -33,4 +33,8 @@ class PlayListInteractorImpl(private val playListRepository: PlayListRepository)
     override suspend fun deletePlaylistById(playlistId: Int): Flow<Int> {
         return playListRepository.deletePlaylistById(playlistId)
     }
+
+    override suspend fun saveUpdatePlayList(playlist: PlayList) {
+        playListRepository.saveUpdatePlayList(playlist)
+    }
 }

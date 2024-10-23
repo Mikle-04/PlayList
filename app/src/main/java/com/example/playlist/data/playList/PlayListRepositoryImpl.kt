@@ -89,6 +89,10 @@ class PlayListRepositoryImpl(
         appDatabase.playListDao().deletePlaylist(playlistEntity)
         emit(DELETE)
     }
+    override suspend fun saveUpdatePlayList(playlist: PlayList) {
+        val playlistEntity = playListConverter.mapPlayListToEntity(playlist)
+        appDatabase.playListDao().updatePlaylist(playlistEntity)
+    }
 
     private fun convertPlayListEntityToPlayList(playlists: MutableList<PlayListEntity>): MutableList<PlayList> {
         return playlists.map { playlistEntity ->

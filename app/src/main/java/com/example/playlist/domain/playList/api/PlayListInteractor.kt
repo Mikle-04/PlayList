@@ -1,7 +1,6 @@
 package com.example.playlist.domain.playList.api
 
 import com.example.playlist.domain.playList.models.PlayList
-import com.example.playlist.domain.playList.models.SelectTrack
 import com.example.playlist.domain.search.models.Track
 import kotlinx.coroutines.flow.Flow
 
@@ -13,5 +12,6 @@ interface PlayListInteractor {
     suspend fun getTracksByPlaylistId(playlistId: Int): Flow<MutableList<Track>>
     suspend fun deleteSelectedTrackFromPlaylist(track: Track)
     suspend fun deletePlaylistById(playlistId: Int): Flow<Int>
+    suspend fun saveUpdatePlayList(playlist: PlayList)
 
 }
