@@ -8,15 +8,15 @@ data class Track(
     var id: Int,
     var playlistId: Int,
     val trackId: Int,
-    val trackName: String,
-    val artistName: String,
+    val trackName: String?,
+    val artistName: String?,
     @SerializedName("trackTimeMillis") val trackTime: Long,
-    val artworkUrl100: String,
-    val collectionName: String,
-    val releaseDate: String,
-    val primaryGenreName: String,
+    val artworkUrl100: String?,
+    val collectionName: String?,
+    val releaseDate: String?,
+    val primaryGenreName: String?,
     val previewUrl: String?,
-    val country: String,
+    val country: String?,
     var isFavourite: Boolean = false
 ) : Parcelable {
     override fun equals(other: Any?): Boolean {

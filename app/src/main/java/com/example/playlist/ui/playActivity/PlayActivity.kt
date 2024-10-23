@@ -182,7 +182,7 @@ class PlayActivity : AppCompatActivity() {
             authorTxt.text = track.artistName
             timeTxt.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTime)
             albumNameTxt.text = track.collectionName
-            yearTxt.text = track.releaseDate.take(4)
+            yearTxt.text = track.releaseDate?.take(4)
             genreTxt.text = track.primaryGenreName
             countryTxt.text = track.country
         }

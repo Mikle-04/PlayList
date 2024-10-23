@@ -8,15 +8,8 @@ import com.example.playlist.domain.sharing.model.EmailData
 
 class SharingRepositoryImpl(val context: Context, val externalNavigator: ExternalNavigator) :
     SharingRepository {
-    override fun share(link: String) {
-        Intent(Intent.ACTION_SEND).apply {
-            type = context.getString(R.string.text_plain)
-            putExtra(Intent.EXTRA_TEXT, link)
-            if (resolveActivity(context.packageManager) != null) {
-                this.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(this)
-            }
-        }
+    override fun shareLink(link: String) {
+        externalNavigator.shareLink(link)
     }
 
     override fun shareApp() {

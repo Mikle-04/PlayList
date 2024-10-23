@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_fragmentMedia_to_createPlayList"
             app:destination="@id/createPlayList" />
+        <action
+            android:id="@+id/action_fragmentMedia_to_fragmentPlayListDesc"
+            app:destination="@id/fragmentPlayListDesc" />
     </fragment>
     <fragment
         android:id="@+id/fragmentSettings"
