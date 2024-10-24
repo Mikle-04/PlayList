@@ -32,7 +32,7 @@
             android:layout_width="@dimen/size_24dp"
             android:layout_height="@dimen/size_24dp"
             android:layout_margin="@dimen/size_16dp"
-            android:src="@drawable/ic_back_24"
+            android:src="@drawable/ic_back_playlist_desc"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,7 +52,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cover_playlist"
-            tools:text="@tools:sample/first_names" />
+            tools:text="Bang Bang" />
 
         <TextView
             android:id="@+id/description_playlist"
