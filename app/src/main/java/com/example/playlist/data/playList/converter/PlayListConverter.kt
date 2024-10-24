@@ -14,6 +14,9 @@ class PlayListConverter (private val gson: Gson) {
         uriImageStorage = playlist.imgStorage.toString(),
         listTrackIds = gson.toJson(playlist.listTrackIds),
         amountTracks = playlist.listTrackIds.size,
+        playlist.totalPlaylistTime,
+        playlist.trackSpelling,
+        playlist.minutesSpelling
 
     )
 
@@ -24,6 +27,9 @@ class PlayListConverter (private val gson: Gson) {
         imgStorage = playlistEntity.uriImageStorage?.toUri(),
         listTrackIds = gson.fromJson(playlistEntity.listTrackIds, Array<Int>::class.java).toMutableList(),
         amountTracks = playlistEntity.amountTracks,
+        playlistEntity.totalPlaylistTime,
+        playlistEntity.trackSpelling,
+        playlistEntity.minutesSpelling
 
     )
 }

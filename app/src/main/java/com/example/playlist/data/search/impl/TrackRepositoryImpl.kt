@@ -23,6 +23,8 @@ class TrackRepositoryImpl(
 
             200 -> {
                 emit(Resource.Success((response as TrackResponse).results.map { Track(
+                    0,
+                    0,
                     it.trackId,
                     it.trackName,
                     it.artistName,

@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlist.R
 import com.example.playlist.domain.playList.models.PlayList
 
-class PlayListAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PlayListAdapter(
+    private val onPlaylistClickListener: OnPlaylistClickListener
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var listPlayList = mutableListOf<PlayList>()
     override fun getItemViewType(position: Int): Int {
@@ -33,9 +35,16 @@ class PlayListAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+
+        holder.itemView.setOnClickListener { onPlaylistClickListener.onPlaylistClick(listPlayList.get(position)) }
+
         when (holder) {
             is PlayListImgDefaultViewHolder -> holder.bind(listPlayList.get(position))
             is PlayListImgStorageViewHolder -> holder.bind(listPlayList.get(position))
         }
+    }
+
+    fun interface OnPlaylistClickListener {
+        fun onPlaylistClick(playlist: PlayList)
     }
 }

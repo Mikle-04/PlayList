@@ -4,34 +4,37 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.playlist.R
 import com.example.playlist.databinding.FragmentPlayListBinding
 import com.example.playlist.ui.mediaActivity.playListFragment.state.PlayListState
-import com.example.playlist.ui.mediaActivity.playListFragment.viewModel.PlayListViewModel
+import com.example.playlist.ui.mediaActivity.playListFragment.viewModel.ListPlayListViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FragmentPlayList : Fragment() {
+class FragmentListPlayList : Fragment() {
 
     companion object {
-        fun newInstance() = FragmentPlayList()
+        fun newInstance() = FragmentListPlayList()
 
     }
 
-    private val viewModel: PlayListViewModel by viewModel()
+    private val viewModel: ListPlayListViewModel by viewModel()
 
     private var _binding: FragmentPlayListBinding? = null
     private val binding get() = _binding!!
 
-    private val adapter = PlayListAdapter()
+    private val adapterPlayList = PlayListAdapter{ playlist ->
+        findNavController().navigate(R.id.action_fragmentMedia_to_fragmentPlayListDesc, FragmentPlayListDesc.createArgs(playlist.id))
+    }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-
+    ): View{
         _binding = FragmentPlayListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -39,10 +42,10 @@ class FragmentPlayList : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.recyclerPlaylist.adapter = adapter
+        binding.recyclerPlaylist.adapter = adapterPlayList
 
         binding.btnNewPlayList.setOnClickListener {
-            findNavController().navigate(com.example.playlist.R.id.action_fragmentMedia_to_createPlayList)
+            findNavController().navigate(R.id.action_fragmentMedia_to_createPlayList)
         }
 
         viewModel.getStatePlayList().observe(viewLifecycleOwner) { state ->
@@ -51,8 +54,8 @@ class FragmentPlayList : Fragment() {
                     binding.imgEmptyList.isVisible = false
                     binding.txtEmptyList.isVisible = false
                     binding.recyclerPlaylist.isVisible = true
-                    adapter.listPlayList = state.playlists
-                    adapter.notifyDataSetChanged()
+                    adapterPlayList.listPlayList = state.playlists
+                    adapterPlayList.notifyDataSetChanged()
                 }
 
                 is PlayListState.Empty -> {

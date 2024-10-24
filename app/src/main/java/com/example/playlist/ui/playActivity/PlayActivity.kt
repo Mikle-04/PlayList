@@ -27,7 +27,7 @@ import org.koin.core.parameter.parametersOf
 class PlayActivity : AppCompatActivity() {
 
     companion object{
-        private const val KEY_TRACK = "track"
+        const val KEY_TRACK = "track"
     }
 
     private lateinit var track: Track
@@ -182,7 +182,7 @@ class PlayActivity : AppCompatActivity() {
             authorTxt.text = track.artistName
             timeTxt.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTime)
             albumNameTxt.text = track.collectionName
-            yearTxt.text = track.releaseDate.take(4)
+            yearTxt.text = track.releaseDate?.take(4)
             genreTxt.text = track.primaryGenreName
             countryTxt.text = track.country
         }
@@ -231,6 +231,11 @@ class PlayActivity : AppCompatActivity() {
             binding.likeImg.setImageResource(R.drawable.like_button)
         }
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.checkIsFavouriteTrack(track.trackId)
     }
 
 

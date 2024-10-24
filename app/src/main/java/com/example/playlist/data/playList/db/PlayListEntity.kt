@@ -12,6 +12,9 @@ data class PlayListEntity(
     val descriptionPlaylist: String?,
     val uriImageStorage: String?,
     var listTrackIds: String,
-    var amountTracks: Int
+    var amountTracks: Int,
+    var totalPlaylistTime: Int,
+    var trackSpelling: String,
+    var minutesSpelling: String,
 ) {
 }

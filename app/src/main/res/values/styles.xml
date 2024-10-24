@@ -125,12 +125,13 @@
         <item name="android:textFontWeight">500</item>
     </style>
 
-    <style name="PlaylistDialogStyle" parent="MaterialAlertDialog.Material3">
+    <style name="PlayListDialogStyle" parent="MaterialAlertDialog.Material3">
         <item name="android:textFontWeight">400</item>
         <item name="android:backgroundTint">@color/white</item>
         <item name="android:dialogCornerRadius">@dimen/size_4dp</item>
-        <item name="colorOnSurface">@color/black</item>
-        <item name="colorOnSurfaceVariant">@color/black</item>
+        <item name="colorOnSurface">@color/fiol</item>
+        <item name="colorOnSurfaceVariant">@color/fiol</item>
         <item name="colorPrimary">@color/blue</item>
     </style>
+
 </resources>

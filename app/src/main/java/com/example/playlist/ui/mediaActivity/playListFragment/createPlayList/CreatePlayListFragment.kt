@@ -33,7 +33,7 @@ open class CreatePlayListFragment : Fragment() {
     open val viewModel: CreateAlbumFragmentViewModel by viewModel()
 
     private var _binding: FragmentCreatePlayListBinding? = null
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
 
     private lateinit var nameTextWatcher: TextWatcher
     private lateinit var descriptionWatcher: TextWatcher
@@ -181,7 +181,7 @@ open class CreatePlayListFragment : Fragment() {
         }
     }
 
-    private fun downloadImage() {
+    fun downloadImage() {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
@@ -195,7 +195,7 @@ open class CreatePlayListFragment : Fragment() {
     }
 
     private fun showExitMsg() {
-        MaterialAlertDialogBuilder(requireContext(), R.style.PlaylistDialogStyle).setTitle(
+        MaterialAlertDialogBuilder(requireContext(), R.style.PlayListDialogStyle).setTitle(
             getString(R.string.close_create_playlist)
         )
             .setMessage(getString(R.string.save_msg))

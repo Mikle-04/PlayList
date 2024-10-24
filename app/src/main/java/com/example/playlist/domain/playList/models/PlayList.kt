@@ -8,5 +8,8 @@ data class PlayList(
     var descriptionPlaylist: String?,
     var imgStorage: Uri?,
     var listTrackIds: MutableList<Int> = mutableListOf(),
-    var amountTracks: Int = 0
+    var amountTracks: Int = 0,
+    var totalPlaylistTime: Int = 0,
+    var trackSpelling: String = "треков",
+    var minutesSpelling: String = "минут",
 )

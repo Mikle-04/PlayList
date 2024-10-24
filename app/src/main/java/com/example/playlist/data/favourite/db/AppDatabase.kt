@@ -10,7 +10,7 @@ import com.example.playlist.data.playList.selectedTrack.db.dao.SelectedTrackDao
 
 @Database(
     version = 4,
-    entities = [TrackEntity::class, PlayListEntity::class, SelectedTrackEntity::class],
+    entities = [FavouriteEntity::class, PlayListEntity::class, SelectedTrackEntity::class],
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
