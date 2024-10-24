@@ -125,6 +125,8 @@ class PlayViewModel(
                 track.isFavourite = false
                 favouriteInteractor.deleteFavoriteTrack(track)
                 stateLiveDataFavourite.postValue(track.isFavourite)
+                favouriteInteractor.getFavouriteTrack()
+
             } else {
                 track.isFavourite = true
                 favouriteInteractor.insertFavoriteTrack(track)
@@ -133,7 +135,7 @@ class PlayViewModel(
         }
     }
 
-    private fun checkIsFavouriteTrack(trackId: Int) {
+    fun checkIsFavouriteTrack(trackId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             favouriteInteractor.getFavouriteTrackId(trackId).collect {
                 stateLiveDataFavourite.postValue(it)

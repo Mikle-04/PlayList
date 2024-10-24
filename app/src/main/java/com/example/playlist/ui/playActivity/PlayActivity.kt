@@ -233,6 +233,11 @@ class PlayActivity : AppCompatActivity() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.checkIsFavouriteTrack(track.trackId)
+    }
+
 
 }
 //

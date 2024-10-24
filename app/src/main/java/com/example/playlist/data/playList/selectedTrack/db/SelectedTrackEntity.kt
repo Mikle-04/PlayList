@@ -9,8 +9,8 @@ import com.google.gson.annotations.SerializedName
 data class SelectedTrackEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
-    val trackId: Int,
     val playlistId: Int,
+    val trackId: Int,
     val trackName: String?,
     val artistName: String?,
     @SerializedName("trackTimeMillis")val trackTime: Long,

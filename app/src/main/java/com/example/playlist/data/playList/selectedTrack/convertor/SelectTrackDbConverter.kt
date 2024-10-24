@@ -7,8 +7,8 @@ import com.example.playlist.domain.search.models.Track
 class SelectTrackDbConverter {
     fun mapModelToEntity(track: Track): SelectedTrackEntity = SelectedTrackEntity(
         track.id,
-        track.trackId,
         track.playlistId,
+        track.trackId,
         track.trackName,
         track.artistName,
         track.trackTime,
@@ -23,8 +23,8 @@ class SelectTrackDbConverter {
 
     fun mapEntityToModel(selectedTrackEntity: SelectedTrackEntity): Track = Track(
         selectedTrackEntity.id,
-        selectedTrackEntity.trackId,
         selectedTrackEntity.playlistId,
+        selectedTrackEntity.trackId,
         selectedTrackEntity.trackName,
         selectedTrackEntity.artistName,
         selectedTrackEntity.trackTime,
