@@ -29,8 +29,8 @@ class PlayListRepositoryImpl(
     }
 
     override suspend fun insertTrackToPlaylist(track: Track): Flow<Long> = flow {
-        val trackIdsOfPlaylist =
-            appDatabase.selectedTrackDao().getTrackIdOfPlaylistByPlaylistId(track.playlistId)
+        val trackIdsOfPlaylist = appDatabase.selectedTrackDao().getTrackIdOfPlaylistByPlaylistId(track.playlistId)
+
         if (trackIdsOfPlaylist.contains(track.trackId)) {
             emit(TRACK_INSERT)
         } else {

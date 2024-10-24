@@ -54,7 +54,7 @@
     <string name="minuta">минута\n</string>
     <string name="minuti">минуты</string>
     <string name="playlist_no_track">В этом плейлисте нет треков</string>
-    <string name="share">Поделиться\n</string>
+    <string name="share">Поделиться</string>
     <string name="edit_information">Редактировать информацию</string>
     <string name="delete_playlist">Удалить плейлист</string>
     <string name="text_plain">text/plain</string>

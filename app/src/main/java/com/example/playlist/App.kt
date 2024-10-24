@@ -25,7 +25,7 @@ import com.example.playlist.di.viewModelModule.favoriteViewModelModule
 import com.example.playlist.di.viewModelModule.createPlayListViewModelModule
 import com.example.playlist.di.viewModelModule.playListDescViewModelModule
 import com.example.playlist.di.viewModelModule.playListEditorViewModel
-import com.example.playlist.di.viewModelModule.playListViewModelModule
+import com.example.playlist.di.viewModelModule.listPlayListViewModelModule
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.component.KoinComponent
@@ -63,7 +63,7 @@ class App : Application(), KoinComponent {
                 playListRepositoryModule,
                 createPlayListInteractor,
                 createPlayListViewModelModule,
-                playListViewModelModule,
+                listPlayListViewModelModule,
                 selectTrackDbConverterModule,
                 playListDescViewModelModule,
                 playListEditorViewModel

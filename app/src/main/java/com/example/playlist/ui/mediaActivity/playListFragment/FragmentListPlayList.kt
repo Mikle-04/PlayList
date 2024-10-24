@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.playlist.R
 import com.example.playlist.databinding.FragmentPlayListBinding
 import com.example.playlist.ui.mediaActivity.playListFragment.state.PlayListState
-import com.example.playlist.ui.mediaActivity.playListFragment.viewModel.PlayListViewModel
+import com.example.playlist.ui.mediaActivity.playListFragment.viewModel.ListPlayListViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FragmentListPlayList : Fragment() {
@@ -20,7 +20,7 @@ class FragmentListPlayList : Fragment() {
 
     }
 
-    private val viewModel: PlayListViewModel by viewModel()
+    private val viewModel: ListPlayListViewModel by viewModel()
 
     private var _binding: FragmentPlayListBinding? = null
     private val binding get() = _binding!!

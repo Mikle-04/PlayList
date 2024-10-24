@@ -9,7 +9,7 @@ import com.example.playlist.ui.mediaActivity.playListFragment.state.PlayListStat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PlayListViewModel(val playListInteractor: PlayListInteractor) : ViewModel() {
+class ListPlayListViewModel(val playListInteractor: PlayListInteractor) : ViewModel() {
 
 
     private var statePlayList = MutableLiveData<PlayListState>()
@@ -17,7 +17,7 @@ class PlayListViewModel(val playListInteractor: PlayListInteractor) : ViewModel(
 
 
     fun getPlayListDb() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             playListInteractor.getListPlaylist().collect() { listPlayList ->
                 if (listPlayList.isEmpty()) {
                     statePlayList.postValue(PlayListState.Empty())

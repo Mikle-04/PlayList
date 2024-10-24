@@ -5,7 +5,7 @@ import com.example.playlist.domain.sharing.impl.SharingInteractorImpl
 import org.koin.dsl.module
 
 val sharingInteractorModule = module {
-    single<SharingInteractor> {
+    factory<SharingInteractor> {
         SharingInteractorImpl(get())
     }
 }

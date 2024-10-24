@@ -4,12 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlist.domain.settings.ThemeInteractor
+import com.example.playlist.domain.sharing.api.SharingInteractor
 import com.example.playlist.domain.sharing.impl.SharingInteractorImpl
 import org.koin.core.component.KoinComponent
 
 
 class SettingsViewModel(
-    val sharingInteractor: SharingInteractorImpl,
+    val sharingInteractor: SharingInteractor,
     val themeInteractor: ThemeInteractor
 ) : ViewModel(), KoinComponent {
 

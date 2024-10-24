@@ -144,7 +144,7 @@ class PlayViewModel(
     fun getPlayListDb() {
         viewModelScope.launch(Dispatchers.IO) {
             playListInteractor.getListPlaylist().collect() { listPlayList ->
-                if (listPlayList.isEmpty()) {
+                if (listPlayList.isNullOrEmpty()) {
                     statePlaylist.postValue(PlayListState.Empty())
                 } else {
                     statePlaylist.postValue(PlayListState.Content(listPlayList))
@@ -155,10 +155,10 @@ class PlayViewModel(
 
     fun insertTrackToPlayList(track: Track, playlist: PlayList) {
         viewModelScope.launch {
-            val selectTrack = SelectTrack(
+            val trackInsert = Track(
                 0,
-                track.trackId,
                 playlist.id,
+                track.trackId,
                 track.trackName,
                 track.artistName,
                 track.trackTime,
@@ -170,7 +170,7 @@ class PlayViewModel(
                 track.country,
                 track.isFavourite
             )
-            playListInteractor.insertTrackToPlaylist(track).collect { numberInsert ->
+            playListInteractor.insertTrackToPlaylist(trackInsert).collect { numberInsert ->
                 if (numberInsert == 1L) {
                     stateInsertTrack.postValue(InsertTrackPlayListState.Success(playlist.namePlaylist))
                 } else {
