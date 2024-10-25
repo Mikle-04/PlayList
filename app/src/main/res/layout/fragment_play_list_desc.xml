@@ -134,6 +134,7 @@
             app:layout_constraintTop_toTopOf="@id/button_share"
             app:tint="@color/black" />
 
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -145,7 +146,7 @@
         android:orientation="vertical"
         android:visibility="visible"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="200dp"
+        app:behavior_peekHeight="266dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         tools:visibility="visible">
 
@@ -180,6 +181,20 @@
             android:textFontWeight="400"
             android:textSize="@dimen/size_18sp"
             android:visibility="gone" />
+        <View
+            android:id="@+id/green"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@color/green"
+            android:elevation="@dimen/size_10dp"
+            android:layout_gravity="bottom"/>
+        <View
+            android:id="@+id/green_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@color/green"
+            android:elevation="@dimen/size_10dp"
+            android:layout_gravity="top"/>
 
 
     </LinearLayout>
@@ -330,6 +345,7 @@
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_edit_information" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
