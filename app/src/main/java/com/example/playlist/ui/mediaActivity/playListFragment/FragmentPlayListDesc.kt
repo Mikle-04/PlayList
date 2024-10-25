@@ -61,6 +61,8 @@ class FragmentPlayListDesc : Fragment() {
     ): View {
         _binding = FragmentPlayListDescBinding.inflate(inflater, container, false)
         return binding.root
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -225,6 +227,11 @@ class FragmentPlayListDesc : Fragment() {
             amountTracksLinear.text = playlist.amountTracks.toString()
             titleTrackLinear.text = playlist.trackSpelling
         }
+    }
+    private fun getYPosition(elem: View): Int {
+        val xy = intArrayOf(0, 0)
+        elem.getLocationOnScreen(xy)
+        return xy[1]
     }
 
     companion object {

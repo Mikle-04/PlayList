@@ -9,4 +9,5 @@ interface SharingInteractor {
     fun openEmail()
 
     fun share(link: String)
+
 }

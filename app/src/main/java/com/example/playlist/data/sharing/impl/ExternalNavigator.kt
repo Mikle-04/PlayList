@@ -3,9 +3,11 @@ package com.example.playlist.data.sharing.impl
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import com.example.playlist.R
 import com.example.playlist.domain.sharing.model.EmailData
 
 class ExternalNavigator(val context: Context) {
+
     fun shareLink(shareLink: String) {
 
         Intent().apply {

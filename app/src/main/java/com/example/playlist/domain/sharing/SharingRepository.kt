@@ -6,4 +6,5 @@ interface SharingRepository {
     fun shareApp()
     fun openEmail()
     fun openTerms()
+
 }

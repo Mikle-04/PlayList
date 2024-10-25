@@ -20,4 +20,5 @@ class SharingInteractorImpl(private val sharingRepository: SharingRepository) : 
     override fun share(link: String) {
         sharingRepository.shareLink(link)
     }
+
 }
