@@ -16,7 +16,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="@dimen/size_13dp">
         <ImageView
-            android:id="@+id/track_img"
+            android:id="@+id/img_track"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:background="?attr/colorPrimaryVariant"
@@ -36,7 +36,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/trackName"
+            android:id="@+id/track_Name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/ys_display_regular"
@@ -53,11 +53,12 @@
             android:orientation="horizontal">
             <TextView
                 android:id="@+id/artistName"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="1"
                 style="@style/TrackArtistAndTrackTime"
                 tools:text="The Beatles"
-
                 />
             <ImageView
                 android:layout_width="wrap_content"
@@ -66,9 +67,10 @@
                 android:layout_gravity="center_vertical"
                 tools:ignore="ContentDescription" />
             <TextView
-                android:id="@+id/trackTime"
-                android:layout_width="64dp"
+                android:id="@+id/track_time"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 style="@style/TrackArtistAndTrackTime"
                 tools:text="2:55"
                 />

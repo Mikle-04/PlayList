@@ -1,12 +1,17 @@
 package com.example.playlist.data.sharing.impl
 
 import android.content.Context
+import android.content.Intent
 import com.example.playlist.R
 import com.example.playlist.domain.sharing.SharingRepository
 import com.example.playlist.domain.sharing.model.EmailData
 
 class SharingRepositoryImpl(val context: Context, val externalNavigator: ExternalNavigator) :
     SharingRepository {
+    override fun shareLink(link: String) {
+        externalNavigator.shareLink(link)
+    }
+
     override fun shareApp() {
         externalNavigator.shareLink(context.getString(R.string.link_message))
     }

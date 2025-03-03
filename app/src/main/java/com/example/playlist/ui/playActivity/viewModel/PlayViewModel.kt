@@ -125,6 +125,8 @@ class PlayViewModel(
                 track.isFavourite = false
                 favouriteInteractor.deleteFavoriteTrack(track)
                 stateLiveDataFavourite.postValue(track.isFavourite)
+                favouriteInteractor.getFavouriteTrack()
+
             } else {
                 track.isFavourite = true
                 favouriteInteractor.insertFavoriteTrack(track)
@@ -133,7 +135,7 @@ class PlayViewModel(
         }
     }
 
-    private fun checkIsFavouriteTrack(trackId: Int) {
+    fun checkIsFavouriteTrack(trackId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             favouriteInteractor.getFavouriteTrackId(trackId).collect {
                 stateLiveDataFavourite.postValue(it)
@@ -143,8 +145,8 @@ class PlayViewModel(
 
     fun getPlayListDb() {
         viewModelScope.launch(Dispatchers.IO) {
-            playListInteractor.getPlaylist().collect() { listPlayList ->
-                if (listPlayList.isEmpty()) {
+            playListInteractor.getListPlaylist().collect() { listPlayList ->
+                if (listPlayList.isNullOrEmpty()) {
                     statePlaylist.postValue(PlayListState.Empty())
                 } else {
                     statePlaylist.postValue(PlayListState.Content(listPlayList))
@@ -155,10 +157,10 @@ class PlayViewModel(
 
     fun insertTrackToPlayList(track: Track, playlist: PlayList) {
         viewModelScope.launch {
-            val selectTrack = SelectTrack(
+            val trackInsert = Track(
                 0,
-                track.trackId,
                 playlist.id,
+                track.trackId,
                 track.trackName,
                 track.artistName,
                 track.trackTime,
@@ -170,7 +172,7 @@ class PlayViewModel(
                 track.country,
                 track.isFavourite
             )
-            playListInteractor.insertTrackToPlaylist(selectTrack).collect { numberInsert ->
+            playListInteractor.insertTrackToPlaylist(trackInsert).collect { numberInsert ->
                 if (numberInsert == 1L) {
                     stateInsertTrack.postValue(InsertTrackPlayListState.Success(playlist.namePlaylist))
                 } else {

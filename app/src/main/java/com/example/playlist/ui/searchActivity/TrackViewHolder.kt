@@ -1,6 +1,7 @@
 package com.example.playlist.ui.searchActivity
 
 
+import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -14,10 +15,11 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-    private val trackName = itemView.findViewById<TextView>(R.id.trackName)
+
+    private val trackName = itemView.findViewById<TextView>(R.id.track_Name)
     private val artistName = itemView.findViewById<TextView>(R.id.artistName)
-    private val trackTime = itemView.findViewById<TextView>(R.id.trackTime)
-    private val artworkImg = itemView.findViewById<ImageView>(R.id.track_img)
+    private val trackTime = itemView.findViewById<TextView>(R.id.track_time)
+    private val artworkImg = itemView.findViewById<ImageView>(R.id.img_track)
 
 
 
