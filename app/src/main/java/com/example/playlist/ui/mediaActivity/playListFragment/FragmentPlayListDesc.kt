@@ -69,9 +69,6 @@ class FragmentPlayListDesc : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val bottomSheet = binding.tracksBottomSheet
-
-
         viewModel.getPlaylist(playlistId)
         viewModel.getTracksByPlaylistId(playlistId)
 
